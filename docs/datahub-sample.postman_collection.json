@@ -1,0 +1,762 @@
+{
+	"info": {
+		"_postman_id": "38d0151e-79b5-4471-8d84-5f84400290f6",
+		"name": "datahub-sample",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "show indices",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9200/_cat/indices",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"_cat",
+						"indices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create policy template",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"policy\": {\n    \"phases\": {\n      \"hot\": {\n        \"actions\": {\n          \"rollover\": {\n            \"max_age\": \"7d\"\n          }\n        }\n      },\n      \"delete\": {\n        \"min_age\": \"60d\",\n        \"actions\": {\n          \"delete\": {}\n        }\n      }\n    }\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9200/_ilm/policy/datahub_usage_event_policy",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"_ilm",
+						"policy",
+						"datahub_usage_event_policy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "index-template",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"index_patterns\": [\"*datahub_usage_event*\"],\n  \"data_stream\": { },\n  \"priority\": 500,\n  \"template\": {\n    \"mappings\": {\n      \"properties\": {\n        \"@timestamp\": {\n          \"type\": \"date\"\n        },\n        \"type\": {\n          \"type\": \"keyword\"\n        },\n        \"timestamp\": {\n          \"type\": \"date\"\n        },\n        \"userAgent\": {\n          \"type\": \"keyword\"\n        },\n        \"browserId\": {\n          \"type\": \"keyword\"\n        }\n      }\n    },\n    \"settings\": {\n      \"index.lifecycle.name\": \"datahub_usage_event_policy\"\n    }\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9200/_index_template/datahub_usage_event_index_template",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"_index_template",
+						"datahub_usage_event_index_template"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create datahub_usage_event",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9200/_data_stream/datahub_usage_event",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"_data_stream",
+						"datahub_usage_event"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sample-ingest-hive-dataset",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"proposal\" : {\n\"entityType\": \"dataset\",\n\"entityUrn\" : \"urn:li:dataset:(urn:li:dataPlatform:hive,SampleHiveDataset,PROD)\",\n\"changeType\" : \"UPSERT\",\n\"aspectName\" : \"datasetUsageStatistics\",\n\"aspect\" : {\n\"value\" : \"{ \\\"timestampMillis\\\":1629840771000,\\\"uniqueUserCount\\\" : 10, \\\"totalSqlQueries\\\": 20, \\\"fieldCounts\\\": [ {\\\"fieldPath\\\": \\\"col1\\\", \\\"count\\\": 20}, {\\\"fieldPath\\\" : \\\"col2\\\", \\\"count\\\": 5} ]}\",\n\"contentType\": \"application/json\"\n}\n}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/aspects?action=ingestProposal",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"aspects"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "ingestProposal"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-userinfo",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"entity\":{\n      \"value\":{\n         \"com.linkedin.metadata.snapshot.CorpUserSnapshot\":{\n            \"urn\":\"urn:li:corpuser:footbarusername\",\n            \"aspects\":[\n               {\n                  \"com.linkedin.identity.CorpUserInfo\":{\n                     \"active\":true,\n                     \"displayName\":\"Foo Bar\",\n                     \"fullName\":\"Foo Bar\",\n                     \"email\":\"fbar@linkedin.com\"\n                  }\n               }\n            ]\n         }\n      }\n   }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/entities?action=ingest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "ingest"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-group",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"entity\": {\n\t\t\"value\": {\n\t\t\t\"com.linkedin.metadata.snapshot.CorpGroupSnapshot\": {\n\t\t\t\t\"urn\": \"urn:li:corpGroup:dev\",\n\t\t\t\t\"aspects\": [{\n\t\t\t\t\t\"com.linkedin.identity.CorpGroupInfo\": {\n\t\t\t\t\t\t\"email\": \"dev@linkedin.com\",\n\t\t\t\t\t\t\"admins\": [\n\t\t\t\t\t\t\t\"urn:li:corpuser:jdoe\"\n\t\t\t\t\t\t],\n\t\t\t\t\t\t\"members\": [\n\t\t\t\t\t\t\t\"urn:li:corpuser:datahub\",\n\t\t\t\t\t\t\t\"urn:li:corpuser:jdoe\"\n\t\t\t\t\t\t],\n\t\t\t\t\t\t\"groups\": [\n\n\t\t\t\t\t\t]\n\t\t\t\t\t}\n\t\t\t\t}]\n\t\t\t}\n\t\t}\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/entities?action=ingest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "ingest"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-data-set",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"entity\":{\n      \"value\":{\n         \"com.linkedin.metadata.snapshot.DatasetSnapshot\":{\n            \"urn\":\"urn:li:dataset:(urn:li:dataPlatform:foo,bar,PROD)\",\n            \"aspects\":[\n               {\n                  \"com.linkedin.common.Ownership\":{\n                     \"owners\":[\n                        {\n                           \"owner\":\"urn:li:corpuser:fbar\",\n                           \"type\":\"DATAOWNER\"\n                        }\n                     ],\n                     \"lastModified\":{\n                        \"time\":0,\n                        \"actor\":\"urn:li:corpuser:fbar\"\n                     }\n                  }\n               },\n               {\n                  \"com.linkedin.common.InstitutionalMemory\":{\n                     \"elements\":[\n                        {\n                           \"url\":\"https://www.linkedin.com\",\n                           \"description\":\"Sample doc\",\n                           \"createStamp\":{\n                              \"time\":0,\n                              \"actor\":\"urn:li:corpuser:fbar\"\n                           }\n                        }\n                     ]\n                  }\n               },\n               {\n                  \"com.linkedin.schema.SchemaMetadata\":{\n                     \"schemaName\":\"FooEvent\",\n                     \"platform\":\"urn:li:dataPlatform:foo\",\n                     \"version\":0,\n                     \"created\":{\n                        \"time\":0,\n                        \"actor\":\"urn:li:corpuser:fbar\"\n                     },\n                     \"lastModified\":{\n                        \"time\":0,\n                        \"actor\":\"urn:li:corpuser:fbar\"\n                     },\n                     \"hash\":\"\",\n                     \"platformSchema\":{\n                        \"com.linkedin.schema.KafkaSchema\":{\n                           \"documentSchema\":\"{\\\"type\\\":\\\"record\\\",\\\"name\\\":\\\"MetadataChangeEvent\\\",\\\"namespace\\\":\\\"com.linkedin.mxe\\\",\\\"doc\\\":\\\"Kafka event for proposing a metadata change for an entity.\\\",\\\"fields\\\":[{\\\"name\\\":\\\"auditHeader\\\",\\\"type\\\":{\\\"type\\\":\\\"record\\\",\\\"name\\\":\\\"KafkaAuditHeader\\\",\\\"namespace\\\":\\\"com.linkedin.avro2pegasus.events\\\",\\\"doc\\\":\\\"Header\\\"}}]}\"\n                        }\n                     },\n                     \"fields\":[\n                        {\n                           \"fieldPath\":\"foo\",\n                           \"description\":\"Bar\",\n                           \"nativeDataType\":\"string\",\n                           \"type\":{\n                              \"type\":{\n                                 \"com.linkedin.schema.StringType\":{\n                                    \n                                 }\n                              }\n                           }\n                        }\n                     ]\n                  }\n               }\n            ]\n         }\n      }\n   }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/entities?action=ingest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "ingest"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create chart",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"entity\":{\n      \"value\":{\n         \"com.linkedin.metadata.snapshot.ChartSnapshot\":{\n            \"urn\":\"urn:li:chart:(looker,baz1)\",\n            \"aspects\":[\n               {\n                  \"com.linkedin.chart.ChartInfo\":{\n                     \"title\":\"Baz Chart 1\",\n                     \"description\":\"Baz Chart 1\",\n                     \"inputs\":[\n                        {\n                           \"string\":\"urn:li:dataset:(urn:li:dataPlatform:hdfs,SampleHdfsDataset,PROD)\"\n                        }\n                     ],\n                     \"lastModified\":{\n                        \"created\":{\n                           \"time\":0,\n                           \"actor\":\"urn:li:corpuser:jdoe\"\n                        },\n                        \"lastModified\":{\n                           \"time\":0,\n                           \"actor\":\"urn:li:corpuser:datahub\"\n                        }\n                     }\n                  }\n               }\n            ]\n         }\n      }\n   }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/entities?action=ingest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "ingest"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create dashboard",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"entity\":{\n      \"value\":{\n         \"com.linkedin.metadata.snapshot.DashboardSnapshot\":{\n            \"urn\":\"urn:li:dashboard:(looker,baz)\",\n            \"aspects\":[\n               {\n                  \"com.linkedin.dashboard.DashboardInfo\":{\n                     \"title\":\"Baz Dashboard\",\n                     \"description\":\"Baz Dashboard\",\n                     \"charts\":[\n                        \"urn:li:chart:(looker,baz1)\",\n                        \"urn:li:chart:(looker,baz2)\"\n                     ],\n                     \"lastModified\":{\n                        \"created\":{\n                           \"time\":0,\n                           \"actor\":\"urn:li:corpuser:jdoe\"\n                        },\n                        \"lastModified\":{\n                           \"time\":0,\n                           \"actor\":\"urn:li:corpuser:datahub\"\n                        }\n                     }\n                  }\n               }\n            ]\n         }\n      }\n   }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/entities?action=ingest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "ingest"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create Tag",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"entity\":{\n      \"value\":{\n         \"com.linkedin.metadata.snapshot.TagSnapshot\":{\n            \"urn\":\"urn:li:tag:Engineering\",\n            \"aspects\":[\n               {\n                  \"com.linkedin.tag.TagProperties\":{\n                     \"name\":\"Engineering\",\n                     \"description\":\"The tag will be assigned to all assets owned by the Eng org.\"\n                  }\n               }\n            ]\n         }\n      }\n   }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/entities?action=ingest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "ingest"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Global Tags",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"entity\":{\n      \"value\":{\n         \"com.linkedin.metadata.snapshot.DatasetSnapshot\":{\n            \"urn\":\"urn:li:dataset:(urn:li:dataPlatform:foo,bar,PROD)\",\n            \"aspects\":[\n               {\n                  \"com.linkedin.common.GlobalTags\":{\n                     \"tags\":[\n                        {\n                           \"tag\":\"urn:li:tag:Engineering\"\n                        }\n                     ]\n                  }\n               }\n            ]\n         }\n      }\n   }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/entities?action=ingest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "ingest"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Entity Aspects",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/entitiesV2/urn%3Ali%3Adataset%3A%28urn%3Ali%3AdataPlatform%3Ahdfs%2CSampleHdfsDataset%2CPROD%29",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entitiesV2",
+						"urn%3Ali%3Adataset%3A%28urn%3Ali%3AdataPlatform%3Ahdfs%2CSampleHdfsDataset%2CPROD%29"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Entity Aspects-2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/entitiesV2/urn%3Ali%3Adataset%3A%28urn%3Ali%3AdataPlatform%3Ahdfs%2CSampleHdfsDataset%2CPROD%29",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entitiesV2",
+						"urn%3Ali%3Adataset%3A%28urn%3Ali%3AdataPlatform%3Ahdfs%2CSampleHdfsDataset%2CPROD%29"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Entity Aspects-3",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/entitiesV2/urn%3Ali%3Adataset%3A%28urn%3Ali%3AdataPlatform%3Ahdfs%2CSampleHdfsDataset%2CPROD%29",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entitiesV2",
+						"urn%3Ali%3Adataset%3A%28urn%3Ali%3AdataPlatform%3Ahdfs%2CSampleHdfsDataset%2CPROD%29"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Entity Aspects-4",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/entitiesV2/urn%3Ali%3Adataset%3A%28urn%3Ali%3AdataPlatform%3Ahdfs%2CSampleHdfsDataset%2CPROD%29",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entitiesV2",
+						"urn%3Ali%3Adataset%3A%28urn%3Ali%3AdataPlatform%3Ahdfs%2CSampleHdfsDataset%2CPROD%29"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Entity Aspects Copy",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/entitiesV2/urn%3Ali%3Adataset%3A%28urn%3Ali%3AdataPlatform%3Ahdfs%2CSampleHdfsDataset%2CPROD%29",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entitiesV2",
+						"urn%3Ali%3Adataset%3A%28urn%3Ali%3AdataPlatform%3Ahdfs%2CSampleHdfsDataset%2CPROD%29"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query CorpGroup",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/entities/urn%3Ali%3AcorpGroup%3Adev",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities",
+						"urn%3Ali%3AcorpGroup%3Adev"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Corpuser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/entities/urn%3Ali%3Acorpuser%3Afbar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities",
+						"urn%3Ali%3Acorpuser%3Afbar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Dataset",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/entities/urn%3Ali%3Adataset%3A(urn%3Ali%3AdataPlatform%3Afoo,bar,PROD)",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities",
+						"urn%3Ali%3Adataset%3A(urn%3Ali%3AdataPlatform%3Afoo,bar,PROD)"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Chart",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/entities/urn%3Ali%3Achart%3A(looker,baz1)",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities",
+						"urn%3Ali%3Achart%3A(looker,baz1)"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Dashboard",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/entities/urn%3Ali%3Adashboard%3A(looker,foo)",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities",
+						"urn%3Ali%3Adashboard%3A(looker,foo)"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Browse Entities",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"path\": \"/looker\",\n    \"entity\": \"chart\",\n    \"start\": 0,\n    \"limit\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/entities?action=browse",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "browse"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Entities",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"input\": \"looker\",\n    \"entity\": \"chart\",\n    \"start\": 0,\n    \"count\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/entities?action=search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "search"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Exact Match",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"input\": \"tags:Engineering\",\n    \"entity\": \"dataset\",\n    \"start\": 0,\n    \"count\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/entities?action=search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "search"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Custom Model",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/config",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"config"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "IngestCustomEntity-Draft-1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"entity\": {\n\t\t\"value\": {\n\t\t\t\"com.visa.models.UMFTag\": {\n\t\t\t\t\"urn\": \"urn:li:umfTag:currency,PROD\",\n\t\t\t\t\"aspects\": [{\n\t\t\t\t\t\t\"com.visa.models.UMFTagInfo\": {\n\t\t\t\t\t\t\t\"tagName\": \"currency\",\n\t\t\t\t\t\t\t\"isoTagName\": \"money\",\n\t\t\t\t\t\t\t\"isoCode\": 124\n\t\t\t\t\t\t},\n\t\t\t\t\t\t\"com.visa.models.UMFTagKey\": {\n\t\t\t\t\t\t\t\"name\": \"currency\"\n\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\n\t\t\t\t]\n\t\t\t}\n\t\t}\n\t}\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/entities?action=ingest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"entities"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "ingest"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "IngestCustomEntity-Draft-2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"proposal\": {\n\t\t\"entityType\": \"umfTag\",\n\t\t\"entityUrn\": \"urn:li:umfTag:currency,PROD\",\n\t\t\"changeType\": \"UPSERT\",\n\t\t\"aspectName\": \"umfTagInfo\",\n\t\t\"aspect\": {\n\t\t\t\"value\": \"{\\\"tagName\\\": \\\"currency\\\",\\\"isoTagName\\\": \\\"money\\\",\\\"isoCode\\\": 124}\",\n\t\t\t\"contentType\": \"application/json\"\n\t\t}\n\t}\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/aspects?action=ingestProposal",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"aspects"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "ingestProposal"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

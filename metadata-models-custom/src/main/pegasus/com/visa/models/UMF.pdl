@@ -1,0 +1,9 @@
+namespace com.visa.models
+
+import com.linkedin.common.BrowsePaths
+
+typeref UMF = union[
+  UMFTagKey,
+  UMFTagInfo,
+  BrowsePaths
+]

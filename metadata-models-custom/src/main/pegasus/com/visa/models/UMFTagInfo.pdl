@@ -1,0 +1,29 @@
+namespace com.visa.models
+import com.linkedin.common.GlobalTags
+import com.linkedin.common.CustomProperties
+
+/**
+ * Tag aspect used for applying tags to an entity
+ */
+@Aspect = {
+  "name": "umfTagInfo"
+   "autoRender": true,
+    "renderSpec": {
+      "displayType": "tabular", // or properties
+      "key": "umfTag",
+      "displayName": "UM Global Tag"
+    }
+}
+record UMFTagInfo includes CustomProperties{
+
+  /**
+   * Tags associated with a given entity
+   */
+  @Searchable = {}
+  tagName:string
+  @Searchable = {}
+  isoTagName:string
+  isoCode:int
+  @Searchable = {}
+  description: string
+}

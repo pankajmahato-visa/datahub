@@ -1,0 +1,19 @@
+namespace com.visa.models
+
+import com.linkedin.common.Urn
+
+@Entity = {
+  "name": "umfTag",
+  "keyAspect": "umfTagKey"
+}
+record UMFTag {
+  /**
+     * Urn for the service
+     */
+    urn: Urn
+
+    /**
+     * The list of service aspects
+     */
+    aspects: array[UMF]
+}

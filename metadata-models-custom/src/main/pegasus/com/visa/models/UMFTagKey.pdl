@@ -1,0 +1,14 @@
+namespace com.visa.models
+
+/**
+ * Key for a UMFTag
+ */
+@Aspect = {
+  "name": "umfTagKey"
+}
+record UMFTagKey {
+  /**
+  *  UMFTag name i.e. currency,
+  */
+  name: string
+}
