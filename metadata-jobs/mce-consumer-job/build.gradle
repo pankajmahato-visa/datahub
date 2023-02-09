@@ -31,6 +31,8 @@ dependencies {
     runtime externalDependency.mariadbConnector
     runtime externalDependency.mysqlConnector
     runtime externalDependency.postgresql
+    runtime externalDependency.slf4jApi
+    runtime externalDependency.slf4jSimple
 
     annotationProcessor externalDependency.lombok
 

@@ -9,6 +9,11 @@ tasks.withType(PlayRun) {
 }
 
 configurations {
+  all{
+    resolutionStrategy {
+      force 'org.apache.logging.log4j:log4j-core:2.19.0', 'org.apache.logging.log4j:log4j-api:2.19.0'
+    }
+  }
   play
 }
 

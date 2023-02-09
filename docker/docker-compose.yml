@@ -56,7 +56,7 @@ services:
         retries: 4
 
   neo4j:
-    image: neo4j:4.4.9-community
+    image: neo4j:4.4.14-community
     env_file: neo4j/env/docker.env
     hostname: neo4j
     container_name: neo4j

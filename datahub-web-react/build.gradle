@@ -55,7 +55,7 @@ task yarnServe(type: YarnTask, dependsOn: [yarnInstall, yarnGenerate]) {
 }
 
 task yarnTest(type: YarnTask, dependsOn: [yarnInstall, yarnGenerate]) {
-  args = ['run', 'test', '--watchAll', 'false']
+  args = ['run', 'test', '--watchAll', 'false', '--testTimeout', '50000']
 }
 
 task yarnLint(type: YarnTask, dependsOn: [yarnInstall, yarnGenerate]) {

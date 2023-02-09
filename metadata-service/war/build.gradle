@@ -27,6 +27,8 @@ dependencies {
   runtime externalDependency.mariadbConnector
   runtime externalDependency.mysqlConnector
   runtime externalDependency.postgresql
+  runtime externalDependency.slf4jApi
+  runtime externalDependency.slf4jSimple
   runtime externalDependency.springWebMVC
 
   runtime spec.product.pegasus.restliDocgen

@@ -20,6 +20,9 @@ dependencies {
     }
     compile externalDependency.springBootStarterJetty
     compile externalDependency.springKafka
+
+    runtime externalDependency.slf4jApi
+    runtime externalDependency.slf4jSimple
 }
 
 bootJar {
