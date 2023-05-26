@@ -1,0 +1,11 @@
+source:
+  type: custom_ingestion_tags.AutoTaggingSource
+  config:
+    env: "PROD"
+    include_data: [{ platform: "", schema: "", table: "" }]
+    include_view: [""]
+    exclude_data: [{ platform: "", schema: "", table: "" }]
+sink:
+  type: "datahub-rest"
+  config:
+    server: "http://localhost:8080"
