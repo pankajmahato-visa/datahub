@@ -1,6 +1,7 @@
 import logging
 from typing import Iterable, Union
 import pydantic
+import datetime
 
 from datahub.configuration.common import ConfigModel
 from datahub.ingestion.api.common import PipelineContext
@@ -13,6 +14,7 @@ from datahub.ingestion.source.auto_tagging.reporter import (
     index as auto_tagging_reporter,
 )
 from datahub.ingestion.source.auto_tagging.graphql_api import DataHubGraphqlAPI
+from reporter.index import Reporter as auto_tagging_reporter
 
 logger = logging.getLogger(__name__)
 console_handler = logging.StreamHandler()
@@ -36,12 +38,34 @@ class AutoTaggingSourceConfig(ConfigModel):
             raise ValueError("include_data and include_view both are empty")
         return v
 
+# The AutoTaggingSourceReport class is a Python class that extends the SourceReport class and provides methods for
+# generating and sending reports to the admin.
+class AutoTaggingSourceReport(SourceReport):
+    def __init__ (self):
+        super().__init__()
+        self.sendMail=False
+    
+    def compute_stats(self) -> None:
+        duration = datetime.datetime.now() - self.start_time
+        workunits_produced = self.events_produced
+        if duration.total_seconds() > 0:
+            self.events_produced_per_sec: int = int(
+                workunits_produced / duration.total_seconds()
+            )
+            self.running_time = duration
+        else:
+            self.read_rate = 0
+        if self.sendMail==False:
+            atr = auto_tagging_reporter(self.auto_tagged_report)
+            logger.debug("Sending Mails...")
+            atr.send_report()
+            self.sendMail=True
 
 # The AutoTaggingSource class is a Python class that extends the Source class and provides methods for
 # generating MetadataWorkUnits and reporting on the status of those work units.
 class AutoTaggingSource(Source):
     source_config: AutoTaggingSourceConfig
-    report: SourceReport = SourceReport()
+    report: AutoTaggingSourceReport = AutoTaggingSourceReport()
 
     def __init__(
         self,
@@ -92,18 +116,16 @@ class AutoTaggingSource(Source):
                 dataset_name = conf["table"]
             else:
                 dataset_name = f"{conf['schema']}.{conf['table']}"
-
             dataset_urn = builder.make_dataset_urn(
                 platform=conf["platform"], name=dataset_name
             )
             if dataset_urn not in exclude_dataset_urns:
-                at = auto_tagging.auto_tag(dataset_urn)
-                snapshots = at["snapshots"]
-                auto_tag_reports = at["reports"]
+                snapshots,auto_tag_reports = auto_tagging.auto_tag(dataset_urn)
+                # snapshots = at["snapshots"]
+                # auto_tag_reports = at["reports"]
                 if auto_tag_reports:
-                    logger.debug("Auto-tagging completed. Sending Email...")
-                    atr = auto_tagging_reporter(auto_tag_reports)
-                    atr.send_report()
+                    logger.debug("Auto-tagging completed.")
+                    self.report.auto_tagged_report[dataset_name]=(auto_tag_reports)
                 if snapshots:
                     for dataset_snapshot in snapshots:
                         logger.debug(f"Snapshot: {dataset_snapshot}")
@@ -143,7 +165,7 @@ class AutoTaggingSource(Source):
             )
         return exclude_dataset_urns
 
-    def get_report(self) -> SourceReport:
+    def get_report(self) -> AutoTaggingSourceReport:
         return self.report
 
     def close(self) -> None:

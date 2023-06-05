@@ -1,0 +1,60 @@
+{
+    "Dataset 1": [
+
+        
+
+    ],
+
+    "Dataset 2": [
+
+        {
+
+            "field_name": "c1",
+
+            "source_dataset": "bars.bar2",
+
+            "source_field": "c1",
+
+            "status": "NOT SUCCEDED",
+
+            "tags": []
+
+        },
+
+        {
+
+            "field_name": "c2",
+
+            "source_dataset": "bars.bar2",
+
+            "source_field": "c2",
+
+            "status": "SUCCEDED",
+
+            "tags": [
+
+                "urn:li:tag:batman"
+            ]
+
+        },
+
+        {
+
+            "field_name": "c3",
+
+            "source_dataset": "bars.bar2",
+
+            "source_field": "c3",
+
+            "status": "SUCCEDED",
+
+            "tags": [
+
+                "urn:li:tag:superman"
+            ]
+
+        }
+
+    ]
+
+}
