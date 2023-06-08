@@ -32,6 +32,9 @@ dependencies {
       implementation('commons-collections:commons-collections:3.2.2') {
         because 'Vulnerability Issue'
       }
+      implementation('org.apache.commons:commons-text:1.10.0') {
+        because 'Vulnerability Issue'
+      }
     }
     compileOnly externalDependency.httpAsyncClient
     implementation externalDependency.jacksonDataBind

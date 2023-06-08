@@ -27,11 +27,21 @@ dependencies {
   testCompile project(':test-models')
 
   constraints {
-      implementation(externalDependency.log4jCore) {
-          because("previous versions are vulnerable to CVE-2021-45105")
-      }
-      implementation(externalDependency.log4jApi) {
-        because("previous versions are vulnerable to CVE-2021-45105")
+    implementation(externalDependency.log4jCore) {
+      because("previous versions are vulnerable to CVE-2021-45105")
+    }
+    implementation(externalDependency.log4jApi) {
+      because("previous versions are vulnerable to CVE-2021-45105")
+    }
+    implementation("commons-httpclient:commons-httpclient:20020423") {
+      because("previous versions are vulnerable to CVE-2012-5783")
+    }
+    implementation('commons-codec:commons-codec:1.15') {
+      because("previous versions are vulnerable to CVE-2012-0050")
+    }
+
+    implementation('commons-io:commons-io:2.11.0') {
+      because("previous versions are vulnerable to CVE-2021-29425")
     }
   }
   implementation externalDependency.logbackClassic

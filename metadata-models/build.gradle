@@ -5,12 +5,12 @@ apply plugin: 'pegasus'
 
 tasks.withType(JavaCompile).configureEach {
   javaCompiler = javaToolchains.compilerFor {
-    languageVersion = JavaLanguageVersion.of(8)
+    languageVersion = JavaLanguageVersion.of(11)
   }
 }
 tasks.withType(Test).configureEach {
   javaLauncher = javaToolchains.launcherFor {
-    languageVersion = JavaLanguageVersion.of(8)
+    languageVersion = JavaLanguageVersion.of(11)
   }
 }
 
@@ -20,6 +20,15 @@ dependencies {
   dataModel project(':li-utils')
 
   testCompile externalDependency.guava
+
+  constraints {
+    implementation('commons-codec:commons-codec:1.15') {
+      because("previous versions are vulnerable to CVE-2012-0050")
+    }
+    implementation('commons-io:commons-io:2.11.0') {
+      because("previous versions are vulnerable to CVE-2021-29425")
+    }
+  }
 }
 
 mainAvroSchemaJar.dependsOn generateAvroSchema

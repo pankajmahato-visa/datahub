@@ -81,6 +81,9 @@ dependencies {
     implementation(externalDependency.jettison) {
       because("previous versions are vulnerable")
     }
+    implementation(externalDependency.antlr4) {
+      because("previous versions are vulnerable")
+    }
   }
 }
 

@@ -11,12 +11,18 @@ dependencies {
   implementation externalDependency.jacksonDataPropertyFormat
   implementation externalDependency.logbackClassic;
   implementation externalDependency.slf4jApi
-  
+
   compileOnly externalDependency.lombok
 
   testImplementation externalDependency.mockito
   testImplementation externalDependency.testng
   annotationProcessor externalDependency.lombok
+
+  constraints {
+    implementation('com.google.guava:guava:31.0-jre') {
+      because("previous versions are vulnerable to CVE-2020-8908")
+    }
+  }
 }
 
 test {

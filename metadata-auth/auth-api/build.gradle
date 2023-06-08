@@ -29,13 +29,19 @@ dependencies() {
   implementation spec.product.pegasus.data
   implementation project(path: ':li-utils')
   implementation project(path: ':metadata-utils')
- 
+
   compile externalDependency.guava
   compile externalDependency.lombok
 
   annotationProcessor externalDependency.lombok
-  
+
   testCompile externalDependency.testng
+
+  constraints {
+    implementation('commons-codec:commons-codec:1.15') {
+      because("previous versions are vulnerable to CVE-2012-0050")
+    }
+  }
 }
 
 task sourcesJar(type: Jar) {

@@ -1,0 +1,46 @@
+jobs:
+  name: datahub
+  type: generic
+  alert: CHANGE_EMAIL.visainc.onmicrosoft.com@amer.teams.ms
+  askNowId: 0012345
+  buildUrl: https://chocolate.factory.visa.com/job/dlc/job/datahub/
+  steps:
+    image: reg.visa.com/usawant/centos7-openjdk11-node16:v0.2
+    build:
+      init: make init clean
+      build: make build package
+      test: make test
+    sonatypeScan:
+      iqStage: 'build'
+      iqApplication: '0029651_DPDLC_Datahub'
+      iqScanPatterns: [scanPattern: 'metadata-service/war/build/libs/*.war']
+      iqModuleExcludes: [moduleExclude: '']
+  publish:
+    steps:
+      artifactory:
+        uploadHost: 'https://artifactory.trusted.visa.com'
+        uploadFiles: '[{"pattern":"datahub-*.tar","target":"vdc/datahub/"}]'
+        credentialsId: vdc-upload
+  deployment:
+    tool: ansible
+    defaultEnvironment: int
+    dev:
+      host: datahub
+      playbook: ansible/roles/deployment/main.yml
+      inventory: rest-api/ansible/inventories/dev/hosts
+      deployUser: svc_am_cicd
+    int:
+      host: datahub
+      playbook: ansible/roles/deployment/main.yml
+      inventory: rest-api/ansible/inventories/int/hosts
+      deployUser: svc_am_cicd
+    oce:
+      host: datahub
+      playbook: ansible/roles/deployment/main-deployment-prod-oce.yml
+      inventory: rest-api/ansible/inventories/oce/hosts
+      deployUser: svc_am_cicd_prod
+    occ:
+      host: datahub
+      playbook: ansible/roles/deployment/main-deployment-prod-occ.yml
+      inventory: rest-api/ansible/inventories/occ/hosts
+      deployUser: svc_am_cicd_prod

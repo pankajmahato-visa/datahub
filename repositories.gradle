@@ -1,16 +1,26 @@
 repositories {
-    gradlePluginPortal()
+    maven {
+        url "https://artifactory.trusted.visa.com/gradle-plugins"
+        credentials {
+            username System.getenv("PIPER_CUSTOM_USER")
+            password System.getenv("PIPER_CUSTOM_PASSWORD")
+        }
+    }
+    maven {
+        url "https://artifactory.trusted.visa.com/dp-maven-virtual"
+        credentials {
+            username System.getenv("PIPER_CUSTOM_USER")
+            password System.getenv("PIPER_CUSTOM_PASSWORD")
+        }
+    }
+    maven {
+        url "https://artifactory.trusted.visa.com/central-cache"
+        credentials {
+            username System.getenv("PIPER_CUSTOM_USER")
+            password System.getenv("PIPER_CUSTOM_PASSWORD")
+        }
+    }
     mavenLocal()
-    mavenCentral()
-    maven {
-        url "https://packages.confluent.io/maven/"
-    }
-    maven {
-        url "https://plugins.gradle.org/m2/"
-    }
-    maven {
-        url "https://linkedin.jfrog.io/artifactory/open-source/" // GMA, pegasus
-    }
 }
 
 try {

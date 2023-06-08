@@ -1,0 +1,65 @@
+- hosts:
+  - "{{ deploy_host }}"
+  vars:
+    artifactory_path: https://artifactoryprod.trusted.visa.com
+    rpm_root: /
+    rpm_db: /usr/mware/instances/webserver/rpmdb
+    package_name: paas-portal-dlc-config-prod-oce
+    download_url: "{{ artifactory_path }}//paas-portal-bin-prod-release/paas-portal-dlc-config/{{ package_name }}-{{ deploy_version}}-1.el7.x86_64.rpm"
+    tmp_file: "/tmp/{{ package_name }}-{{ deploy_version}}-1.el7.x86_64.rpm"
+    nginx_path: /usr/mware/instances/webserver
+    nginxctl_path: bin/nginxctl
+    nginx_conf: conf/nginx.conf
+    date: "{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
+  gather_facts: no
+  tasks:
+    - name: download package  "{{ download_url }}"
+      get_url:
+        url: "{{ download_url }}"
+        dest: "{{ tmp_file }}"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+      register: download_package
+    - debug: msg="{{ download_package }}"
+    - name: take nginx conf backup
+      copy:
+        src: "{{ nginx_path }}/{{ nginx_conf }}"
+        dest: "{{ nginx_path }}/{{ nginx_conf }}_bkp_{{ date }}"
+        remote_src: yes
+      register: backup_nginx
+    - debug: msg="{{ backup_nginx }}"
+    - name: package install "{{ tmp_file }}"
+      command: "/usr/bin/rpm -ivhU --prefix {{ rpm_root }} --dbpath {{ rpm_db }} {{ tmp_file }}  --nomd5 --replacepkgs  --force"
+      args:
+        warn: no
+      register: package_install
+    - debug: msg="{{ package_install }}"
+    - name: delete package "{{ tmp_file }}"
+      file:
+        state: absent
+        path: "{{ tmp_file }}"
+    - name: Fetch nginx master process pid
+      shell: "pgrep -u www nginx"
+      register: nginx_master_pid
+    - name: Check if nginx.pid file exists
+      stat:
+        path: "{{ nginx_path }}/logs/nginx.pid"
+      register: pid_file_present
+    - name: Create nginx.pid file, if it doesnt exist already
+      copy:
+        dest: "{{ nginx_path }}/logs/nginx.pid"
+        content: |
+          {{ nginx_master_pid.stdout_lines }}
+      when: not pid_file_present.stat.exists
+    - name: stop nginx
+      command: "{{ nginx_path }}/{{ nginxctl_path }} stop"
+      register: stop_nginx
+    - debug: msg="{{ stop_nginx }}"
+    - name: wait for nginx to stop
+      wait_for:
+        timeout: 30
+    - name: start nginx
+      command: "{{ nginx_path }}/{{ nginxctl_path }} start"
+      register: start_nginx
+    - debug: msg="{{ start_nginx }}"

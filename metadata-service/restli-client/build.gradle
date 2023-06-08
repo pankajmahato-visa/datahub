@@ -12,4 +12,19 @@ dependencies {
   annotationProcessor externalDependency.lombok
 
   compile spec.product.pegasus.restliClient
+
+  constraints {
+    implementation('org.apache.kafka:kafka-clients:3.4.0') {
+      because("previous versions are vulnerable to CVE-2023-25194 and CVE-2021-38153")
+    }
+    implementation('com.nimbusds:oauth2-oidc-sdk:8.36.2') {
+      because("previous versions are vulnerable to CVE-2021-0429")
+    }
+    implementation('commons-codec:commons-codec:1.15') {
+      because("previous versions are vulnerable to CVE-2012-0050")
+    }
+    implementation('commons-io:commons-io:2.11.0') {
+      because("previous versions are vulnerable to CVE-2021-29425")
+    }
+  }
 }

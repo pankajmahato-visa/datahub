@@ -42,6 +42,7 @@ dependencies {
   compile spec.product.pegasus.restliServer
   implementation externalDependency.slf4jApi
   // This is compile and not compileOnly because of restli
+  compile externalDependency.commonsText
   compile externalDependency.lombok
   compile externalDependency.neo4jJavaDriver
   compile externalDependency.opentelemetryAnnotations
