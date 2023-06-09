@@ -18,6 +18,7 @@ public class YamlPropertySourceFactory implements PropertySourceFactory {
     factory.setResources(encodedResource.getResource());
 
     Properties properties = factory.getObject();
+    properties.putAll(CloudViewPropertySource.getInstance().getVaultProps());
 
     return new PropertiesPropertySource(encodedResource.getResource().getFilename(), properties);
   }
