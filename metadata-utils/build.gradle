@@ -40,7 +40,7 @@ dependencies {
       because("previous versions are vulnerable to CVE-2012-0050")
     }
 
-    implementation('commons-io:commons-io:2.11.0') {
+    implementation('commons-io:commons-io:2.4') {
       because("previous versions are vulnerable to CVE-2021-29425")
     }
   }

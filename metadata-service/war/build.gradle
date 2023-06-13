@@ -45,7 +45,7 @@ configurations {
 }
 
 dependencies {
-  jetty9 "org.eclipse.jetty:jetty-runner:9.4.46.v20220331"
+  jetty9 "org.eclipse.jetty:jetty-runner:9.4.51.v20230217"
 }
 
 task run(type: JavaExec, dependsOn: build) {

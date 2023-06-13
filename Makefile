@@ -82,44 +82,38 @@ package:
     export LC_ALL=$LANG; \
     export LANGUAGE=$LANG; \
 	echo "Packaging Datahub Artifacts to folder: datahub-artifact"; \
-	mkdir datahub-artifact; \
-	mkdir datahub-artifact/datahub-gms; \
-	mkdir datahub-artifact/datahub-frontend; \
-	mkdir datahub-artifact/datahub-upgrade; \
-	mkdir datahub-artifact/lib; \
-	mkdir datahub-artifact/certs; \
-	mkdir datahub-artifact/setup; \
-	mkdir datahub-artifact/setup/elasticsearch-setup; \
-	mkdir datahub-artifact/setup/kafka-setup; \
-	mkdir datahub-artifact/setup/mysql-setup; \
-	mkdir datahub-artifact/resources; \
+	rm -rf datahub-artifact; \
+	mkdir -p datahub-artifact; \
+	mkdir -p datahub-artifact/datahub-gms; \
+	mkdir -p datahub-artifact/datahub-frontend/datahub-frontend; \
+	mkdir -p datahub-artifact/datahub-upgrade; \
+	mkdir -p datahub-artifact/certs; \
+	mkdir -p datahub-artifact/setup/elasticsearch-setup; \
+	mkdir -p datahub-artifact/setup/kafka-setup; \
+	mkdir -p datahub-artifact/setup/mysql-setup; \
+	mkdir -p datahub-artifact/resources; \
 	echo "Current datahub-artifact folder tree"; \
 	find datahub-artifact | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"; \
-	echo "1. Copying Datahub Frontend Tar ball"; \
-	cp datahub-frontend/build/distributions/datahub-frontend-*.tar datahub-artifact; \
+	echo "1. Copying Datahub Frontend"; \
+	tar -xvf datahub-frontend/build/distributions/datahub-frontend-*.tar -C datahub-artifact/datahub-frontend/datahub-frontend --strip-components 1; \
 	echo "2. Copying Datahub Upgrade JAR"; \
-	cp datahub-upgrade/build/libs/datahub-upgrade.jar datahub-artifact; \
+	cp datahub-upgrade/build/libs/datahub-upgrade.jar datahub-artifact/datahub-upgrade; \
 	echo "3. Copying Metadata Service WAR"; \
-	cp metadata-service/war/build/libs/war.war datahub-artifact; \
-	echo "4. Copying Elastic Setup"; \
-	cp docker/elasticsearch-setup/create-indices.sh datahub-artifact/setup/elasticsearch-setup/create-indices.sh; \
-	echo "5. Copying Kafka Setup"; \
-	cp docker/kafka-setup/{kafka-config.sh,kafka-setup.sh,kafka-topic-workers.sh} datahub-artifact/setup/kafka-setup; \
-	echo "6. Copying MySQL Setup"; \
-	cp docker/mysql-setup/{init.sh,init.sql} datahub-artifact/setup/mysql-setup; \
-	echo "7. Copying entity-registry.yml"; \
+	cp metadata-service/war/build/libs/war.war datahub-artifact/datahub-gms; \
+	echo "4. Copying entity-registry.yml"; \
 	cp metadata-models/src/main/resources/entity-registry.yml datahub-artifact/resources; \
-	echo "8. Downloading jetty files"; \
+	echo "5. Copying elasticsearch json files"; \
+    cp metadata-service/restli-servlet-impl/src/main/resources/index/usage-event/{index_template.json,policy.json} datahub-artifact/setup/elasticsearch-setup; \
+	echo "6. Downloading jetty files"; \
 	chmod u+x download.sh; \
 	./download.sh; \
-	echo "9. Downloading VISA Certificates"; \
-	echo "10. Copying Datahub GMS files"; \
-	cp docker/datahub-gms/{start.sh,jetty.xml} datahub-artifact/datahub-gms; \
-	echo "11. Copying Datahub Frontend files"; \
-    cp docker/datahub-frontend/start.sh datahub-artifact/datahub-frontend; \
-	cp metadata-service/war/build/libs/war.war datahub-artifact; \
+	echo "7. Downloading VISA Certificates"; \
+	echo "8. Copying Datahub GMS files"; \
+	cp docker/datahub-gms/jetty.xml datahub-artifact/datahub-gms; \
+	echo "9. Copying Deploy Scripts"; \
+	cp -a deploy-scripts/. datahub-artifact/; \
 	echo "Final datahub-artifact folder tree"; \
 	find datahub-artifact | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"; \
 	tar cvf ${TAR_BALL_VERSION}.tar datahub-artifact; \
-	ls -lah ${TAR_BALL_VERSION}.tar
-
+	ls -lah ${TAR_BALL_VERSION}.tar; \
+	echo "\n\nPackage Completed"

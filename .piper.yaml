@@ -19,7 +19,7 @@ jobs:
     steps:
       artifactory:
         uploadHost: 'https://artifactory.trusted.visa.com'
-        uploadFiles: '[{"pattern":"datahub-*.tar","target":"vdc/datahub/"}]'
+        uploadFiles: '[{"pattern":"./datahub-*.tar","target":"vdc/datahub/"}]'
         credentialsId: vdc-upload
   deployment:
     tool: ansible
@@ -27,20 +27,24 @@ jobs:
     dev:
       host: datahub
       playbook: ansible/roles/deployment/main.yml
-      inventory: rest-api/ansible/inventories/dev/hosts
+      inventory: ansible/inventories/dev/hosts
       deployUser: svc_am_cicd
+      credentialsId: datahub-deployment
     int:
       host: datahub
-      playbook: ansible/roles/deployment/main.yml
-      inventory: rest-api/ansible/inventories/int/hosts
+      playbook: ansible/roles/deployment/main-deployment-int.yml
+      inventory: ansible/inventories/int/hosts
       deployUser: svc_am_cicd
+      credentialsId: datahub-deployment
     oce:
       host: datahub
       playbook: ansible/roles/deployment/main-deployment-prod-oce.yml
-      inventory: rest-api/ansible/inventories/oce/hosts
+      inventory: ansible/inventories/oce/hosts
       deployUser: svc_am_cicd_prod
+      credentialsId: datahub-deployment
     occ:
       host: datahub
       playbook: ansible/roles/deployment/main-deployment-prod-occ.yml
-      inventory: rest-api/ansible/inventories/occ/hosts
+      inventory: ansible/inventories/occ/hosts
       deployUser: svc_am_cicd_prod
+      credentialsId: datahub-deployment

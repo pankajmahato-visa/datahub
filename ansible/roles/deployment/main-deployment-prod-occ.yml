@@ -1,65 +1,103 @@
+# Piper provided environment variables are mentioned here for reference
+#   deploy_host
+#   deploy_environment
+#   deploy_version
+#   username
+#   password
 - hosts:
-  - "{{ deploy_host }}"
+    - "{{ deploy_host }}"
   vars:
-    artifactory_path: https://artifactoryprod.trusted.visa.com
-    rpm_root: /
-    rpm_db: /usr/mware/instances/webserver/rpmdb
-    package_name: paas-portal-dlc-config-prod-occ
-    download_url: "{{ artifactory_path }}//paas-portal-bin-prod-release/paas-portal-dlc-config/{{ package_name }}-{{ deploy_version}}-1.el7.x86_64.rpm"
-    tmp_file: "/tmp/{{ package_name }}-{{ deploy_version}}-1.el7.x86_64.rpm"
-    nginx_path: /usr/mware/instances/webserver
-    nginxctl_path: bin/nginxctl
-    nginx_conf: conf/nginx.conf
+    artifactory_path: https://artifactory.trusted.visa.com/vdc-prod-release
+    package_name: datahub
+    download_url: "{{ artifactory_path }}/{{ package_name }}/{{ package_name }}-{{ deploy_version}}.tar"
+    frontend_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/occ/datahub-frontend.env"
+    gms_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/occ/datahub-gms.env"
+    upgrade_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/occ/datahub-upgrade.env"
+    elasticsearch_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/occ/elasticsearch-setup.env"
+    kafka_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/occ/kafka-setup.env"
+    mysql_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/occ/mysql-setup.env"
+    folder: "/datahub/{{ package_name }}-{{ deploy_version}}"
     date: "{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
   gather_facts: no
   tasks:
     - name: download package  "{{ download_url }}"
       get_url:
         url: "{{ download_url }}"
-        dest: "{{ tmp_file }}"
+        dest: "{{ folder }}.tar"
         validate_certs: no
         username: "{{ username }}"
         password: "{{ password }}"
       register: download_package
     - debug: msg="{{ download_package }}"
-    - name: take nginx conf backup
-      copy:
-        src: "{{ nginx_path }}/{{ nginx_conf }}"
-        dest: "{{ nginx_path }}/{{ nginx_conf }}_bkp_{{ date }}"
-        remote_src: yes
-      register: backup_nginx
-    - debug: msg="{{ backup_nginx }}"
-    - name: package install "{{ tmp_file }}"
-      command: "/usr/bin/rpm -ivhU --prefix {{ rpm_root }} --dbpath {{ rpm_db }} {{ tmp_file }}  --nomd5 --replacepkgs  --force"
-      args:
-        warn: no
-      register: package_install
-    - debug: msg="{{ package_install }}"
-    - name: delete package "{{ tmp_file }}"
-      file:
-        state: absent
-        path: "{{ tmp_file }}"
-    - name: Fetch nginx master process pid
-      shell: "pgrep -u www nginx"
-      register: nginx_master_pid
-    - name: Check if nginx.pid file exists
-      stat:
-        path: "{{ nginx_path }}/logs/nginx.pid"
-      register: pid_file_present
-    - name: Create nginx.pid file, if it doesnt exist already
-      copy:
-        dest: "{{ nginx_path }}/logs/nginx.pid"
-        content: |
-          {{ nginx_master_pid.stdout_lines }}
-      when: not pid_file_present.stat.exists
-    - name: stop nginx
-      command: "{{ nginx_path }}/{{ nginxctl_path }} stop"
-      register: stop_nginx
-    - debug: msg="{{ stop_nginx }}"
-    - name: wait for nginx to stop
-      wait_for:
-        timeout: 30
-    - name: start nginx
-      command: "{{ nginx_path }}/{{ nginxctl_path }} start"
-      register: start_nginx
-    - debug: msg="{{ start_nginx }}"
+    - name: Kill previous running version
+      shell: "echo \"TODO: Kill the process"
+    - name: extract tar
+      shell: "mkdir -p {{ folder }} && tar -xvf {{ folder }}.tar -C {{ folder }}"
+    - name: download package  "{{ frontend_env_download_url }}"
+      get_url:
+        url: "{{ download_url }}"
+        dest: "{{ folder }}/datahub-frontend/env"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+      register: download_package_frontend
+    - debug: msg="{{ download_package_frontend }}"
+    - name: download package  "{{ gms_env_download_url }}"
+      get_url:
+        url: "{{ download_url }}"
+        dest: "{{ folder }}/datahub-gms/env"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+      register: download_package_gms
+    - debug: msg="{{ download_package_gms }}"
+    - name: download package  "{{ upgrade_env_download_url }}"
+      get_url:
+        url: "{{ download_url }}"
+        dest: "{{ folder }}/datahub-upgrade/env"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+      register: download_package_upgrade
+    - debug: msg="{{ download_package_upgrade }}"
+    - name: download package  "{{ elasticsearch_env_download_url }}"
+      get_url:
+        url: "{{ download_url }}"
+        dest: "{{ folder }}/setup/elasticsearch-elasticsearch/env"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+      register: download_package_elasticsearch
+    - debug: msg="{{ download_package_elasticsearch }}"
+    - name: download package  "{{ kafka_env_download_url }}"
+      get_url:
+        url: "{{ download_url }}"
+        dest: "{{ folder }}/setup/kafka-setup/env"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+      register: download_package_kafka
+    - debug: msg="{{ download_package_kafka }}"
+    - name: download package  "{{ mysql_env_download_url }}"
+      get_url:
+        url: "{{ download_url }}"
+        dest: "{{ folder }}/setup/mysql-setup/env"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+      register: download_package_mysql
+    - debug: msg="{{ download_package_mysql }}"
+    - name: check download
+      shell: "ls -R {{ folder }}"
+
+
+# TODO:
+#  1. Download tar files -- Done
+#  2. Extract tar file -- Done
+#  3. Point latest symlink to this folder
+#  4. Run mysql, elastic, kafka setup
+#  5. Gracefully kill previous process
+#  6. Run Datahub Upgrae
+#  7. Run Datahub GMS
+#  8. Run Frontend
+#  9. Retain only last 3 versions

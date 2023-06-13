@@ -21,7 +21,7 @@ dependencies {
     implementation("commons-httpclient:commons-httpclient:20020423") {
       because("previous versions are vulnerable ")
     }
-    implementation('commons-io:commons-io:2.11.0') {
+    implementation('commons-io:commons-io:2.4') {
       because("previous versions are vulnerable to CVE-2021-29425")
     }
   }

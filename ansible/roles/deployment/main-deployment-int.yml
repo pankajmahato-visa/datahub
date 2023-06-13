@@ -5,17 +5,17 @@
 #   username
 #   password
 - hosts:
-    - "{{ deploy_host }}"
+  - "{{ deploy_host }}"
   vars:
     artifactory_path: https://artifactory.trusted.visa.com/vdc
     package_name: datahub
     download_url: "{{ artifactory_path }}/{{ package_name }}/{{ package_name }}-{{ deploy_version}}.tar"
-    frontend_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/dev/datahub-frontend.env"
-    gms_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/dev/datahub-gms.env"
-    upgrade_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/dev/datahub-upgrade.env"
-    elasticsearch_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/dev/elasticsearch-setup.env"
-    kafka_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/dev/kafka-setup.env"
-    mysql_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/dev/mysql-setup.env"
+    frontend_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/int/datahub-frontend.env"
+    gms_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/int/datahub-gms.env"
+    upgrade_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/int/datahub-upgrade.env"
+    elasticsearch_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/int/elasticsearch-setup.env"
+    kafka_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/int/kafka-setup.env"
+    mysql_env_download_url: "{{ artifactory_path }}/{{ package_name }}/env/int/mysql-setup.env"
     folder: "/datahub/{{ package_name }}-{{ deploy_version}}"
     date: "{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
   gather_facts: no
