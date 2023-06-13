@@ -19,7 +19,7 @@ jobs:
     steps:
       artifactory:
         uploadHost: 'https://artifactory.trusted.visa.com'
-        uploadFiles: '[{"pattern":"./datahub-*.tar","target":"vdc/datahub/"}]'
+        uploadFiles: '[{"pattern":"datahub-v*.tar","target":"vdc/datahub/"}]'
         credentialsId: vdc-upload
   deployment:
     tool: ansible
