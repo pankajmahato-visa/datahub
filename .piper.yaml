@@ -1,7 +1,7 @@
 jobs:
   name: datahub
   type: generic
-  alert: CHANGE_EMAIL.visainc.onmicrosoft.com@amer.teams.ms
+  alert: 837a4955.visainc.onmicrosoft.com@amer.teams.ms
   askNowId: 0012345
   buildUrl: https://chocolate.factory.visa.com/job/dlc/job/datahub/
   steps:
@@ -22,7 +22,7 @@ jobs:
         uploadFiles: '[{"pattern":"datahub-v*.tar","target":"vdc/datahub/"}]'
         credentialsId: vdc-upload
   deployment:
-    tool: ansible
+    tool: ansible-file
     defaultEnvironment: int
     dev:
       host: datahub
