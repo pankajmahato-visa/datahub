@@ -1,5 +1,8 @@
 #!/bin/bash
 
+touch env/datahub-gms-creds.env
+mkdir -p logs/gms/
+
 if [[ $ELASTICSEARCH_USE_SSL == true ]]; then
   ELASTICSEARCH_PROTOCOL=https
 else

@@ -1,6 +1,9 @@
 #!/bin/sh
 set -u
 
+touch env/datahub-frontend-creds.env
+mkdir -p logs/datahub-frontend/
+
 PROMETHEUS_AGENT=""
 if [[ ${ENABLE_PROMETHEUS:-false} == true ]]; then
   PROMETHEUS_AGENT="-javaagent:jmx_prometheus_javaagent.jar=4318:/datahub-frontend/client-prometheus-config.yaml"
@@ -36,8 +39,8 @@ source env/datahub-frontend-creds.env
 set +o allexport
 
 export JAVA_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
-   -Xms512m \
-   -Xmx1024m \
+   -Xms1g \
+   -Xmx2g \
    -Dhttp.port=$SERVER_PORT \
    -Dconfig.file=datahub-frontend/conf/application.conf \
    -Djava.security.auth.login.config=datahub-frontend/conf/jaas.conf \
@@ -45,7 +48,8 @@ export JAVA_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
    -Dlogback.debug=false \
    ${PROMETHEUS_AGENT:-} ${OTEL_AGENT:-} \
    ${TRUSTSTORE_FILE:-} ${TRUSTSTORE_TYPE:-} ${TRUSTSTORE_PASSWORD:-} \
-   -Dpidfile.path=/dev/null"
+   -Dlogback.debug=false \
+   -Dpidfile.path=/datahub/datahub-artifact/datahub-frontend/datahub-frontend.pid"
 
 exec ./datahub-frontend/bin/datahub-frontend
 
