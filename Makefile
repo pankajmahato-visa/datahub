@@ -28,32 +28,25 @@ clean:
 	echo "Running Metadata Service WAR Clean Task"; \
 	./gradlew --stacktrace :metadata-service:war:clean; \
 	echo "Running Datahub Upgrade Clean Task"; \
-	./gradlew --stacktrace :datahub-upgrade:clean; \
-	echo "Running Datahub Spark Lineage Clean Task"; \
-	./gradlew --stacktrace :metadata-integration:java:spark-lineage:clean
+	./gradlew --stacktrace :datahub-upgrade:clean
 
 build:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
-	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD";
-#	echo "Running Metadata Service WAR build Task"; \
-#	./gradlew --stacktrace :metadata-service:war:build; \
-#	echo "Running Datahub Upgrade build Task"; \
-#	./gradlew --stacktrace :datahub-upgrade:build; \
-#	echo "Running Datahub Frontend build Task"; \
-#	./gradlew --stacktrace :datahub-frontend:build;
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
-	echo "Running Datahub Spark Lineage build Task"; \
-	./gradlew --stacktrace :metadata-integration:java:spark-lineage:build -x test
+	echo "Running Metadata Service WAR build Task"; \
+	./gradlew --stacktrace :metadata-service:war:build; \
+	echo "Running Datahub Upgrade build Task"; \
+	./gradlew --stacktrace :datahub-upgrade:build; \
+	echo "Running Datahub Frontend build Task"; \
+	./gradlew --stacktrace :datahub-frontend:build
 
-#test: datahub-upgrade-test metadata-service-test datahub-frontend-test
-test:
-	echo "TEST"
+test: datahub-upgrade-test metadata-service-test datahub-frontend-test
 
 datahub-upgrade-test:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
 	echo "Running Datahub Upgrade Test Task"; \
-	./gradlew --stacktrace --scan :datahub-upgrade:test
+	./gradlew --stacktrace :datahub-upgrade:test
 
 metadata-service-test:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
@@ -80,7 +73,7 @@ datahub-frontend-test:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
 	echo "Running Datahub Upgrade Test Task"; \
-	./gradlew --stacktrace --stacktrace :datahub-frontend:test
+	./gradlew --stacktrace :datahub-frontend:test
 
 package:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
@@ -94,7 +87,6 @@ package:
 	mkdir -p datahub-artifact/datahub-gms; \
 	mkdir -p datahub-artifact/datahub-frontend/datahub-frontend; \
 	mkdir -p datahub-artifact/datahub-upgrade; \
-	mkdir -p datahub-artifact/datahub-spark-lineage; \
 	mkdir -p datahub-artifact/certs; \
 	mkdir -p datahub-artifact/setup/elasticsearch-setup; \
 	mkdir -p datahub-artifact/setup/kafka-setup; \
@@ -106,24 +98,22 @@ package:
 	tar -xvf datahub-frontend/build/distributions/datahub-frontend-*.tar -C datahub-artifact/datahub-frontend/datahub-frontend --strip-components 1; \
 	echo "2. Copying Datahub Upgrade JAR"; \
 	cp datahub-upgrade/build/libs/datahub-upgrade.jar datahub-artifact/datahub-upgrade; \
-	echo "3. Copying Datahub Spark Lineage JAR"; \
-    cp metadata-integration/java/spark-lineage/build/libs/datahub-spark-lineage-*jar datahub-artifact/datahub-spark-lineage/datahub-spark-lineage-$(subst -,.,$(TAG_VERSION)).jar; \
-	echo "4. Copying Metadata Service WAR"; \
+	echo "3. Copying Metadata Service WAR"; \
 	cp metadata-service/war/build/libs/war.war datahub-artifact/datahub-gms; \
-	echo "5. Copying entity-registry.yml"; \
+	echo "4. Copying entity-registry.yml"; \
 	cp metadata-models/src/main/resources/entity-registry.yml datahub-artifact/resources; \
-	echo "6. Copying elasticsearch json files"; \
+	echo "5. Copying elasticsearch json files"; \
     cp metadata-service/restli-servlet-impl/src/main/resources/index/usage-event/{index_template.json,policy.json} datahub-artifact/setup/elasticsearch-setup; \
-	echo "7. Downloading jetty files"; \
+	echo "6. Downloading jetty files"; \
 	chmod u+x download.sh; \
 	./download.sh; \
-	echo "8. Downloading VISA Certificates"; \
-	echo "9. Copying Datahub GMS files"; \
+	echo "7. Downloading VISA Certificates"; \
+	echo "8. Copying Datahub GMS files"; \
 	cp docker/datahub-gms/jetty.xml datahub-artifact/datahub-gms; \
-	echo "10. Copying Deploy Scripts"; \
+	echo "9. Copying Deploy Scripts"; \
 	cp -a deploy-scripts/. datahub-artifact/; \
 	echo "Final datahub-artifact folder tree"; \
-	find datahub-artifact | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/";
-#	tar cvf ${TAR_BALL_VERSION}.tar datahub-artifact;
+	find datahub-artifact | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"; \
+	tar cvf ${TAR_BALL_VERSION}.tar datahub-artifact; \
 	ls -lah ${TAR_BALL_VERSION}.tar; \
 	echo "\n\nPackage Completed"
