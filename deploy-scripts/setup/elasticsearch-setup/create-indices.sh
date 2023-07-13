@@ -2,8 +2,12 @@
 
 # Export all Environment Variables
 set -o allexport
-source env/elasticsearch-setup.env
-source env/elasticsearch-setup-creds.env
+if [ -f ../../env/elasticsearch-setup.env ] ; then
+  source ../../env/elasticsearch-setup.env
+else
+  source env/elasticsearch-setup.env
+fi
+[ -f ../../env/elasticsearch-setup-creds.env ] && source ../../env/elasticsearch-setup-creds.env
 set +o allexport
 
 set -e

@@ -2,8 +2,12 @@
 
 # Export all Environment Variables
 set -o allexport
-source env/datahub-upgrade.env
-source env/datahub-upgrade-creds.env
+if [ -f ../../env/datahub-upgrade.env ] ; then
+  source ../../env/datahub-upgrade.env
+else
+  source env/datahub-upgrade.env
+fi
+[ -f ../../env/datahub-upgrade-creds.env ] && source ../../env/datahub-upgrade.env
 set +o allexport
 
 java -jar datahub-upgrade.jar

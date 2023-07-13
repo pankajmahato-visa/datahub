@@ -2,8 +2,12 @@
 
 # Export all Environment Variables
 set -o allexport
-source env/kafka-setup.env
-source env/kafka-setup-creds.env
+if [ -f ../../env/kafka-setup.env ] ; then
+  source ../../env/kafka-setup.env
+else
+  source env/kafka-setup.env
+fi
+[ -f ../../env/kafka-setup-creds.env ] && source ../../env/kafka-setup-creds.env
 set +o allexport
 
 ## Exit early if PRECREATION is not needed

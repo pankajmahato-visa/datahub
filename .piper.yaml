@@ -22,29 +22,27 @@ jobs:
         uploadFiles: '[{"pattern":"datahub-v*.tar","target":"vdc/datahub/"},{"pattern":"datahub-artifact/datahub-spark-lineage/datahub-spark-lineage-v*.jar","target":"vdc/datahub/"}]'
         credentialsId: vdc-upload
   deployment:
-    tool: ansible-file
-    defaultEnvironment: int
+    tool: ansible-rpm
+    stack:
+      engine: host
+      credentialsId: datahub-deployment
     dev:
       host: datahub
       playbook: ansible/roles/deployment/main.yml
       inventory: ansible/inventories/dev/hosts
-      deployUser: svc_am_cicd
       credentialsId: datahub-deployment
-    int:
+    integration:
       host: datahub
       playbook: ansible/roles/deployment/main-deployment-int.yml
       inventory: ansible/inventories/int/hosts
-      deployUser: svc_am_cicd
       credentialsId: datahub-deployment
     oce:
       host: datahub
       playbook: ansible/roles/deployment/main-deployment-prod-oce.yml
       inventory: ansible/inventories/oce/hosts
-      deployUser: svc_am_cicd_prod
       credentialsId: datahub-deployment
     occ:
       host: datahub
       playbook: ansible/roles/deployment/main-deployment-prod-occ.yml
       inventory: ansible/inventories/occ/hosts
-      deployUser: svc_am_cicd_prod
       credentialsId: datahub-deployment

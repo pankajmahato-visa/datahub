@@ -1,5 +1,4 @@
 #!/bin/sh
-set -u
 
 touch env/datahub-frontend-creds.env
 mkdir -p logs/datahub-frontend/
@@ -34,22 +33,27 @@ fi
 
 # Export all Environment Variables
 set -o allexport
-source env/datahub-frontend.env
-source env/datahub-frontend-creds.env
+if [ -f ../../env/datahub-frontend.env ] ; then
+  source ../../env/datahub-frontend.env
+else
+  source env/datahub-frontend.env
+fi
+[ -f ../../env/datahub-frontend-creds.env ] && source ../../env/datahub-frontend-creds.env
 set +o allexport
 
-export JAVA_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
-   -Xms1g \
-   -Xmx2g \
-   -Dhttp.port=$SERVER_PORT \
-   -Dconfig.file=datahub-frontend/conf/application.conf \
-   -Djava.security.auth.login.config=datahub-frontend/conf/jaas.conf \
-   -Dlogback.configurationFile=datahub-frontend/conf/logback.xml \
-   -Dlogback.debug=false \
-   ${PROMETHEUS_AGENT:-} ${OTEL_AGENT:-} \
-   ${TRUSTSTORE_FILE:-} ${TRUSTSTORE_TYPE:-} ${TRUSTSTORE_PASSWORD:-} \
-   -Dlogback.debug=false \
-   -Dpidfile.path=/datahub/datahub-artifact/datahub-frontend/datahub-frontend.pid"
+[  -z "$DATAHUB_FRONTEND_HEAP_OPTS" ] && export DATAHUB_FRONTEND_HEAP_OPTS="-Xms1g -Xmx2g"
+
+[  -z "$GMS_HEAP_OPTS" ] && export GMS_HEAP_OPTS="-Xms1g -Xmx4g"
+
+export DATAHUB_FRONTEND_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
+  ${DATAHUB_FRONTEND_HEAP_OPTS} \
+  -Dhttp.port=$SERVER_PORT \
+  -Dconfig.file=datahub-frontend/conf/application.conf \
+  -Djava.security.auth.login.config=datahub-frontend/conf/jaas.conf \
+  -Dlogback.configurationFile=datahub-frontend/conf/logback.xml \
+  ${PROMETHEUS_AGENT:-} ${OTEL_AGENT:-} \
+  ${TRUSTSTORE_FILE:-} ${TRUSTSTORE_TYPE:-} ${TRUSTSTORE_PASSWORD:-} \
+  -Dlogback.debug=false "
 
 exec ./datahub-frontend/bin/datahub-frontend
 
