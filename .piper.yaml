@@ -23,6 +23,7 @@ jobs:
         credentialsId: vdc-upload
   deployment:
     tool: ansible-rpm
+    environment: dev
     stack:
       engine: host
       credentialsId: datahub-deployment

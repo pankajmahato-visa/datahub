@@ -36,8 +36,7 @@
       args:
         removes: "{{ datahub_root_folder }}/datahub-latest/"
       register: task_output
-    - debug: msg="{{ task_output.stdout_lines }}"
-    - debug: msg="{{ task_output.stderr_lines }}"
+    - debug: msg="{{ task_output }}"
 
 
 
@@ -54,8 +53,7 @@
       args:
         removes: "{{ datahub_root_folder }}/datahub-latest/"
       register: task_output
-    - debug: msg="{{ task_output.stdout_lines }}"
-    - debug: msg="{{ task_output.stderr_lines }}"
+    - debug: msg="{{ task_output }}"
 
 
 
@@ -76,8 +74,7 @@
       shell: |
         mkdir -p {{ folder }} && tar -xvf {{ folder }}.tar -C {{ folder }} --strip-components 1
       register: task_output
-    - debug: msg="{{ task_output.stdout_lines }}"
-    - debug: msg="{{ task_output.stderr_lines }}"
+    - debug: msg="{{ task_output }}"
 
 
 
@@ -88,8 +85,7 @@
       args:
         removes: "{{ datahub_root_folder }}/datahub-latest"
       register: task_output
-    - debug: msg="{{ task_output.stdout_lines }}"
-    - debug: msg="{{ task_output.stderr_lines }}"
+    - debug: msg="{{ task_output }}"
 
 
 
@@ -97,8 +93,7 @@
       shell: |
         ln -shvf {{ folder}} {{ datahub_root_folder }}/datahub-latest
       register: task_output
-    - debug: msg="{{ task_output.stdout_lines }}"
-    - debug: msg="{{ task_output.stderr_lines }}"
+    - debug: msg="{{ task_output }}"
 
 
 
@@ -184,8 +179,7 @@
       shell: |
         ls -lah {{ datahub_root_folder }}/datahub-latest/
       register: task_output
-    - debug: msg="{{ task_output.stdout_lines }}"
-    - debug: msg="{{ task_output.stderr_lines }}"
+    - debug: msg="{{ task_output }}"
 
 
 
@@ -196,8 +190,7 @@
         nohup sh start.sh > /dev/null 2> datahub-gms.log < /dev/null & echo $! > datahub-gms.pid
         disown
       register: task_output
-    - debug: msg="{{ task_output.stdout_lines }}"
-    - debug: msg="{{ task_output.stderr_lines }}"
+    - debug: msg="{{ task_output }}"
 
 
 
@@ -208,8 +201,7 @@
         nohup sh start.sh > /dev/null 2> datahub-frontend.log < /dev/null & echo $! > datahub-frontend.pid
         disown
       register: task_output
-    - debug: msg="{{ task_output.stdout_lines }}"
-    - debug: msg="{{ task_output.stderr_lines }}"
+    - debug: msg="{{ task_output }}"
 
 
 
@@ -224,7 +216,6 @@
         ls -dt */ | grep -E 'datahub-v'| tail -n +{{files_to_retain + 1 }} | xargs -r rm -rf --
         ls -t datahub-v*.tar | tail -n +{{files_to_retain + 1 }} | xargs -r rm -rf --
       register: task_output
-    - debug: msg="{{ task_output.stdout_lines }}"
-    - debug: msg="{{ task_output.stderr_lines }}"
+    - debug: msg="{{ task_output }}"
 
 
