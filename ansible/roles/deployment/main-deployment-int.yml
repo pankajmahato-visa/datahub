@@ -17,7 +17,7 @@
     elasticsearch_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/int/elasticsearch-setup.env"
     kafka_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/int/kafka-setup.env"
     mysql_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/int/mysql-setup.env"
-    folder: "/Users/pamahato/github/active-metadata/forked/testansible/{{ package_name }}-{{ deploy_version}}"
+    folder: "/datahub/{{ package_name }}-{{ deploy_version}}"
     datahub_root_folder: "/datahub"
     date: "{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
     files_to_retain: 3
