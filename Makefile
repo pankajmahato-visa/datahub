@@ -28,7 +28,9 @@ clean:
 	echo "Running Metadata Service WAR Clean Task"; \
 	./gradlew --stacktrace :metadata-service:war:clean; \
 	echo "Running Datahub Upgrade Clean Task"; \
-	./gradlew --stacktrace :datahub-upgrade:clean
+	./gradlew --stacktrace :datahub-upgrade:clean; \
+	echo "Running Crawler Test Clean Task"; \
+	./gradlew --stacktrace :crawler-test:clean
 
 build:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
@@ -38,7 +40,10 @@ build:
 	echo "Running Datahub Upgrade build Task"; \
 	./gradlew --stacktrace :datahub-upgrade:build; \
 	echo "Running Datahub Frontend build Task"; \
-	./gradlew --stacktrace :datahub-frontend:build
+	./gradlew --stacktrace :datahub-frontend:build; \
+	echo "Running Crawler Test build Task"; \
+	./gradlew --stacktrace :crawler-test:build
+
 
 test: datahub-upgrade-test metadata-service-test datahub-frontend-test
 
@@ -87,6 +92,7 @@ package:
 	mkdir -p datahub-artifact/datahub-gms; \
 	mkdir -p datahub-artifact/datahub-frontend/datahub-frontend; \
 	mkdir -p datahub-artifact/datahub-upgrade; \
+	mkdir -p datahub-artifact/crawler-test; \
 	mkdir -p datahub-artifact/certs; \
 	mkdir -p datahub-artifact/setup/elasticsearch-setup; \
 	mkdir -p datahub-artifact/setup/kafka-setup; \
@@ -100,17 +106,20 @@ package:
 	cp datahub-upgrade/build/libs/datahub-upgrade.jar datahub-artifact/datahub-upgrade; \
 	echo "3. Copying Metadata Service WAR"; \
 	cp metadata-service/war/build/libs/war.war datahub-artifact/datahub-gms; \
-	echo "4. Copying entity-registry.yml"; \
+	echo "4. Copying Crawler Test JAR"; \
+	cp crawler-test/build/libs/crawler-test.jar datahub-artifact/crawler-test; \
+	cp crawler-test/{crawler-test.properties,README.md} datahub-artifact/crawler-test; \
+	echo "5. Copying entity-registry.yml"; \
 	cp metadata-models/src/main/resources/entity-registry.yml datahub-artifact/resources; \
-	echo "5. Copying elasticsearch json files"; \
-    cp metadata-service/restli-servlet-impl/src/main/resources/index/usage-event/{index_template.json,policy.json} datahub-artifact/setup/elasticsearch-setup; \
-	echo "6. Downloading jetty files"; \
+	echo "6. Copying elasticsearch json files"; \
+	cp metadata-service/restli-servlet-impl/src/main/resources/index/usage-event/{index_template.json,policy.json} datahub-artifact/setup/elasticsearch-setup; \
+	echo "7. Downloading jetty files"; \
 	chmod u+x download.sh; \
 	./download.sh; \
-	echo "7. Downloading VISA Certificates"; \
-	echo "8. Copying Datahub GMS files"; \
+	echo "8. Downloading VISA Certificates"; \
+	echo "9. Copying Datahub GMS files"; \
 	cp docker/datahub-gms/jetty.xml datahub-artifact/datahub-gms; \
-	echo "9. Copying Deploy Scripts"; \
+	echo "10. Copying Deploy Scripts"; \
 	cp -a deploy-scripts/. datahub-artifact/; \
 	echo "Final datahub-artifact folder tree"; \
 	find datahub-artifact | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"; \

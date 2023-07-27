@@ -75,3 +75,5 @@ include 'metadata-ingestion-modules:airflow-plugin'
 include 'smoke-test'
 include 'metadata-auth:auth-api'
 include 'metadata-integration:java:examples'
+include 'crawler-test'
+
