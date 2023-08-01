@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,7 @@ public class HiveTest {
 
     public static void main(String[] args) throws SQLException, IOException {
 
-
+        Instant globalStart = Instant.now();
         Properties prop = new Properties();
         prop.load(new FileInputStream(args[0]));
 
@@ -40,8 +41,7 @@ public class HiveTest {
         String hdfsSite = prop.getProperty("hdfsSite");
         String hiveSite = prop.getProperty("hiveSite");
         String outputPath = prop.getProperty("output");
-        System.out.println(outputPath);
-        outputPath = outputPath == null || outputPath.isBlank() ? "./" : outputPath.endsWith("/") ? outputPath : outputPath + "/";
+        outputPath = outputPath == null || outputPath.trim().length() == 0 ? "./" : outputPath.endsWith("/") ? outputPath : outputPath + "/";
 
         String username = prop.getProperty("username");
         String keytab = prop.getProperty("keytab");
@@ -79,51 +79,64 @@ public class HiveTest {
         }
 
 
-        HiveConnectionService hiveConnectionService = new HiveConnectionService(ldapUrl, driverName);
+        HiveConnectionService hiveConnectionService = new HiveConnectionService(ldapUrl, driverName, jdbcUrl);
+        hiveConnectionService.authenticate(username, keytab, coreSite, hdfsSite, hiveSite, krb5Path);
+        Instant start = Instant.now();
         List<Map<String, String>> databaseMap = hiveConnectionService
-                .executeHiveQuery(username, keytab, jdbcUrl, coreSite, hdfsSite, hiveSite, krb5Path, databaseQuery);
+                .executeHiveQuery(databaseQuery);
 
+        Instant end = Instant.now();
         String databaseOutputPath = outputPath + "database-list.txt";
         FileUtil.writeFile(databaseOutputPath, objectMapper.writeValueAsString(databaseMap));
-        System.out.println("\n\n#############\n\nWriting file " + databaseOutputPath + " \n\n#############\n\n");
+        System.out.println(String.format("\n\n#############\n\nWriting file %s \n\nTime Taken: %s\n\n#############\n\n",
+                databaseOutputPath, ReadableTime.format(end.toEpochMilli() - start.toEpochMilli())));
 
         new File("schemas").mkdirs();
 
-        List<String> schemaList = Arrays.asList(schema.split(","));
+        List<String> schemaList = Arrays.asList(schema.trim().split("\\s*,+\\s*,*\\s*"));
         for (String schemaName : schemaList) {
+            start = Instant.now();
             List<Map<String, String>> data = hiveConnectionService
-                    .executeHiveQuery(username, keytab, jdbcUrl, coreSite, hdfsSite, hiveSite, krb5Path, String.format(tablesQuery, schemaName));
+                    .executeHiveQuery(String.format(tablesQuery, schemaName));
 
+            end = Instant.now();
             String schemaOutputPath = outputPath + "schemas/" + schemaName + ".txt";
             FileUtil.writeFile(schemaOutputPath, objectMapper.writeValueAsString(data));
-            System.out.println("\n\n#############\n\nWriting file " + schemaOutputPath + " \n\n#############\n\n");
+            System.out.println(String.format("\n\n#############\n\nWriting file %s \n\nTime Taken: %s\n\n#############\n\n",
+                    schemaOutputPath, ReadableTime.format(end.toEpochMilli() - start.toEpochMilli())));
 
             new File("schemas/" + schemaName).mkdirs();
             String table = prop.getProperty(schema + ".table");
-            if (table == null || "*".equals(table) || table.isBlank()) {
+            if (table == null || "*".equals(table) || table.trim().length() == 0) {
                 for (Map<String, String> map : data) {
-                    crawlTable(outputPath, datasetQuery, username, keytab, jdbcUrl, coreSite, hdfsSite, hiveSite, krb5Path,
-                            hiveConnectionService, schemaName, map.get("tab_name"));
+                    crawlTable(outputPath, datasetQuery, hiveConnectionService, schemaName, map.get("tab_name"));
                 }
             } else {
-                List<String> tableList = Arrays.asList(table.split(","));
+                List<String> tableList = Arrays.asList(table.trim().split("\\s*,+\\s*,*\\s*"));
                 for (String tableName : tableList) {
-                    crawlTable(outputPath, datasetQuery, username, keytab, jdbcUrl, coreSite, hdfsSite, hiveSite, krb5Path,
-                            hiveConnectionService, schemaName, tableName);
+                    crawlTable(outputPath, datasetQuery, hiveConnectionService, schemaName, tableName);
                 }
             }
         }
 
+        hiveConnectionService.close();
+
+        Instant globalEnd = Instant.now();
+        System.out.println(String.format("Time taken for completion: %s",
+                ReadableTime.format(globalEnd.toEpochMilli() - globalStart.toEpochMilli())));
+
     }
 
-    private static void crawlTable(String outputPath, String tablesQuery, String username, String keytab, String jdbcUrl, String coreSite,
-                                   String hdfsSite, String hiveSite, String krb5Path, HiveConnectionService hiveConnectionService,
+    private static void crawlTable(String outputPath, String tablesQuery, HiveConnectionService hiveConnectionService,
                                    String schemaName, String tableName) throws SQLException, IOException {
+        Instant start = Instant.now();
         List<Map<String, String>> tableData = hiveConnectionService
-                .executeHiveQuery(username, keytab, jdbcUrl, coreSite, hdfsSite, hiveSite, krb5Path, String.format(tablesQuery, schemaName, tableName));
+                .executeHiveQuery(String.format(tablesQuery, schemaName, tableName));
 
+        Instant end = Instant.now();
         String tableOutputPath = outputPath + "schemas/" + schemaName + "/" + tableName + ".txt";
         FileUtil.writeFile(tableOutputPath, objectMapper.writeValueAsString(tableData));
-        System.out.println("\n\n#############\n\nWriting file " + tableOutputPath + " \n\n#############\n\n");
+        System.out.println(String.format("\n\n#############\n\nWriting file %s \n\nTime Taken: %s\n\n#############\n\n",
+                tableOutputPath, ReadableTime.format(end.toEpochMilli() - start.toEpochMilli())));
     }
 }

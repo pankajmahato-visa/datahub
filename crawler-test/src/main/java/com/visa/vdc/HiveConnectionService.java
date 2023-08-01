@@ -4,7 +4,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.security.UserGroupInformation;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,26 +20,18 @@ public class HiveConnectionService {
 
     private String driverName;
     private String ldapUrl;
+    private String jdbcUrl;
+    private Connection conn;
 
-    public HiveConnectionService(String ldapUrl, String driverName) {
+    public HiveConnectionService(String ldapUrl, String driverName, String jdbcUrl) {
         this.ldapUrl = ldapUrl;
         this.driverName = driverName;
+        this.jdbcUrl = jdbcUrl;
     }
 
-    public List<Map<String, String>> executeHiveQuery(String userName, String keyTabPath, String jdbcURL,
-                                                      String coreSite, String hdfsSite, String hiveSite, String krb5Path, String query)
-            throws SQLException {
+    public void authenticate(String userName, String keyTabPath, String coreSite, String hdfsSite, String hiveSite, String krb5Path) throws SQLException {
         try {
             if (driverName != null) {
-                String absolutePath = new File(".").getAbsolutePath();
-                System.out.println(absolutePath);
-
-
-                String classpath = System.getProperty("java.class.path");
-                String[] classPathValues = classpath.split(File.pathSeparator);
-                for (String classPath : classPathValues) {
-                    System.out.println(classPath);
-                }
                 Class.forName(driverName);
             }
         } catch (ClassNotFoundException e) {
@@ -75,19 +66,24 @@ public class HiveConnectionService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        List<Map<String, String>> resultList = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection(jdbcURL)) {
+        conn = DriverManager.getConnection(jdbcUrl);
+    }
 
-            Statement stmt = conn.createStatement();
-            ResultSet res = stmt.executeQuery(query);
-            while (res.next()) {
-                Map<String, String> map = new LinkedHashMap<>();
-                for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
-                    map.put(res.getMetaData().getColumnName(i), res.getString(i));
-                }
-                resultList.add(map);
+    public List<Map<String, String>> executeHiveQuery(String query) throws SQLException {
+        List<Map<String, String>> resultList = new ArrayList<>();
+        Statement stmt = conn.createStatement();
+        ResultSet res = stmt.executeQuery(query);
+        while (res.next()) {
+            Map<String, String> map = new LinkedHashMap<>();
+            for (int i = 1; i <= res.getMetaData().getColumnCount(); i++) {
+                map.put(res.getMetaData().getColumnName(i), res.getString(i));
             }
+            resultList.add(map);
         }
         return resultList;
+    }
+
+    public void close() throws SQLException {
+        conn.close();
     }
 }
