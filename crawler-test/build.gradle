@@ -12,8 +12,8 @@ tasks.withType(JavaCompile).configureEach {
 dependencies {
   implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
-  implementation 'org.apache.hadoop:hadoop-common:2.7.3.2.6.5.179-4'
-  implementation 'org.apache.hive:hive-jdbc:1.2.1000.2.6.5.179-4'
+  implementation 'org.apache.hadoop:hadoop-common:2.7.3.2.6.5.0-292'
+  implementation 'org.apache.hive:hive-jdbc:1.2.1000.2.6.5.0-292'
 }
 shadowJar {
   zip64 true
