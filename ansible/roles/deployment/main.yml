@@ -91,7 +91,7 @@
 
     - name: Pointing latest symlink to latest Downloaded TAR Ball
       shell: |
-        ln -shvf {{ folder}} {{ datahub_root_folder }}/datahub-latest
+        ln -snvf {{ folder}} {{ datahub_root_folder }}/datahub-latest
       register: task_output
     - debug: msg="{{ task_output }}"
 
