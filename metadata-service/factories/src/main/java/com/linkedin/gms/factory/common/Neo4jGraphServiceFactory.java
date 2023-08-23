@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({Neo4jDriverFactory.class, EntityRegistryFactory.class})
 public class Neo4jGraphServiceFactory {
- @Value("${neo4j.database}")
+  @Value("${neo4j.database}")
   private String neo4jDatabase;
 
   @Autowired

@@ -3,6 +3,19 @@
 touch env/datahub-frontend-creds.env
 mkdir -p logs/datahub-frontend/
 
+# make sure there is no whitespace at the beginning and the end of
+# this string
+
+# Export all Environment Variables
+set -o allexport
+if [ -f ../../env/datahub-frontend.env ] ; then
+  source ../../env/datahub-frontend.env
+else
+  source env/datahub-frontend.env
+fi
+[ -f ../../env/datahub-frontend-creds.env ] && source ../../env/datahub-frontend-creds.env
+set +o allexport
+
 PROMETHEUS_AGENT=""
 if [[ ${ENABLE_PROMETHEUS:-false} == true ]]; then
   PROMETHEUS_AGENT="-javaagent:jmx_prometheus_javaagent.jar=4318:/datahub-frontend/client-prometheus-config.yaml"
@@ -27,19 +40,6 @@ TRUSTSTORE_PASSWORD=""
 if [[ ! -z ${SSL_TRUSTSTORE_PASSWORD:-} ]]; then
   TRUSTSTORE_PASSWORD="-Djavax.net.ssl.trustStorePassword=$SSL_TRUSTSTORE_PASSWORD"
 fi
-
-# make sure there is no whitespace at the beginning and the end of
-# this string
-
-# Export all Environment Variables
-set -o allexport
-if [ -f ../../env/datahub-frontend.env ] ; then
-  source ../../env/datahub-frontend.env
-else
-  source env/datahub-frontend.env
-fi
-[ -f ../../env/datahub-frontend-creds.env ] && source ../../env/datahub-frontend-creds.env
-set +o allexport
 
 [  -z "$DATAHUB_FRONTEND_HEAP_OPTS" ] && export DATAHUB_FRONTEND_HEAP_OPTS="-Xms1g -Xmx2g"
 

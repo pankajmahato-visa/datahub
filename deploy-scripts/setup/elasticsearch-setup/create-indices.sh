@@ -2,12 +2,12 @@
 
 # Export all Environment Variables
 set -o allexport
-if [ -f ../../env/elasticsearch-setup.env ] ; then
-  source ../../env/elasticsearch-setup.env
+if [ -f ../../../env/elasticsearch-setup.env ] ; then
+  source ../../../env/elasticsearch-setup.env
 else
   source env/elasticsearch-setup.env
 fi
-[ -f ../../env/elasticsearch-setup-creds.env ] && source ../../env/elasticsearch-setup-creds.env
+[ -f ../../../env/elasticsearch-setup-creds.env ] && source ../../../env/elasticsearch-setup-creds.env
 set +o allexport
 
 set -e
@@ -61,7 +61,7 @@ else
 fi
 
 # path where index definitions are stored
-INDEX_DEFINITIONS_ROOT=/index/usage-event
+# INDEX_DEFINITIONS_ROOT=/index/usage-event
 
 
 # check Elasticsearch for given index/resource (first argument)

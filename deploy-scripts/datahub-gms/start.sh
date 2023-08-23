@@ -3,6 +3,16 @@
 touch env/datahub-gms-creds.env
 mkdir -p logs/gms/
 
+# Export all Environment Variables
+set -o allexport
+if [ -f ../../env/datahub-gms.env ] ; then
+  source ../../env/datahub-gms.env
+else
+  source env/datahub-gms.env
+fi
+[ -f ../../env/datahub-gms-creds.env ] && source ../../env/datahub-gms-creds.env
+set +o allexport
+
 if [[ $ELASTICSEARCH_USE_SSL == true ]]; then
   ELASTICSEARCH_PROTOCOL=https
 else
@@ -18,16 +28,6 @@ PROMETHEUS_AGENT=""
 if [[ $ENABLE_PROMETHEUS == true ]]; then
   PROMETHEUS_AGENT="-javaagent:jmx_prometheus_javaagent.jar=4318:/datahub/datahub-gms/scripts/prometheus-config.yaml "
 fi
-
-# Export all Environment Variables
-set -o allexport
-if [ -f ../../env/datahub-gms.env ] ; then
-  source ../../env/datahub-gms.env
-else
-  source env/datahub-gms.env
-fi
-[ -f ../../env/datahub-gms-creds.env ] && source ../../env/datahub-gms-creds.env
-set +o allexport
 
 [  -z "$GMS_HEAP_OPTS" ] && export GMS_HEAP_OPTS="-Xms1g -Xmx4g"
 
