@@ -12,15 +12,15 @@ export const GroupsOnboardingConfig: OnboardingStep[] = [
         content: (
             <Typography.Paragraph>
                 <p>
-                    Welcome to Datahub <strong>Groups</strong>!
+                    Welcome to Visa Data Catalog <strong>Groups</strong>!
                 </p>
                 <p>
                     <strong>Groups</strong> are collections of users which can be used to assign ownership to assets and
                     manage access.
                 </p>
                 <p>
-                    <strong>Groups</strong> can be created natively within DataHub, or synced from your Identity
-                    Provider.
+                    <strong>Groups</strong> can be created natively within Visa Data Catalog, or synced from your
+                    Identity Provider.
                 </p>
                 <p>
                     Learn more about <strong>Groups</strong>{' '}
