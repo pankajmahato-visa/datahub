@@ -11,6 +11,7 @@
     repo_name: datahub
     package_name: datahub
     download_url: "{{ artifactory_path }}/{{ repo_name }}/{{ package_name }}-{{ deploy_version}}.tar"
+    visa_certificates_download_url: "{{ artifactory_path }}/{{ repo_name }}/certificates/dev/cacerts"
     frontend_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/dev/datahub-frontend.env"
     gms_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/dev/datahub-gms.env"
     upgrade_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/dev/datahub-upgrade.env"
@@ -92,6 +93,19 @@
     - name: Pointing latest symlink to latest Downloaded TAR Ball
       shell: |
         ln -snvf {{ folder}} {{ datahub_root_folder }}/datahub-latest
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Download VISA Certificates  "{{ visa_certificates_download_url }}"
+      get_url:
+        url: "{{ visa_certificates_download_url }}"
+        dest: "{{ folder }}/certs"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+        force: true
       register: task_output
     - debug: msg="{{ task_output }}"
 
