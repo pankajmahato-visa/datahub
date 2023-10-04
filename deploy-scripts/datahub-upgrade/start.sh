@@ -11,13 +11,13 @@ fi
 set +o allexport
 
 TRUSTSTORE_FILE=""
-if [[ ! -z ${SSL_TRUSTSTORE_FILE:-} ]]; then
-  TRUSTSTORE_FILE="-Djavax.net.ssl.trustStore=$SSL_TRUSTSTORE_FILE"
+if [[ ! -z ${KEYSTORE_FILE:-} ]]; then
+  TRUSTSTORE_FILE="-Djavax.net.ssl.trustStore=$KEYSTORE_FILE"
 fi
 
 TRUSTSTORE_PASSWORD=""
-if [[ ! -z ${SSL_TRUSTSTORE_PASSWORD:-} ]]; then
-  TRUSTSTORE_PASSWORD="-Djavax.net.ssl.trustStorePassword=$SSL_TRUSTSTORE_PASSWORD"
+if [[ ! -z ${KEYSTORE_PASSWORD:-} ]]; then
+  TRUSTSTORE_PASSWORD="-Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASSWORD"
 fi
 
 export UPGRADE_INTERNAL_JAVA_OPTS="${TRUSTSTORE_FILE:-} ${TRUSTSTORE_PASSWORD:-}"
