@@ -16,7 +16,7 @@ action:
     gms_host: "datahub-gms"
     gms_port: "8080"
     gms_scheme: "http"
-    role: "urn:li:dataHubRole:Reader"
+    role: "urn:li:dataHubRole:Editor"
 
 filter: 
   event_type: "MetadataChangeLogEvent_v1"
