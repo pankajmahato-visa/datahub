@@ -8,6 +8,7 @@ dependencies {
     implementation externalDependency.slf4jApi
     implementation externalDependency.springCore
     implementation externalDependency.springBeans
+    implementation externalDependency.windsClient
 
     compileOnly externalDependency.lombok
 

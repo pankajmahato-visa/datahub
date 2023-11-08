@@ -1,0 +1,59 @@
+#!/bin/sh
+
+mkdir -p logs/datahub-frontend/
+
+# make sure there is no whitespace at the beginning and the end of
+# this string
+
+# Export all Environment Variables
+set -o allexport
+if [ -f ../../env/datahub-frontend.env ] ; then
+  source ../../env/datahub-frontend.env
+else
+  source env/datahub-frontend.env
+fi
+[ -f ../../env/datahub-frontend-creds.env ] && source ../../env/datahub-frontend-creds.env
+set +o allexport
+
+PROMETHEUS_AGENT=""
+if [[ ${ENABLE_PROMETHEUS:-false} == true ]]; then
+  PROMETHEUS_AGENT="-javaagent:jmx_prometheus_javaagent.jar=4318:/datahub-frontend/client-prometheus-config.yaml"
+fi
+
+OTEL_AGENT=""
+if [[ ${ENABLE_OTEL:-false} == true ]]; then
+  OTEL_AGENT="-javaagent:/opentelemetry-javaagent.jar"
+fi
+
+TRUSTSTORE_FILE=""
+if [[ ! -z ${SSL_TRUSTSTORE_FILE:-} ]]; then
+  TRUSTSTORE_FILE="-Djavax.net.ssl.trustStore=$SSL_TRUSTSTORE_FILE"
+fi
+
+TRUSTSTORE_TYPE=""
+if [[ ! -z ${SSL_TRUSTSTORE_TYPE:-} ]]; then
+  TRUSTSTORE_TYPE="-Djavax.net.ssl.trustStoreType=$SSL_TRUSTSTORE_TYPE"
+fi
+
+TRUSTSTORE_PASSWORD=""
+if [[ ! -z ${SSL_TRUSTSTORE_PASSWORD:-} ]]; then
+  TRUSTSTORE_PASSWORD="-Djavax.net.ssl.trustStorePassword=$SSL_TRUSTSTORE_PASSWORD"
+fi
+
+[  -z "$DATAHUB_FRONTEND_HEAP_OPTS" ] && export DATAHUB_FRONTEND_HEAP_OPTS="-Xms1g -Xmx2g"
+
+[  -z "$GMS_HEAP_OPTS" ] && export GMS_HEAP_OPTS="-Xms1g -Xmx4g"
+
+export DATAHUB_FRONTEND_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
+  ${DATAHUB_FRONTEND_HEAP_OPTS} \
+  -Dhttp.port=$SERVER_PORT \
+  -Dconfig.file=datahub-frontend/conf/application.conf \
+  -Djava.security.auth.login.config=datahub-frontend/conf/jaas.conf \
+  -Dlogback.configurationFile=datahub-frontend/conf/logback.xml \
+  ${PROMETHEUS_AGENT:-} ${OTEL_AGENT:-} \
+  ${TRUSTSTORE_FILE:-} ${TRUSTSTORE_TYPE:-} ${TRUSTSTORE_PASSWORD:-} \
+  -Dlogback.debug=false "
+
+exec ./datahub-frontend/bin/datahub-frontend
+
+

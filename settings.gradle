@@ -1,3 +1,22 @@
+pluginManagement {
+    repositories {
+        maven {
+            url "https://artifactory.trusted.visa.com/gradle-plugins"
+            credentials {
+                username System.getenv("PIPER_CUSTOM_USER")
+                password System.getenv("PIPER_CUSTOM_PASSWORD")
+            }
+        }
+        maven {
+            url "https://artifactory.trusted.visa.com/gradle-plugins-cache"
+            credentials {
+                username System.getenv("PIPER_CUSTOM_USER")
+                password System.getenv("PIPER_CUSTOM_PASSWORD")
+            }
+        }
+        mavenLocal()
+    }
+}
 include 'datahub-web-react'
 include 'datahub-frontend'
 include 'datahub-graphql-core'
@@ -64,3 +83,4 @@ include 'metadata-integration:java:examples'
 include 'mock-entity-registry'
 include 'metadata-service:services'
 include 'metadata-service:configuration'
+include 'crawler-test'

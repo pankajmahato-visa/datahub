@@ -13,12 +13,12 @@ jar.enabled = false // Since we only want to build shadow jars, disabling the re
 
 tasks.withType(JavaCompile).configureEach {
     javaCompiler = javaToolchains.compilerFor {
-        languageVersion = JavaLanguageVersion.of(8)
+        languageVersion = JavaLanguageVersion.of(11)
     }
 }
 tasks.withType(Test).configureEach {
     javaLauncher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of(8)
+        languageVersion = JavaLanguageVersion.of(11)
     }
 }
 
@@ -30,6 +30,10 @@ project.archivesBaseName = 'datahub-'+project.name
 configurations {
     provided
     implementation.extendsFrom provided
+}
+
+configurations.configureEach {
+    exclude group:"log4j", module: "log4j"
 }
 
 dependencies {
@@ -61,8 +65,14 @@ dependencies {
   implementation externalDependency.httpAsyncClient
 
   // Tests need a concrete log4j available. Providing it here
-  testImplementation 'org.apache.logging.log4j:log4j-api:2.17.1'
-  testImplementation 'org.apache.logging.log4j:log4j-core:2.17.1'
+  testImplementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+  testImplementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+
+  constraints {
+    implementation('org.apache.commons:commons-text:1.10.0') {
+      because 'Vulnerability Issue'
+    }
+  }
 
   testImplementation(externalDependency.postgresql){
     exclude group: "com.fasterxml.jackson.core"

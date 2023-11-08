@@ -10,15 +10,16 @@ buildscript {
   ext.testContainersVersion = '1.17.4'
   ext.elasticsearchVersion = '2.9.0' // ES 7.10, Opensearch 1.x, 2.x
   ext.jacksonVersion = '2.15.2'
-  ext.jettyVersion = '9.4.46.v20220331'
+  ext.jettyVersion = '9.4.53.v20231009'
   ext.playVersion = '2.8.18'
   ext.log4jVersion = '2.19.0'
   ext.slf4jVersion = '1.7.36'
   ext.logbackClassic = '1.2.12'
   ext.hadoop3Version = '3.3.5'
-  ext.kafkaVersion = '2.3.0'
-  ext.hazelcastVersion = '5.3.1'
+  ext.kafkaVersion = '3.4.0'
+  ext.hazelcastVersion = '5.3.2'
   ext.ebeanVersion = '12.16.1'
+  ext.windsClientVersion = '4.0-20230811.061526-3'
 
   ext.docker_registry = 'linkedin'
 
@@ -33,6 +34,8 @@ buildscript {
     classpath "com.palantir.gradle.gitversion:gradle-git-version:3.0.0"
     classpath "org.gradle.playframework:gradle-playframework:0.14"
     classpath "gradle.plugin.org.hidetake:gradle-swagger-generator-plugin:2.19.1"
+    classpath 'org.apache.logging.log4j:log4j-core:2.19.0'
+    classpath 'org.apache.logging.log4j:log4j-api:2.19.0'
   }
 }
 
@@ -64,19 +67,19 @@ project.ext.spec = [
 
 project.ext.externalDependency = [
     'akkaHttp': 'com.typesafe.akka:akka-http-core_2.12:10.2.10',
-    'antlr4Runtime': 'org.antlr:antlr4-runtime:4.7.2',
-    'antlr4': 'org.antlr:antlr4:4.7.2',
+    'antlr4Runtime': 'org.antlr:antlr4-runtime:4.9.3',
+    'antlr4': 'org.antlr:antlr4:4.9.3',
     'assertJ': 'org.assertj:assertj-core:3.11.1',
     'avro': 'org.apache.avro:avro:1.11.3',
     'avroCompiler': 'org.apache.avro:avro-compiler:1.11.3',
-    'awsGlueSchemaRegistrySerde': 'software.amazon.glue:schema-registry-serde:1.1.10',
+    'awsGlueSchemaRegistrySerde': 'software.amazon.glue:schema-registry-serde:1.1.15',
     'awsMskIamAuth': 'software.amazon.msk:aws-msk-iam-auth:1.1.1',
     'awsSecretsManagerJdbc': 'com.amazonaws.secretsmanager:aws-secretsmanager-jdbc:1.0.8',
     'awsPostgresIamAuth': 'software.amazon.jdbc:aws-advanced-jdbc-wrapper:1.0.0',
     'awsRds':'software.amazon.awssdk:rds:2.18.24',
     'cacheApi' : 'javax.cache:cache-api:1.1.0',
     'commonsCli': 'commons-cli:commons-cli:1.5.0',
-    'commonsIo': 'commons-io:commons-io:2.4',
+    'commonsIo': 'commons-io:commons-io:2.14.0',
     'commonsLang': 'commons-lang:commons-lang:2.6',
     'commonsText': 'org.apache.commons:commons-text:1.10.0',
     'commonsCollections': 'commons-collections:commons-collections:3.2.2',
@@ -119,7 +122,7 @@ project.ext.externalDependency = [
     'javatuples': 'org.javatuples:javatuples:1.2',
     'javaxInject' : 'javax.inject:javax.inject:1',
     'javaxValidation' : 'javax.validation:validation-api:2.0.1.Final',
-    'jerseyCore': 'org.glassfish.jersey.core:jersey-client:2.25.1',
+    'jerseyCore': 'org.glassfish.jersey.core:jersey-client:2.39.1',
     'jerseyGuava': 'org.glassfish.jersey.bundles.repackaged:jersey-guava:2.25.1',
     'jettyJaas': "org.eclipse.jetty:jetty-jaas:$jettyVersion",
     'jettyClient': "org.eclipse.jetty:jetty-client:$jettyVersion",
@@ -129,16 +132,16 @@ project.ext.externalDependency = [
     'jsonPatch': 'com.github.java-json-tools:json-patch:1.13',
     'jsonSimple': 'com.googlecode.json-simple:json-simple:1.1.1',
     'jsonSmart': 'net.minidev:json-smart:2.4.9',
-    'json': 'org.json:json:20230227',
+    'json': 'org.json:json:20231013',
     'junit': 'junit:junit:4.13.2',
     'junitJupiterApi': "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion",
     'junitJupiterParams': "org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion",
     'junitJupiterEngine': "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion",
     // avro-serde includes dependencies for `kafka-avro-serializer` `kafka-schema-registry-client` and `avro`
-    'kafkaAvroSerde': 'io.confluent:kafka-streams-avro-serde:5.5.1',
-    'kafkaAvroSerializer': 'io.confluent:kafka-avro-serializer:5.1.4',
+    'kafkaAvroSerde': 'io.confluent:kafka-streams-avro-serde:5.5.14',
+    'kafkaAvroSerializer': 'io.confluent:kafka-avro-serializer:5.5.14',
     'kafkaClients': "org.apache.kafka:kafka-clients:$kafkaVersion",
-    'snappy': 'org.xerial.snappy:snappy-java:1.1.10.3',
+    'snappy': 'org.xerial.snappy:snappy-java:1.1.10.5',
     'logbackClassic': "ch.qos.logback:logback-classic:$logbackClassic",
     'slf4jApi': "org.slf4j:slf4j-api:$slf4jVersion",
     'log4jCore': "org.apache.logging.log4j:log4j-core:$log4jVersion",
@@ -148,12 +151,12 @@ project.ext.externalDependency = [
     'lombok': 'org.projectlombok:lombok:1.18.16',
     'mariadbConnector': 'org.mariadb.jdbc:mariadb-java-client:2.6.0',
     'mavenArtifact': "org.apache.maven:maven-artifact:$mavenVersion",
-    'mixpanel': 'com.mixpanel:mixpanel-java:1.4.4',
+    'mixpanel': 'com.mixpanel:mixpanel-java:1.5.1',
     'mockito': 'org.mockito:mockito-core:3.0.0',
     'mockitoInline': 'org.mockito:mockito-inline:3.0.0',
-    'mockServer': 'org.mock-server:mockserver-netty:5.11.2',
-    'mockServerClient': 'org.mock-server:mockserver-client-java:5.11.2',
-    'mysqlConnector': 'mysql:mysql-connector-java:8.0.20',
+    'mockServer': 'org.mock-server:mockserver-netty:5.13.0',
+    'mockServerClient': 'org.mock-server:mockserver-client-java:5.13.0',
+    'mysqlConnector': 'mysql:mysql-connector-java:8.0.33',
     'neo4jHarness': 'org.neo4j.test:neo4j-harness:' + neo4jVersion,
     'neo4jJavaDriver': 'org.neo4j.driver:neo4j-java-driver:' + neo4jVersion,
     'opentelemetryApi': 'io.opentelemetry:opentelemetry-api:' + openTelemetryVersion,
@@ -175,11 +178,13 @@ project.ext.externalDependency = [
     'postgresql': 'org.postgresql:postgresql:42.3.8',
     'protobuf': 'com.google.protobuf:protobuf-java:3.19.6',
     'rangerCommons': 'org.apache.ranger:ranger-plugins-common:2.3.0',
-    'reflections': 'org.reflections:reflections:0.9.9',
+    'reflections': 'org.reflections:reflections:0.10.2',
     'resilience4j': 'io.github.resilience4j:resilience4j-retry:1.7.1',
     'rythmEngine': 'org.rythmengine:rythm-engine:1.3.0',
     'servletApi': 'javax.servlet:javax.servlet-api:3.1.0',
-    'shiroCore': 'org.apache.shiro:shiro-core:1.11.0',
+    'shiroCore': 'org.apache.shiro:shiro-core:1.12.0',
+    'slf4jApi': 'org.slf4j:slf4j-api:1.7.35',
+    'slf4jSimple': 'org.slf4j:slf4j-simple:1.7.35',
     'snakeYaml': 'org.yaml:snakeyaml:2.0',
     'sparkSql' : 'org.apache.spark:spark-sql_2.11:2.4.8',
     'sparkHive' : 'org.apache.spark:spark-hive_2.11:2.4.8',
@@ -213,12 +218,13 @@ project.ext.externalDependency = [
     'typesafeConfig':'com.typesafe:config:1.4.1',
     'wiremock':'com.github.tomakehurst:wiremock:2.10.0',
     'zookeeper': 'org.apache.zookeeper:zookeeper:3.4.14',
-    'wire': 'com.squareup.wire:wire-compiler:3.7.1',
+    'wire': 'com.squareup.wire:wire-compiler:4.9.1',
     'charle':  'com.charleskorn.kaml:kaml:0.53.0',
-    'common': 'commons-io:commons-io:2.7',
+    'common': 'commons-io:commons-io:2.14.0',
     'jline':'jline:jline:1.4.1',
-    'jetbrains':' org.jetbrains.kotlin:kotlin-stdlib:1.6.0'
-    
+    'jetbrains':' org.jetbrains.kotlin:kotlin-stdlib:1.6.0',
+    'windsClient': 'com.visa.cloud.gateway:winds-client-java:'+windsClientVersion
+
 ]
 
 allprojects {
@@ -239,6 +245,7 @@ configure(subprojects.findAll {! it.name.startsWith('spark-lineage')}) {
     exclude group: "org.slf4j", module: "slf4j-log4j12"
     exclude group: "org.slf4j", module: "slf4j-nop"
     exclude group: "org.slf4j", module: "slf4j-ext"
+    exclude group: "commons-httpclient", module: "commons-httpclient"
   }
 }
 
@@ -259,7 +266,7 @@ subprojects {
   plugins.withType(JavaPlugin) {
     dependencies {
       constraints {
-        implementation('io.netty:netty-all:4.1.86.Final')
+        implementation('io.netty:netty-all:4.1.100.Final')
         implementation('org.apache.commons:commons-compress:1.21')
         implementation('org.apache.velocity:velocity-engine-core:2.3')
         implementation('org.hibernate:hibernate-validator:6.0.20.Final')

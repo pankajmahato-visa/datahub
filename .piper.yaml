@@ -1,0 +1,48 @@
+jobs:
+  name: datahub
+  type: generic
+  alert: 837a4955.visainc.onmicrosoft.com@amer.teams.ms
+  askNowId: 0012345
+  buildUrl: https://chocolate.factory.visa.com/job/dlc/job/datahub/
+  steps:
+    image: reg.visa.com/usawant/centos7-openjdk11-node16:v0.2
+    build:
+      init: make init clean
+      build: make build package
+    sonatypeScan:
+      iqStage: 'build'
+      iqApplication: '0029651_DPDLC_Datahub'
+      iqScanPatterns: [ { scanPattern: '**/build/libs/*' }, { scanPattern: '**/build/distributions/*' } ]
+      iqModuleExcludes: [moduleExclude: '']
+  publish:
+    steps:
+      artifactory:
+        uploadHost: 'https://artifactory.trusted.visa.com'
+        uploadFiles: '[{"pattern":"datahub-v*.tar","target":"vdc/datahub/"}]'
+        credentialsId: vdc-upload
+  deployment:
+    tool: ansible-rpm
+    environment: dev
+    stack:
+      engine: host
+      credentialsId: datahub-deployment
+    dev:
+      host: datahub
+      playbook: ansible/roles/deployment/main.yml
+      inventory: ansible/inventories/dev/hosts
+      credentialsId: datahub-deployment
+    integration:
+      host: datahub
+      playbook: ansible/roles/deployment/main-deployment-int.yml
+      inventory: ansible/inventories/int/hosts
+      credentialsId: datahub-deployment
+    oce:
+      host: datahub
+      playbook: ansible/roles/deployment/main-deployment-prod-oce.yml
+      inventory: ansible/inventories/oce/hosts
+      credentialsId: datahub-deployment
+    occ:
+      host: datahub
+      playbook: ansible/roles/deployment/main-deployment-prod-occ.yml
+      inventory: ansible/inventories/occ/hosts
+      credentialsId: datahub-deployment

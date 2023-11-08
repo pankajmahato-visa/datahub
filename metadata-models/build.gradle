@@ -6,12 +6,12 @@ apply plugin: 'org.hidetake.swagger.generator'
 
 tasks.withType(JavaCompile).configureEach {
   javaCompiler = javaToolchains.compilerFor {
-    languageVersion = JavaLanguageVersion.of(8)
+    languageVersion = JavaLanguageVersion.of(11)
   }
 }
 tasks.withType(Test).configureEach {
   javaLauncher = javaToolchains.launcherFor {
-    languageVersion = JavaLanguageVersion.of(8)
+    languageVersion = JavaLanguageVersion.of(11)
   }
 }
 
@@ -36,6 +36,15 @@ dependencies {
   swaggerCodegen externalDependency.swaggerCli
   testImplementation externalDependency.guava
   testImplementation externalDependency.testngJava8
+
+  constraints {
+    implementation('commons-codec:commons-codec:1.15') {
+      because("previous versions are vulnerable to CVE-2012-0050")
+    }
+    implementation('commons-io:commons-io:2.4') {
+      because("previous versions are vulnerable to CVE-2021-29425")
+    }
+  }
 }
 
 sourceSets {

@@ -30,6 +30,7 @@ dependencies {
     implementation externalDependency.kafkaAvroSerde
     implementation externalDependency.protobuf
     implementation externalDependency.neo4jJavaDriver
+    implementation externalDependency.javaxInject
 
     implementation externalDependency.springKafka
     implementation externalDependency.springActuator
