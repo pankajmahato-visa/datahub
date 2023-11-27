@@ -46,7 +46,7 @@ build:
     echo "Running Datahub Frontend build Task"; \
     cd datahub-web-react; \
     yarn cache clean; \
-    yarn --update-checksums; \
+    # yarn --update-checksums; \
     cd ..; \
     ./gradlew --stacktrace :datahub-frontend:build
 
