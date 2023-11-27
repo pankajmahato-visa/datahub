@@ -15,6 +15,7 @@ dependencies {
 
   implementation (externalDependency.awsGlueSchemaRegistrySerde) {
     exclude group: 'org.json', module: 'json'
+    exclude group: 'org.apache.kafka', module: 'kafka-clients'
   }
   implementation externalDependency.elasticSearchRest
   implementation externalDependency.httpClient

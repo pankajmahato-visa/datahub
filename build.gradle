@@ -15,7 +15,7 @@ buildscript {
   ext.log4jVersion = '2.19.0'
   ext.slf4jVersion = '1.7.36'
   ext.logbackClassic = '1.2.12'
-  ext.hadoop3Version = '3.3.5'
+  ext.hadoop3Version = '3.3.6'
   ext.kafkaVersion = '3.4.0'
   ext.hazelcastVersion = '5.3.5'
   ext.ebeanVersion = '12.16.1'
@@ -246,6 +246,7 @@ configure(subprojects.findAll {! it.name.startsWith('spark-lineage')}) {
     exclude group: "org.slf4j", module: "slf4j-ext"
     exclude group: "commons-httpclient", module: "commons-httpclient"
     exclude group: "org.apache.zookeeper", module: "zookeeper"
+    exclude group: "org.codehaus.jackson", module: "jackson-mapper-asl"
   }
 }
 

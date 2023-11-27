@@ -28,6 +28,9 @@ dependencies {
     implementation(externalDependency.snappy) {
       because("previous versions are vulnerable to CVE-2023-34453 through CVE-2023-34455")
     }
+    implementation('com.nimbusds:oauth2-oidc-sdk:8.36.2'){
+      because("previous versions are vulnerable to CVE-2023-34453 through CVE-2023-34455")
+    }
   }
 
   implementation project(":metadata-service:restli-client")
