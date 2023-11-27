@@ -93,6 +93,7 @@ package:
 	cp -a deploy-scripts/. datahub-artifact/; \
 	echo "Final datahub-artifact folder tree"; \
 	find datahub-artifact | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"; \
+	git diff; \
 	tar cvf ${TAR_BALL_VERSION}.tar datahub-artifact; \
 	ls -lah ${TAR_BALL_VERSION}.tar; \
 	echo "\n\nPackage Completed"
