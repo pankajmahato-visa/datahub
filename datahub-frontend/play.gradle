@@ -21,7 +21,7 @@ dependencies {
     play('com.nimbusds:nimbus-jose-jwt:8.18')
     play('com.typesafe.akka:akka-actor_2.12:2.6.20')
     play(externalDependency.jsonSmart)
-    play('io.netty:netty-all:4.1.86.Final')
+    play('io.netty:netty-all:4.1.100.Final')
     implementation(externalDependency.commonsText) {
       because("previous versions are vulnerable to CVE-2022-42889")
     }
@@ -64,8 +64,10 @@ dependencies {
   implementation externalDependency.playAkkaHttpServer
   implementation externalDependency.playFilters
   implementation externalDependency.kafkaClients
-  implementation externalDependency.awsMskIamAuth
-
+  implementation (externalDependency.awsMskIamAuth){
+    exclude group: 'com.fasterxml.jackson.dataformat', module: 'jackson-dataformat-cbor'
+  }
+  testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.16.1'
   testImplementation 'org.seleniumhq.selenium:htmlunit-driver:2.67.0'
   testImplementation externalDependency.mockito
   testImplementation externalDependency.playTest

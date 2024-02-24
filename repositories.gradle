@@ -1,37 +1,44 @@
 repositories {
-    gradlePluginPortal()
-    mavenLocal()
-
-    if (project.hasProperty('apacheMavenRepositoryUrl')) {
-        maven { url project.getProperty('apacheMavenRepositoryUrl') }
-    } else {
-        mavenCentral()
+  maven {
+    url "https://artifactory.trusted.visa.com/gradle-plugins"
+    credentials {
+      username System.getenv("PIPER_CUSTOM_USER")
+      password System.getenv("PIPER_CUSTOM_PASSWORD")
     }
-
-    if (project.hasProperty('confluentMavenRepositoryUrl')) {
-        maven {
-            url project.getProperty('confluentMavenRepositoryUrl')
-        }
-    } else {
-        maven {
-            url "https://packages.confluent.io/maven/"
-        }
+  }
+  maven {
+    url "https://artifactory.trusted.visa.com/dp-maven-virtual"
+    credentials {
+      username System.getenv("PIPER_CUSTOM_USER")
+      password System.getenv("PIPER_CUSTOM_PASSWORD")
     }
-
-    if (project.hasProperty('linkedinOpenSourceRepositoryUrl')) {
-        maven {
-            url project.getProperty('linkedinOpenSourceRepositoryUrl')
-        }
-    } else {
-        maven {
-            url "https://linkedin.jfrog.io/artifactory/open-source/" // GMA, pegasus
-        }
+  }
+  maven {
+    url "https://artifactory.trusted.visa.com/central"
+    credentials {
+      username System.getenv("PIPER_CUSTOM_USER")
+      password System.getenv("PIPER_CUSTOM_PASSWORD")
     }
+  }
+  maven {
+    url "https://artifactory.trusted.visa.com/linkedin-jfrog-io"
+    credentials {
+      username System.getenv("PIPER_CUSTOM_USER")
+      password System.getenv("PIPER_CUSTOM_PASSWORD")
+    }
+  }
+  maven {
+    url "https://artifactory.trusted.visa.com/npm-remote"
+    credentials {
+      username System.getenv("PIPER_CUSTOM_USER")
+      password System.getenv("PIPER_CUSTOM_PASSWORD")
+    }
+  }
 }
 
 try {
-    subprojects {
-        project.repositories.addAll(rootProject.repositories)
-    }
+  subprojects {
+    project.repositories.addAll(rootProject.repositories)
+  }
 } catch (Throwable t) {
 }

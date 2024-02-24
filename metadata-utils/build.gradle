@@ -5,7 +5,10 @@ dependencies {
   implementation externalDependency.commonsLang
   api externalDependency.dropwizardMetricsCore
   implementation externalDependency.dropwizardMetricsJmx
-  api externalDependency.elasticSearchRest
+  api (externalDependency.elasticSearchRest){
+    exclude group: 'org.apache.lucene', module: 'lucene-core'
+  }
+  implementation externalDependency.luceneCore
   implementation externalDependency.httpClient
   api externalDependency.neo4jJavaDriver
   api externalDependency.json

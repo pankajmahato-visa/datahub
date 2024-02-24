@@ -12,7 +12,7 @@ node {
   if (project.hasProperty('useSystemNode')) {
     download = ! project.getProperty('useSystemNode').toBoolean()
   } else {
-    download = true
+    download = false
   }
 
   // Version of node to use.
@@ -43,7 +43,7 @@ node {
   Wrappers around Yarn Tasks.
  */
 task yarnInstall(type: YarnTask) {
-  args = ['install']
+  args = ['install', '--update-checksums']
 }
 
 task yarnGenerate(type: YarnTask, dependsOn: yarnInstall) {
@@ -73,7 +73,7 @@ task yarnBuild(type: YarnTask, dependsOn: [yarnInstall, yarnTest, yarnLint]) {
 }
 
 task yarnQuickBuild(type: YarnTask, dependsOn: [yarnInstall, yarnGenerate]) {
-  environment = [NODE_OPTIONS: "--max-old-space-size=3072 --openssl-legacy-provider"]
+  environment = [NODE_OPTIONS: "--max-old-space-size=3072"]
   args = ['run', 'build']
 }
 
