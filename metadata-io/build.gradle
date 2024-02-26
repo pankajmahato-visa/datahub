@@ -64,7 +64,7 @@ dependencies {
   testImplementation project(':datahub-graphql-core')
   testImplementation project(path: ':metadata-integration:java:datahub-client', configuration: 'shadow')
   testImplementation externalDependency.testng
-  testImplementation externalDependency.h2
+//  testImplementation externalDependency.h2
   testImplementation externalDependency.mysqlConnector
   testImplementation externalDependency.neo4jHarness
   testImplementation (externalDependency.neo4jApoc) {

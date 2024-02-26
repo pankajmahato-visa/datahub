@@ -23,7 +23,7 @@ fi
 
 PROMETHEUS_AGENT=""
 if [[ ${ENABLE_PROMETHEUS:-false} == true ]]; then
-  PROMETHEUS_AGENT="-javaagent:jmx_prometheus_javaagent.jar=4319:/datahub/monitoring/conf/prometheus-config.yaml"
+  PROMETHEUS_AGENT="-javaagent:/datahub/monitoring/jmx_prometheus_javaagent.jar=4319:/datahub/monitoring/conf/prometheus-config.yaml"
 fi
 
 OTEL_AGENT=""

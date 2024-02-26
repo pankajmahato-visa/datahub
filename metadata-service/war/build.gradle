@@ -26,10 +26,10 @@ dependencies {
   runtimeOnly project(':metadata-jobs:pe-consumer')
 
   runtimeOnly externalDependency.awsSecretsManagerJdbc
-  runtimeOnly externalDependency.h2
+//  runtimeOnly externalDependency.h2
   runtimeOnly externalDependency.mariadbConnector
   runtimeOnly externalDependency.mysqlConnector
-  runtimeOnly externalDependency.postgresql
+//  runtimeOnly externalDependency.postgresql
   runtimeOnly externalDependency.springWebMVC
 
   runtimeOnly spec.product.pegasus.restliDocgen

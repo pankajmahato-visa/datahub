@@ -1,7 +1,7 @@
 buildscript {
   ext.junitJupiterVersion = '5.6.1'
   // Releases: https://github.com/linkedin/rest.li/blob/master/CHANGELOG.md
-  ext.pegasusVersion = '29.49.4'
+  ext.pegasusVersion = '29.51.0'
   ext.mavenVersion = '3.6.3'
   ext.springVersion = '5.3.32'
   ext.springBootVersion = '2.7.18'
@@ -10,15 +10,14 @@ buildscript {
   ext.neo4jTestVersion = '4.4.25'
   ext.neo4jApocVersion = '4.4.0.20:all'
   ext.testContainersVersion = '1.17.4'
-
   ext.elasticsearchVersion = '2.9.0' // ES 7.10, Opensearch 1.x, 2.x
   ext.jacksonVersion = '2.15.2'
-  ext.jettyVersion = '9.4.53.v20231009'
+  ext.jettyVersion = '11.0.19'
   ext.playVersion = '2.8.18'
   ext.log4jVersion = '2.19.0'
   ext.slf4jVersion = '1.7.36'
   ext.logbackClassic = '1.2.13'
-  ext.hadoop3Version = '3.3.6'
+  ext.hadoop3Version = '3.3.5'
   ext.kafkaVersion = '3.6.1'
   ext.hazelcastVersion = '5.3.6'
   ext.ebeanVersion = '12.16.1'
@@ -105,7 +104,7 @@ project.ext.externalDependency = [
     'gson': 'com.google.code.gson:gson:2.8.9',
     'guice': 'com.google.inject:guice:4.2.3',
     'guava': 'com.google.guava:guava:32.1.2-jre',
-    'h2': 'com.h2database:h2:2.2.224',
+//    'h2': 'com.h2database:h2:2.2.224',
     'hadoopCommon':'org.apache.hadoop:hadoop-common:2.7.2',
     'hadoopMapreduceClient':'org.apache.hadoop:hadoop-mapreduce-client-core:2.7.2',
     "hadoopClient": "org.apache.hadoop:hadoop-client:$hadoop3Version",
@@ -191,7 +190,7 @@ project.ext.externalDependency = [
     'resilience4j': 'io.github.resilience4j:resilience4j-retry:1.7.1',
     'rythmEngine': 'org.rythmengine:rythm-engine:1.3.0',
     'servletApi': 'javax.servlet:javax.servlet-api:3.1.0',
-    'shiroCore': 'org.apache.shiro:shiro-core:1.12.0',
+    'shiroCore': 'org.apache.shiro:shiro-core:1.13.0',
     'slf4jSimple': 'org.slf4j:slf4j-simple:1.7.35',
     'snakeYaml': 'org.yaml:snakeyaml:2.0',
     'sparkSql' : 'org.apache.spark:spark-sql_2.11:2.4.8',
@@ -254,6 +253,15 @@ configure(subprojects.findAll {! it.name.startsWith('spark-lineage')}) {
     exclude group: "commons-httpclient", module: "commons-httpclient"
     exclude group: "org.codehaus.jackson", module: "jackson-mapper-asl"
     exclude group: "software.amazon.ion", module: "ion-java"
+    exclude group: "io.envoyproxy.controlplane", module: "api"
+    resolutionStrategy {
+      force "org.apache.commons:commons-compress:1.26.0"
+      force "commons-io:commons-io:2.11.0"
+      force "org.apache.kafka:kafka-clients:3.6.1"
+      force "org.javassist:javassist:3.30.0-GA"
+      force "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.15.4"
+      force "com.nimbusds:oauth2-oidc-sdk:8.36.2"
+    }
   }
 }
 

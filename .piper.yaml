@@ -19,7 +19,7 @@ jobs:
 #      projectName: DPDLC-datahub_0029651_REL_V0120
 #      groupId: fb48f27c-987a-44a3-ba21-a9f843b45287
 #      filterPattern: '**/*.py,**/**/**.java'
-#      excludeFolders: 'build/**, datahub-web-react/node_modules/, tests/**, datahub-artifact/**, .git/**, .github/**, /test/**, *.tar, **/*.png, **/*.map, .gradle/**, ansible/**, **/*.txt, **/__tests__/**/*.*, docs/**, gradle/**, metadata-ingestion/**, crawler-test/**, metadata-integration/**, buildSrc/**'
+#      excludeFolders: 'build/**, datahub-web-react/node_modules/, tests/**, datahub-artifact/**, .git/**, .github/**, /test/**, *.tar, **/*.png, **/*.map, .gradle/**, ansible/**, **/*.txt, **/__tests__/**/*.*, docs/**, gradle/**, datahub-upgrade/**, metadata-ingestion/**, crawler-test/**, metadata-integration/**, buildSrc/**'
 #      credentialsId: dp_checkmarx
 #      vulnerabilityThresholdEnabled: true
 #      highThreshold: 10
@@ -28,8 +28,8 @@ jobs:
 #    sonatypeScan:
 #      iqStage: 'build'
 #      iqApplication: '0029651_DPDLC_Datahub'
-#      iqScanPatterns: [ { scanPattern: '**/build/libs/*' }, { scanPattern: '**/build/distributions/*' } ]
-#      iqModuleExcludes: [moduleExclude: '']
+#      iqScanPatterns: [ { scanPattern: '**/datahub-artifact/datahub-gms/*.war' }, { scanPattern: '**/datahub-artifact/datahub-frontend/*' } ]
+#      iqModuleExcludes: [ moduleExclude: '**/datahub-upgrade/*' ]
   publish:
     steps:
       artifactory:
