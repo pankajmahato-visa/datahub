@@ -74,9 +74,9 @@ dependencies {
     }
   }
 
-  testImplementation(externalDependency.postgresql){
-    exclude group: "com.fasterxml.jackson.core"
-  }
+//  testImplementation(externalDependency.postgresql){
+//    exclude group: "com.fasterxml.jackson.core"
+//  }
 
   testImplementation externalDependency.mockito
 

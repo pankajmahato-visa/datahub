@@ -2,19 +2,18 @@ jobs:
   name: datahub
   type: generic
   alert: 837a4955.visainc.onmicrosoft.com@amer.teams.ms
-  askNowId: 0029651
+  askNowId: 0078529
   buildUrl: https://jenkins.trusted.visa.com/dp/job/dpdlc/job/dpdlc_dev/job/dlc/job/datahub/
   steps:
     image: reg.visa.com/usawant/centos7-openjdk11-node16:v1
     build:
       init: make init
-      build: make build package
-#      test: make test
-#    oss:
-#      name: parsec/datahub
-#      project: DPL_parsec-datahub-AskNowId_0029651
-#      release: v0.12.1_REL_05022024
-#      files: "datahub-artifact/*.jar"
+      build: make build test package
+    oss:
+      name: parsec/datahub
+      project: DPL_parsec-datahub-AskNowId_0078529
+      release: v0.12.1_REL_05022024
+      files: "datahub-artifact/*"
 #    securityScan:
 #      projectName: DPDLC-datahub_0029651_REL_V0120
 #      groupId: fb48f27c-987a-44a3-ba21-a9f843b45287
@@ -25,11 +24,11 @@ jobs:
 #      highThreshold: 10
 #      mediumThreshold: 100
 #      hideDebugLogs: true
-#    sonatypeScan:
-#      iqStage: 'build'
-#      iqApplication: '0029651_DPDLC_Datahub'
-#      iqScanPatterns: [ { scanPattern: '**/datahub-artifact/datahub-gms/*.war' }, { scanPattern: '**/datahub-artifact/datahub-frontend/*' } ]
-#      iqModuleExcludes: [ moduleExclude: '**/datahub-upgrade/*' ]
+    sonatypeScan:
+      iqStage: 'build'
+      iqApplication: '0078529_DPDLC_Datahub'
+      iqScanPatterns: [ { scanPattern: '**/datahub-artifact/datahub-gms/*.war' }, { scanPattern: '**/datahub-artifact/datahub-frontend/*' } ]
+      iqModuleExcludes: [ moduleExclude: '**/datahub-upgrade/*' ]
   publish:
     steps:
       artifactory:

@@ -182,7 +182,7 @@ project.ext.externalDependency = [
     'playFilters': "com.typesafe.play:filters-helpers_2.12:$playVersion",
     'pac4j': 'org.pac4j:pac4j-oidc:4.5.7',
     'playPac4j': 'org.pac4j:play-pac4j_2.12:9.0.2',
-    'postgresql': 'org.postgresql:postgresql:42.7.2',
+//    'postgresql': 'org.postgresql:postgresql:42.7.2',
     'protobuf': 'com.google.protobuf:protobuf-java:3.19.6',
     'grpcProtobuf': 'io.grpc:grpc-protobuf:1.53.0',
     'rangerCommons': 'org.apache.ranger:ranger-plugins-common:2.3.0',
@@ -230,7 +230,8 @@ project.ext.externalDependency = [
     'common': 'commons-io:commons-io:2.14.0',
     'jline':'jline:jline:1.4.1',
     'jetbrains':' org.jetbrains.kotlin:kotlin-stdlib:1.6.0',
-    'windsClient': 'com.visa.cloud.gateway:winds-client-java:'+windsClientVersion
+    'windsClient': 'com.visa.cloud.gateway:winds-client-java:'+windsClientVersion,
+    'javaxMail': 'com.sun.mail:javax.mail:1.6.2'
 ]
 
 allprojects {
@@ -254,6 +255,7 @@ configure(subprojects.findAll {! it.name.startsWith('spark-lineage')}) {
     exclude group: "org.codehaus.jackson", module: "jackson-mapper-asl"
     exclude group: "software.amazon.ion", module: "ion-java"
     exclude group: "io.envoyproxy.controlplane", module: "api"
+    exclude group: "javax.mail", module: "mail"
     resolutionStrategy {
       force "org.apache.commons:commons-compress:1.26.0"
       force "commons-io:commons-io:2.11.0"
