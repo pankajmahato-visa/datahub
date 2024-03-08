@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class HiveTest {
 
@@ -46,7 +47,8 @@ public class HiveTest {
         String username = prop.getProperty("username");
         String keytab = prop.getProperty("keytab");
         String jdbcUrl = prop.getProperty("jdbcUrl");
-        String schema = prop.getProperty("schema");
+        String schema = prop.getProperty("schema") == null ? "" : prop.getProperty("schema");
+        String fetchSchemasOnly = prop.getProperty("fetchSchemasOnly") == null ? "" : prop.getProperty("fetchSchemasOnly");
 
         System.out.println(String.format("sun.security.krb5.debug: %s", krb5Debug));
         System.out.println(String.format("sun.security.spnego.debug: %s", spnegoDebug));
@@ -63,6 +65,7 @@ public class HiveTest {
         System.out.println(String.format("Keytab: %s", keytab));
         System.out.println(String.format("JDBC Url: %s", jdbcUrl));
         System.out.println(String.format("Schema: %s", schema));
+        System.out.println(String.format("Fetch Schemas Only: %s", fetchSchemasOnly));
 
 
         if (krb5Debug != null) {
@@ -91,9 +94,12 @@ public class HiveTest {
         System.out.println(String.format("\n\n#############\n\nWriting file %s \n\nTime Taken: %s\n\n#############\n\n",
                 databaseOutputPath, ReadableTime.format(end.toEpochMilli() - start.toEpochMilli())));
 
-        new File("schemas").mkdirs();
 
         List<String> schemaList = Arrays.asList(schema.trim().split("\\s*,+\\s*,*\\s*"));
+        if (schemaList.isEmpty()) {
+            schemaList = databaseMap.stream().map(map -> map.get("database_name")).collect(Collectors.toList());
+        }
+
         for (String schemaName : schemaList) {
             start = Instant.now();
             List<Map<String, String>> data = hiveConnectionService
@@ -105,7 +111,9 @@ public class HiveTest {
             System.out.println(String.format("\n\n#############\n\nWriting file %s \n\nTime Taken: %s\n\n#############\n\n",
                     schemaOutputPath, ReadableTime.format(end.toEpochMilli() - start.toEpochMilli())));
 
-            new File("schemas/" + schemaName).mkdirs();
+            if ("true".equalsIgnoreCase(fetchSchemasOnly)) {
+                continue;
+            }
             String table = prop.getProperty(schema + ".table");
             if (table == null || "*".equals(table) || table.trim().length() == 0) {
                 for (Map<String, String> map : data) {
