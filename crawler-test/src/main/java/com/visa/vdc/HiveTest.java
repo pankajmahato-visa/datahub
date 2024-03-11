@@ -3,7 +3,6 @@ package com.visa.vdc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -47,7 +46,7 @@ public class HiveTest {
         String username = prop.getProperty("username");
         String keytab = prop.getProperty("keytab");
         String jdbcUrl = prop.getProperty("jdbcUrl");
-        String schema = prop.getProperty("schema") == null ? "" : prop.getProperty("schema");
+        String schema = prop.getProperty("schema");
         String fetchSchemasOnly = prop.getProperty("fetchSchemasOnly") == null ? "" : prop.getProperty("fetchSchemasOnly");
 
         System.out.println(String.format("sun.security.krb5.debug: %s", krb5Debug));
@@ -94,12 +93,14 @@ public class HiveTest {
         System.out.println(String.format("\n\n#############\n\nWriting file %s \n\nTime Taken: %s\n\n#############\n\n",
                 databaseOutputPath, ReadableTime.format(end.toEpochMilli() - start.toEpochMilli())));
 
-
-        List<String> schemaList = Arrays.asList(schema.trim().split("\\s*,+\\s*,*\\s*"));
-        if (schemaList.isEmpty()) {
+        List<String> schemaList;
+        if (schema == null || "".equals(schema.trim())) {
             schemaList = databaseMap.stream().map(map -> map.get("database_name")).collect(Collectors.toList());
+            System.out.println("\n\nSchema list from Hive Source\n\n");
+            System.out.println(schemaList);
+        } else {
+            schemaList = Arrays.asList(schema.trim().split("\\s*,+\\s*,*\\s*"));
         }
-
         for (String schemaName : schemaList) {
             start = Instant.now();
             List<Map<String, String>> data = hiveConnectionService
