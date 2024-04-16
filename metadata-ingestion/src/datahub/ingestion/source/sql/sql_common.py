@@ -824,7 +824,7 @@ class SQLAlchemySource(StatefulIngestionSourceBase):
             self.warn(
                 logger,
                 dataset_name,
-                f"unable to get column information due to an error -> {e}",
+                f"unable to get column information due to an error -> {''.join(traceback.format_tb(e.__traceback__))}",
             )
         return columns
 
