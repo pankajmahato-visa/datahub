@@ -125,15 +125,11 @@ build:
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
 	echo "Running Build and Test for all modules"; \
 	./gradlew :metadata-service:war:build; \
-#	./gradlew :datahub-frontend:assemble; \
+	./gradlew :metadata-jobs:mae-consumer-job:build; \
+	./gradlew :metadata-jobs:mce-consumer-job:build; \
 	./gradlew :datahub-upgrade:build; \
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
 	echo "Running Datahub Frontend build Task"; \
-#	cd datahub-web-react; \
-#	yarn cache clean; \
-#	yarn --update-checksums; \
-#	cd ..; \
-#	git --no-pager diff; \
 	./gradlew :datahub-frontend:build --parallel;
 
 package:
@@ -149,6 +145,8 @@ package:
 	mkdir -p datahub-artifact/datahub-frontend/datahub-frontend; \
 	mkdir -p datahub-artifact/datahub-upgrade; \
 	mkdir -p datahub-artifact/crawler-test; \
+	mkdir -p datahub-artifact/mae-consumer; \
+	mkdir -p datahub-artifact/mce-consumer; \
 	mkdir -p datahub-artifact/certs; \
 	mkdir -p datahub-artifact/setup/elasticsearch-setup; \
 	mkdir -p datahub-artifact/setup/kafka-setup; \
@@ -162,6 +160,10 @@ package:
 	cp datahub-upgrade/build/libs/datahub-upgrade.jar datahub-artifact/datahub-upgrade; \
 	echo "3. Copying Metadata Service WAR"; \
 	cp metadata-service/war/build/libs/war.war datahub-artifact/datahub-gms; \
+	echo "3a. Copying MAE Consumer Jar"; \
+    cp metadata-jobs/mae-consumer-job/build/libs/mae-consumer-job.jar datahub-artifact/mae-consumer; \
+    echo "3b. Copying MCE Consumer Jar"; \
+    cp metadata-jobs/mce-consumer-job/build/libs/mce-consumer-job.jar datahub-artifact/mce-consumer; \
 	echo "4. Copying Crawler Test JAR"; \
 	echo "5. Copying entity-registry.yml"; \
 	cp metadata-models/src/main/resources/entity-registry.yml datahub-artifact/resources; \

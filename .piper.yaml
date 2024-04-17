@@ -27,7 +27,7 @@ jobs:
     sonatypeScan:
       iqStage: 'build'
       iqApplication: '0078529_DPDLC_Datahub'
-      iqScanPatterns: [ { scanPattern: '**/datahub-artifact/datahub-gms/*.war' }, { scanPattern: '**/datahub-artifact/datahub-frontend/*' } ]
+      iqScanPatterns: [ { scanPattern: '**/datahub-artifact/datahub-gms/*.war' }, { scanPattern: '**/datahub-artifact/datahub-frontend/*' }, { scanPattern: '**/datahub-artifact/mae-consumer/*.jar' }, { scanPattern: '**/datahub-artifact/mce-consumer/*.jar' } ]
       iqModuleExcludes: [ moduleExclude: '**/datahub-upgrade/*' ]
   publish:
     steps:
