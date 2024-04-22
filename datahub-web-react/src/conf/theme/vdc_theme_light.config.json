@@ -34,7 +34,13 @@
             "searchbarMessage": "Search Datasets, People, & more..."
         },
         "menu": {
-            "items": []
+            "items": [
+                {
+                    "label": "Docs",
+                    "path": "https://datahubproject.io/docs",
+                    "shouldOpenInNewTab": true
+                }
+            ]
         }
     }
 }
