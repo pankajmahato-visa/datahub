@@ -15,9 +15,6 @@
     frontend_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/dev/datahub-frontend.env"
     gms_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/dev/datahub-gms.env"
     upgrade_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/dev/datahub-upgrade.env"
-    elasticsearch_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/dev/elasticsearch-setup.env"
-    kafka_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/dev/kafka-setup.env"
-    mysql_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/dev/mysql-setup.env"
     folder: "/datahub/{{ package_name }}-{{ deploy_version}}"
     datahub_root_folder: "/datahub"
     date: "{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
@@ -141,45 +138,6 @@
       get_url:
         url: "{{ upgrade_env_download_url }}"
         dest: "{{ folder }}/datahub-upgrade/env"
-        validate_certs: no
-        username: "{{ username }}"
-        password: "{{ password }}"
-        force: true
-      register: task_output
-    - debug: msg="{{ task_output }}"
-
-
-
-    - name: Download Elasticsearch ENV "{{ elasticsearch_env_download_url }}"
-      get_url:
-        url: "{{ elasticsearch_env_download_url }}"
-        dest: "{{ folder }}/setup/elasticsearch-setup/env"
-        validate_certs: no
-        username: "{{ username }}"
-        password: "{{ password }}"
-        force: true
-      register: task_output
-    - debug: msg="{{ task_output }}"
-
-
-
-    - name: Download Kafka ENV "{{ kafka_env_download_url }}"
-      get_url:
-        url: "{{ kafka_env_download_url }}"
-        dest: "{{ folder }}/setup/kafka-setup/env"
-        validate_certs: no
-        username: "{{ username }}"
-        password: "{{ password }}"
-        force: true
-      register: task_output
-    - debug: msg="{{ task_output }}"
-
-
-
-    - name: Download MySQL ENV {{ mysql_env_download_url }}"
-      get_url:
-        url: "{{ mysql_env_download_url }}"
-        dest: "{{ folder }}/setup/mysql-setup/env"
         validate_certs: no
         username: "{{ username }}"
         password: "{{ password }}"

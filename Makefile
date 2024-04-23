@@ -23,112 +23,38 @@ init:
 clean:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
+	export LANG=en_US.UTF-8; \
+	export LC_ALL=$LANG; \
+	export LANGUAGE=$LANG; \
 	echo "Running Complete Datahub Clean Task"; \
 	./gradlew --stacktrace clean
-
-#test:
-#	echo "Setting Gradle Wrapper Credentials for gradle download"; \
-#	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
-#	echo "Running Test for all modules"; \
-#	./gradlew --stacktrace test \
-#	-x :datahub-frontend:build \
-#	-x :datahub-frontend:cleanLocalDockerImages \
-#	-x :datahub-frontend:dist \
-#	-x :datahub-frontend:myTar \
-#	-x :datahub-frontend:test \
-#	-x :datahub-frontend:unversionZip \
-#	-x :datahub-graphql-core:test \
-#	-x :datahub-web-react:build \
-#	-x :datahub-web-react:copyAssets \
-#	-x :datahub-web-react:distZip \
-#	-x :datahub-web-react:jar \
-#	-x :datahub-web-react:test \
-#	-x :datahub-web-react:yarnQuickBuild \
-#	-x :datahub-web-react:yarnTest \
-#	-x :entity-registry:test \
-#	-x :ingestion-scheduler:test \
-#	-x :metadata-ingestion-modules:airflow-plugin:build \
-#	-x :metadata-ingestion-modules:airflow-plugin:check \
-#	-x :metadata-ingestion:build \
-#	-x :metadata-ingestion:check \
-#	-x :metadata-integration:java:datahub-client:checkShadowJar \
-#	-x :metadata-integration:java:datahub-client:test \
-#	-x :metadata-integration:java:spark-lineage:compileJava \
-#	-x :metadata-integration:java:spark-lineage:compileTestJava \
-#	-x :metadata-integration:java:spark-lineage:test \
-#	-x :metadata-io:test \
-#	-x :metadata-jobs:mae-consumer:test \
-#	-x :metadata-service:auth-impl:test \
-#	-x :metadata-service:factories:test \
-#	-x :metadata-service:openapi-entity-servlet:test \
-#	-x :metadata-service:plugin:test \
-#	-x :metadata-service:schema-registry-servlet:test \
-#	-x :metadata-utils:test \
-#	-x docs-website:build \
-#	--parallel --continue
 
 test:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
+	export LANG=en_US.UTF-8; \
+	export LC_ALL=$LANG; \
+	export LANGUAGE=$LANG; \
 	echo "Running Test for all modules"; \
 	./gradlew :metadata-service:war:test; \
 	./gradlew :datahub-frontend:test; \
 	./gradlew :datahub-upgrade:test;
 
-#build:
-#	echo "Setting Gradle Wrapper Credentials for gradle download"; \
-#	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
-#	echo "Running Build and Test for all modules"; \
-#	./gradlew --stacktrace build \
-#	-x :datahub-frontend:build \
-#	-x :datahub-frontend:cleanLocalDockerImages \
-#	-x :datahub-frontend:dist \
-#	-x :datahub-frontend:myTar \
-#	-x :datahub-frontend:test \
-#	-x :datahub-frontend:unversionZip \
-#	-x :datahub-graphql-core:test \
-#	-x :datahub-web-react:build \
-#	-x :datahub-web-react:copyAssets \
-#	-x :datahub-web-react:distZip \
-#	-x :datahub-web-react:jar \
-#	-x :datahub-web-react:test \
-#	-x :datahub-web-react:yarnQuickBuild \
-#	-x :datahub-web-react:yarnTest \
-#	-x :metadata-ingestion-modules:airflow-plugin:build \
-#	-x :metadata-ingestion-modules:airflow-plugin:check \
-#	-x :metadata-ingestion:build \
-#	-x :metadata-ingestion:check \
-#	-x :metadata-integration:java:datahub-client:checkShadowJar \
-#	-x :metadata-integration:java:datahub-client:test \
-#	-x :metadata-integration:java:datahub-protobuf:checkShadowJar \
-#	-x :metadata-integration:java:spark-lineage:compileJava \
-#	-x :metadata-integration:java:spark-lineage:shadowJar \
-#	-x :metadata-integration:java:spark-lineage:test \
-#	-x :metadata-io:test \
-#	-x :metadata-service:auth-impl:test \
-#	-x :metadata-service:plugin:test \
-#	-x docs-website:build \
-#	--parallel \
-#	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
-#	echo "Running Build and Test for all modules"; \
-#	echo "Running Datahub Frontend build Task"; \
-#	cd datahub-web-react; \
-#	yarn cache clean; \
-#	yarn --update-checksums; \
-#	cd ..; \
-#	git --no-pager diff; \
-#	./gradlew --stacktrace :datahub-frontend:build :datahub-web-react:build \
-#	--parallel; \
-
 build:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
+	export LANG=en_US.UTF-8; \
+	export LC_ALL=$LANG; \
+	export LANGUAGE=$LANG; \
 	echo "Running Build and Test for all modules"; \
 	./gradlew :metadata-service:war:build; \
 	./gradlew :metadata-jobs:mae-consumer-job:build; \
 	./gradlew :metadata-jobs:mce-consumer-job:build; \
 	./gradlew :datahub-upgrade:build; \
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
+	export LANG=en_US.UTF-8; \
+	export LC_ALL=$LANG; \
+	export LANGUAGE=$LANG; \
 	echo "Running Datahub Frontend build Task"; \
 	./gradlew :datahub-frontend:build --parallel;
 

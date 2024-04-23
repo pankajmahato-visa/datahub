@@ -18,6 +18,7 @@ public class HiveTest {
     private HiveTest() {
     }
 
+    // TODO: Add schema splitting with configuration to crawler test
     private static ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     public static void main(String[] args) throws SQLException, IOException {
