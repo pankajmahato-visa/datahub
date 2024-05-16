@@ -24,8 +24,8 @@ clean:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
 	export LANG=en_US.UTF-8; \
-	export LC_ALL=$LANG; \
-	export LANGUAGE=$LANG; \
+	export LANGUAGE=en_US.UTF-8; \
+	export LC_ALL=en_US.UTF-8; \
 	echo "Running Complete Datahub Clean Task"; \
 	./gradlew --stacktrace clean
 
@@ -33,8 +33,8 @@ test:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
 	export LANG=en_US.UTF-8; \
-	export LC_ALL=$LANG; \
-	export LANGUAGE=$LANG; \
+	export LANGUAGE=en_US.UTF-8; \
+	export LC_ALL=en_US.UTF-8; \
 	echo "Running Test for all modules"; \
 	./gradlew :metadata-service:war:test; \
 	./gradlew :datahub-frontend:test; \
@@ -44,8 +44,8 @@ build:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
 	export LANG=en_US.UTF-8; \
-	export LC_ALL=$LANG; \
-	export LANGUAGE=$LANG; \
+	export LANGUAGE=en_US.UTF-8; \
+	export LC_ALL=en_US.UTF-8; \
 	echo "Running Build and Test for all modules"; \
 	./gradlew :metadata-service:war:build; \
 	./gradlew :metadata-jobs:mae-consumer-job:build; \
@@ -53,8 +53,8 @@ build:
 	./gradlew :datahub-upgrade:build; \
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
 	export LANG=en_US.UTF-8; \
-	export LC_ALL=$LANG; \
-	export LANGUAGE=$LANG; \
+	export LANGUAGE=en_US.UTF-8; \
+	export LC_ALL=en_US.UTF-8; \
 	echo "Running Datahub Frontend build Task"; \
 	./gradlew :datahub-frontend:build --parallel;
 
@@ -62,8 +62,8 @@ package:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
 	export LANG=en_US.UTF-8; \
-	export LC_ALL=$LANG; \
-	export LANGUAGE=$LANG; \
+	export LANGUAGE=en_US.UTF-8; \
+	export LC_ALL=en_US.UTF-8; \
 	echo "Packaging Datahub Artifacts to folder: datahub-artifact"; \
 	rm -rf datahub-artifact; \
 	mkdir -p datahub-artifact; \
