@@ -78,6 +78,7 @@ package:
 	mkdir -p datahub-artifact/setup/kafka-setup; \
 	mkdir -p datahub-artifact/setup/mysql-setup; \
 	mkdir -p datahub-artifact/resources; \
+	mkdir -p datahub-artifact/plugins/retention; \
 	echo "Current datahub-artifact folder tree"; \
 	find datahub-artifact | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"; \
 	echo "1. Copying Datahub Frontend"; \
