@@ -43,6 +43,7 @@ dependencies {
   implementation externalDependency.antlr4Runtime
   implementation externalDependency.antlr4
   implementation externalDependency.akkaHttp
+  implementation('org.slf4j:slf4j-simple:2.0.5')
 
   implementation externalDependency.jerseyCore
   implementation externalDependency.jerseyGuava
