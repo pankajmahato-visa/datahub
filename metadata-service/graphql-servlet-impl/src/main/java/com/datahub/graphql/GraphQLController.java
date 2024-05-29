@@ -11,24 +11,21 @@ import com.fasterxml.jackson.core.StreamReadConstraints;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.linkedin.datahub.graphql.GraphQLEngine;
 import com.linkedin.datahub.graphql.exception.DataHubGraphQLError;
 import com.linkedin.metadata.utils.metrics.MetricUtils;
 import graphql.ExecutionResult;
 import io.opentelemetry.api.trace.Span;
-
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,35 +41,16 @@ public class GraphQLController {
   public GraphQLController() {
     MetricUtils.get().counter(MetricRegistry.name(this.getClass(), "error"));
     MetricUtils.get().counter(MetricRegistry.name(this.getClass(), "call"));
-
-    cache = CacheBuilder.newBuilder()
-            .expireAfterWrite(4, TimeUnit.HOURS)
-            .maximumSize(1000)
-            .build();
   }
 
   @Inject GraphQLEngine _engine;
 
   @Inject AuthorizerChain _authorizerChain;
 
-  Cache<Object, Object> cache;
-
   @PostMapping(value = "/graphql", produces = "application/json;charset=utf-8")
   CompletableFuture<ResponseEntity<String>> postGraphQL(HttpEntity<String> httpEntity) {
 
     String jsonStr = httpEntity.getBody();
-
-    Authentication authentication = AuthenticationContext.getAuthentication();
-    SpringQueryContext context = new SpringQueryContext(true, authentication, _authorizerChain);
-    String cacheKey = jsonStr + context.getActorUrn();
-    String base64CacheKey = Base64.getEncoder().encodeToString(cacheKey.getBytes(StandardCharsets.UTF_8));
-    log.debug("GraphQL API Cache stats: {}", cache.stats());
-
-    if(cache.asMap().containsKey(base64CacheKey)){
-      String response = cache.asMap().get(base64CacheKey).toString();
-      return CompletableFuture.completedFuture(new ResponseEntity<>(response, HttpStatus.OK));
-    }
-
     ObjectMapper mapper = new ObjectMapper();
     int maxSize =
         Integer.parseInt(
@@ -116,6 +94,8 @@ public class GraphQLController {
     /*
      * Init QueryContext
      */
+    Authentication authentication = AuthenticationContext.getAuthentication();
+    SpringQueryContext context = new SpringQueryContext(true, authentication, _authorizerChain);
     Span.current().setAttribute("actor.urn", context.getActorUrn());
 
     return CompletableFuture.supplyAsync(
@@ -147,9 +127,6 @@ public class GraphQLController {
             executionResult.getExtensions().remove("tracing");
             String responseBodyStr =
                 new ObjectMapper().writeValueAsString(executionResult.toSpecification());
-
-            cache.put(base64CacheKey, responseBodyStr);
-
             return new ResponseEntity<>(responseBodyStr, HttpStatus.OK);
           } catch (IllegalArgumentException | JsonProcessingException e) {
             log.error(
