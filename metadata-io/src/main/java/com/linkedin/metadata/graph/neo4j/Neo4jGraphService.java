@@ -86,9 +86,9 @@ public class Neo4jGraphService implements GraphService {
   public void addEdge(@Nonnull final Edge edge) {
 
     log.debug(
-        String.format(
-            "Adding Edge source: %s, destination: %s, type: %s",
-            edge.getSource(), edge.getDestination(), edge.getRelationshipType()));
+            String.format(
+                    "Adding Edge source: %s, destination: %s, type: %s",
+                    edge.getSource(), edge.getDestination(), edge.getRelationshipType()));
 
     final String sourceType = edge.getSource().getEntityType();
     final String destinationType = edge.getDestination().getEntityType();
@@ -99,45 +99,25 @@ public class Neo4jGraphService implements GraphService {
     // or indirect pattern match
     String endUrn = destinationUrn;
     String startUrn = sourceUrn;
-    String endType = destinationType;
-    String startType = sourceType;
     // Extra relationship typename start with r_ for
     // direct-outgoing-downstream/indirect-incoming-upstream relationships
     String reverseRelationshipType = "r_" + edge.getRelationshipType();
 
+    final String createOrFindSourceNode =
+            String.format("MERGE (source:%s {urn: '%s'})", sourceType, sourceUrn);
+    final String createOrFindDestinationNode =
+            String.format("MERGE (destination:%s {urn: '%s'})", destinationType, destinationUrn);
+    final String createSourceToDestinationRelationShip =
+            String.format("MERGE (source)-[:%s]->(destination)", edge.getRelationshipType());
+    String createReverseRelationShip =
+            String.format("MERGE (source)-[r:%s]->(destination)", reverseRelationshipType);
+
     if (isSourceDestReversed(sourceType, edge.getRelationshipType())) {
       endUrn = sourceUrn;
-      endType = sourceType;
       startUrn = destinationUrn;
-      startType = destinationType;
+      createReverseRelationShip =
+              String.format("MERGE (destination)-[r:%s]->(source)", reverseRelationshipType);
     }
-
-    final List<Statement> statements = new ArrayList<>();
-
-    // Add/Update source & destination node first
-    statements.add(getOrInsertNode(edge.getSource()));
-    statements.add(getOrInsertNode(edge.getDestination()));
-
-    // Add/Update relationship
-    final String mergeRelationshipTemplate =
-        "MATCH (source:%s {urn: '%s'}),(destination:%s {urn: '%s'}) MERGE (source)-[r:%s]->(destination) ";
-    String statement =
-        String.format(
-            mergeRelationshipTemplate,
-            sourceType,
-            sourceUrn,
-            destinationType,
-            destinationUrn,
-            edge.getRelationshipType());
-
-    String statementR =
-        String.format(
-            mergeRelationshipTemplate,
-            startType,
-            startUrn,
-            endType,
-            endUrn,
-            reverseRelationshipType);
 
     // Add/Update relationship properties
     String setCreatedOnTemplate;
@@ -166,33 +146,43 @@ public class Neo4jGraphService implements GraphService {
       for (Map.Entry<String, Object> entry : edge.getProperties().entrySet()) {
         // Make sure extra keys in properties are not preserved
         final Set<String> preservedKeySet =
-            Set.of("createdOn", "createdActor", "updatedOn", "updatedActor", "startUrn", "endUrn");
+                Set.of("createdOn", "createdActor", "updatedOn", "updatedActor", "startUrn", "endUrn");
         if (preservedKeySet.contains(entry.getKey())) {
           throw new UnsupportedOperationException(
-              String.format(
-                  "Tried setting properties on graph edge but property key is preserved. Key: %s",
-                  entry.getKey()));
+                  String.format(
+                          "Tried setting properties on graph edge but property key is preserved. Key: %s",
+                          entry.getKey()));
         }
         if (entry.getValue() instanceof String) {
           setPropertyTemplate = String.format("r.%s = '%s'", entry.getKey(), entry.getValue());
           propertiesTemplateJoiner.add(setPropertyTemplate);
         } else {
           throw new UnsupportedOperationException(
-              String.format(
-                  "Tried setting properties on graph edge but property value type is not supported. Key: %s, Value: %s ",
-                  entry.getKey(), entry.getValue()));
+                  String.format(
+                          "Tried setting properties on graph edge but property value type is not supported. Key: %s, Value: %s ",
+                          entry.getKey(), entry.getValue()));
         }
       }
     }
     final String setStartEndUrnTemplate =
-        String.format("r.startUrn = '%s', r.endUrn = '%s'", startUrn, endUrn);
+            String.format("r.startUrn = '%s', r.endUrn = '%s'", startUrn, endUrn);
     propertiesTemplateJoiner.add(setStartEndUrnTemplate);
-    if (!StringUtils.isEmpty(propertiesTemplateJoiner.toString())) {
-      statementR = String.format("%s SET %s", statementR, propertiesTemplateJoiner);
-    }
 
-    statements.add(buildStatement(statement, new HashMap<>()));
-    statements.add(buildStatement(statementR, new HashMap<>()));
+    StringBuilder finalStatement = new StringBuilder();
+    finalStatement
+            .append(createOrFindSourceNode)
+            .append(" ")
+            .append(createOrFindDestinationNode)
+            .append(" ")
+            .append(createSourceToDestinationRelationShip)
+            .append(" ")
+            .append(createReverseRelationShip)
+            .append(" ");
+    if (!StringUtils.isEmpty(propertiesTemplateJoiner.toString())) {
+      finalStatement.append("SET ").append(propertiesTemplateJoiner);
+    }
+    final List<Statement> statements = new ArrayList<>();
+    statements.add(buildStatement(finalStatement.toString(), new HashMap<>()));
     executeStatements(statements);
   }
 
@@ -741,7 +731,7 @@ public class Neo4jGraphService implements GraphService {
    *
    * @param statements List of statements with parameters to be executed in order
    */
-  private synchronized ExecutionResult executeStatements(@Nonnull List<Statement> statements) {
+  private ExecutionResult executeStatements(@Nonnull List<Statement> statements) {
     int retry = 0;
     final StopWatch stopWatch = new StopWatch();
     stopWatch.start();
