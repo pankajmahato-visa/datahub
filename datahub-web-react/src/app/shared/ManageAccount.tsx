@@ -95,9 +95,11 @@ export const ManageAccount = ({ urn: _urn, pictureLink: _pictureLink, name }: Pr
                     </MenuItem>
                 );
             })}
+            <Menu.Divider />
             <MenuItem key="graphiQLLink">
                 <a href="/api/graphiql">GraphiQL</a>
             </MenuItem>
+            <Menu.Divider />
             <MenuItem key="openapiLink">
                 <a href="/openapi/swagger-ui/index.html">OpenAPI</a>
             </MenuItem>

@@ -89,10 +89,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.mail.MethodNotSupportedException;
+
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.http.MethodNotSupportedException;
 
 @Slf4j
 public class RestliEntityClient extends BaseClient implements EntityClient {
@@ -1067,7 +1068,7 @@ public class RestliEntityClient extends BaseClient implements EntityClient {
       @Nonnull String aspect,
       @Nonnull Long version)
       throws RemoteInvocationException {
-    throw new MethodNotSupportedException();
+    throw new MethodNotSupportedException("Method not supported");
   }
 
   @Override

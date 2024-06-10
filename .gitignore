@@ -24,7 +24,7 @@ metadata-events/mxe-registration/src/main/resources/**/*.avsc
 
 # Python
 .venv
-venv/
+**/venv/**
 env.bak/
 venv.bak/
 .mypy_cache/
@@ -126,3 +126,7 @@ metadata-service/war/bin/
 metadata-utils/bin/
 test-models/bin/
 
+datahub-artifact
+datahub-*.tar
+/.run/
+/env/

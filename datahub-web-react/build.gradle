@@ -12,11 +12,11 @@ node {
   if (project.hasProperty('useSystemNode')) {
     download = ! project.getProperty('useSystemNode').toBoolean()
   } else {
-    download = true
+    download = false
   }
 
   // Version of node to use.
-  version = '21.2.0'
+//  version = '21.5.0'
 
   // Version of Yarn to use.
   yarnVersion = '1.22.21'
@@ -43,7 +43,7 @@ node {
   Wrappers around Yarn Tasks.
  */
 task yarnInstall(type: YarnTask) {
-  args = ['install']
+  args = ['install', '--update-checksums']
 
   // The node_modules directory can contain built artifacts, so
   // it's not really safe to cache it.
@@ -93,7 +93,7 @@ task yarnLintFix(type: YarnTask, dependsOn: [yarnInstall, yarnGenerate]) {
 }
 
 task yarnBuild(type: YarnTask, dependsOn: [yarnInstall, yarnGenerate]) {
-  environment = [NODE_OPTIONS: "--max-old-space-size=3072 --openssl-legacy-provider"]
+  environment = [NODE_OPTIONS: "--max-old-space-size=3072"]
   args = ['run', 'build']
 
   outputs.cacheIf { true }
