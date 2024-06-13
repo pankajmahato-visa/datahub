@@ -1,4 +1,4 @@
-<configuration>
+<configuration scan="true" scanPeriod="120 seconds">
   <property name="LOG_DIR" value="${LOG_DIR:- /tmp/datahub/logs/datahub-frontend}"/>
   <timestamp key="bySecond" datePattern="yyyy-MM-dd'_'HH-mm-ss"/>
   <timestamp key="byDate" datePattern="yyyy-MM-dd"/>
@@ -44,7 +44,7 @@
       <maxFileSize>100MB</maxFileSize>
       <!-- total size of all archive files, if total size > 10GB, it will delete old archived file -->
       <totalSizeCap>10GB</totalSizeCap>
-      <!-- 10 days to keep -->
+      <!-- 15 days to keep -->
       <maxHistory>15</maxHistory>
     </rollingPolicy>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
