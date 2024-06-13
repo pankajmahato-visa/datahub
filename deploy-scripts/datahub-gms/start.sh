@@ -51,4 +51,5 @@ exec java $GMS_INTERNAL_JAVA_OPTS \
     --jar jetty-util.jar \
     --jar jetty-jmx.jar \
     --config jetty.xml \
+    --config jetty-jmx.xml \
     war.war

@@ -1,12 +1,14 @@
 TAG ?= $(eval TAG := $(shell git describe --tags --always --dirty)-$(shell git diff | sha256sum | cut -c -6))$(TAG)
 TAG_VERSION=$(subst -e3b0c4,,$(TAG))
 TAR_BALL_VERSION="datahub-"$(subst -,.,$(TAG_VERSION))
+DATAHUB_FRONTEND_VERSION ?= $(shell ./gradlew :datahub-frontend:properties --no-daemon --console=plain -q | grep "^version:" | awk '{printf $$2}')
 .PHONY: init test clean build package
 
 init:
 	echo "TAG:" ${TAG}; \
 	echo "TAG_VERSION:" ${TAG_VERSION}; \
 	echo "TAR_BALL_VERSION:" ${TAR_BALL_VERSION}; \
+	echo "DATAHUB_FRONTEND_VERSION:" ${DATAHUB_FRONTEND_VERSION}; \
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
 	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
 	echo "Java Version"; \
@@ -20,8 +22,16 @@ init:
 	echo "Gradle Version"; \
 	./gradlew -v
 	echo "Processor count"; \
-	cat /proc/cpuinfo | grep "processor" | wc -l; \
-	cat /proc/meminfo | grep "MemTotal:"; \
+	getconf _NPROCESSORS_ONLN; \
+	echo "Total Memory(MB)"; \
+	OSTYPE=$$(uname); \
+	if [[ "$$OSTYPE" == "Linux" ]]; then \
+		free -m | awk 'NR==2{print $$2}'; \
+	elif [[ "$$OSTYPE" == "Darwin" ]]; then \
+		sysctl -n hw.memsize | awk '{print $$1/(1024*1024)}'; \
+	else \
+		echo "Unknown OS"; \
+	fi
 
 clean:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
@@ -30,7 +40,7 @@ clean:
 	export LANGUAGE=en_US.UTF-8; \
 	export LC_ALL=en_US.UTF-8; \
 	echo "Running Complete Datahub Clean Task"; \
-	./gradlew clean
+	./gradlew :metadata-service:war:clean :metadata-jobs:mae-consumer-job:clean :metadata-jobs:mce-consumer-job:clean :datahub-upgrade:clean :datahub-frontend:clean --parallel
 
 test:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
@@ -87,7 +97,7 @@ package:
 	echo "Current datahub-artifact folder tree"; \
 	find datahub-artifact | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"; \
 	echo "1. Copying Datahub Frontend"; \
-	tar -xvf datahub-frontend/build/distributions/datahub-frontend-*.tar -C datahub-artifact/datahub-frontend/datahub-frontend --strip-components 1; \
+	tar -xvf datahub-frontend/build/distributions/datahub-frontend-${DATAHUB_FRONTEND_VERSION}.tar -C datahub-artifact/datahub-frontend/datahub-frontend --strip-components 1; \
 	echo "2. Copying Datahub Upgrade JAR"; \
 	cp datahub-upgrade/build/libs/datahub-upgrade.jar datahub-artifact/datahub-upgrade; \
 	echo "3. Copying Metadata Service WAR"; \
@@ -107,6 +117,7 @@ package:
 	echo "10. Downloading VISA Certificates"; \
 	echo "11. Copying Datahub GMS files"; \
 	cp docker/datahub-gms/jetty.xml datahub-artifact/datahub-gms; \
+	cp docker/datahub-gms/jetty-jmx.xml datahub-artifact/datahub-gms; \
 	echo "12. Copying Deploy Scripts"; \
 	cp -a deploy-scripts/. datahub-artifact/; \
 	echo "Final datahub-artifact folder tree"; \

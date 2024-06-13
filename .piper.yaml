@@ -35,29 +35,29 @@ jobs:
         uploadHost: 'https://artifactory.trusted.visa.com'
         uploadFiles: '[{"pattern":"datahub-v*.tar","target":"vdc/datahub/"}]'
         credentialsId: vdc-upload
-#  deployment:
-#    tool: ansible-rpm
-#    environment: dev
-#    stack:
-#      engine: host
-#      credentialsId: datahub-deployment
-#    dev:
-#      host: datahub
-#      playbook: ansible/roles/deployment/main.yml
-#      inventory: ansible/inventories/dev/hosts
-#      credentialsId: datahub-deployment
-#    integration:
-#      host: datahub
-#      playbook: ansible/roles/deployment/main-deployment-int.yml
-#      inventory: ansible/inventories/int/hosts
-#      credentialsId: datahub-deployment
-#    oce:
-#      host: datahub
-#      playbook: ansible/roles/deployment/main-deployment-prod-oce.yml
-#      inventory: ansible/inventories/oce/hosts
-#      credentialsId: datahub-deployment
-#    occ:
-#      host: datahub
-#      playbook: ansible/roles/deployment/main-deployment-prod-occ.yml
-#      inventory: ansible/inventories/occ/hosts
-#      credentialsId: datahub-deployment
+  deployment:
+    tool: ansible-rpm
+    environment: dev
+    stack:
+      engine: host
+      credentialsId: datahub-deployment
+    dev:
+      host: datahub
+      playbook: ansible/roles/deployment/main.yml
+      inventory: ansible/inventories/dev/hosts
+      credentialsId: datahub-deployment
+    integration:
+      host: datahub
+      playbook: ansible/roles/deployment/main-deployment-int.yml
+      inventory: ansible/inventories/int/hosts
+      credentialsId: datahub-deployment
+    oce:
+      host: datahub
+      playbook: ansible/roles/deployment/main-deployment-prod-oce.yml
+      inventory: ansible/inventories/oce/hosts
+      credentialsId: datahub-deployment
+    occ:
+      host: datahub
+      playbook: ansible/roles/deployment/main-deployment-prod-occ.yml
+      inventory: ansible/inventories/occ/hosts
+      credentialsId: datahub-deployment
