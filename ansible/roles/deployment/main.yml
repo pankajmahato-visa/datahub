@@ -237,19 +237,6 @@
 
 
 
-    - name: Start Datahub Upgrade
-      shell: |
-        sleep 10
-        echo "Starting Datahub Upgrade"
-        cd {{ datahub_root_folder }}/datahub-latest/datahub-upgrade/
-        nohup sh start.sh > /dev/null 2> datahub-upgrade.log < /dev/null & echo $! > datahub-upgrade.pid
-        sleep 120
-        disown
-      register: task_output
-    - debug: msg="{{ task_output }}"
-      
-
-
     - name: Start MAE Consumer
       shell: |
         sleep 30

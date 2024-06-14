@@ -372,8 +372,10 @@ configure(subprojects.findAll {! it.name.startsWith('spark-lineage')}) {
     resolutionStrategy {
       force "org.apache.commons:commons-compress:1.26.0"
       force "org.mozilla:rhino:1.7.15"
-      force "com.nimbusds:oauth2-oidc-sdk:8.36.2"
+      force "com.nimbusds:nimbus-jose-jwt:8.23"
       force "org.apache.kafka:kafka-clients:3.7.0"
+      force "com.nimbusds:oauth2-oidc-sdk:8.36.2"
+      force "net.minidev:json-smart:2.4.9"
     }
   }
 }
@@ -402,7 +404,7 @@ subprojects {
       implementation externalDependency.annotationApi
       constraints {
         implementation("com.google.googlejavaformat:google-java-format:$googleJavaFormatVersion")
-        implementation('io.netty:netty-all:4.1.111.Final')
+        implementation('io.netty:netty-all:4.1.108.Final')
         implementation('org.apache.commons:commons-compress:1.26.0')
         implementation('org.apache.velocity:velocity-engine-core:2.3')
         implementation('org.hibernate:hibernate-validator:6.0.20.Final')

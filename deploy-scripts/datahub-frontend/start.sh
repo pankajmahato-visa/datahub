@@ -53,7 +53,7 @@ export DATAHUB_FRONTEND_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
   ${PROMETHEUS_AGENT:-} ${OTEL_AGENT:-} \
   ${TRUSTSTORE_FILE:-} ${TRUSTSTORE_TYPE:-} ${TRUSTSTORE_PASSWORD:-} \
   ${DATAHUB_FRONTEND_REMOTE_DEBUG:-} \
-  -Dlogback.debug=false "
+  -Dpidfile.path=/dev/null"
 
 echo $DATAHUB_FRONTEND_OPTS
 
