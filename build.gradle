@@ -369,7 +369,6 @@ configure(subprojects.findAll {! it.name.startsWith('spark-lineage')}) {
     exclude group: "io.envoyproxy.controlplane", module: "api"
     exclude group: "javax.mail", module: "mail"
     exclude group: "org.apache.commons", module: "commons-configuration2"
-    exclude group: "org.iq80.snappy", module: "snappy"
     resolutionStrategy {
       force "org.apache.commons:commons-compress:1.26.0"
       force "org.mozilla:rhino:1.7.15"
