@@ -184,7 +184,7 @@ project.ext.externalDependency = [
     'kafkaAvroSerde': "io.confluent:kafka-streams-avro-serde:$kafkaVersion",
     'kafkaAvroSerializer': "io.confluent:kafka-avro-serializer:$kafkaVersion",
     'kafkaClients': "org.apache.kafka:kafka-clients:$kafkaVersion-ccs",
-    'snappy': 'org.xerial.snappy:snappy-java:1.1.10.5',
+//    'snappy': 'org.xerial.snappy:snappy-java:1.1.10.5',
     'logbackClassic': "ch.qos.logback:logback-classic:$logbackClassic",
     'logbackClassicJava8' : "ch.qos.logback:logback-classic:$logbackClassicJava8",
     'slf4jApi': "org.slf4j:slf4j-api:$slf4jVersion",
@@ -369,6 +369,7 @@ configure(subprojects.findAll {! it.name.startsWith('spark-lineage')}) {
     exclude group: "io.envoyproxy.controlplane", module: "api"
     exclude group: "javax.mail", module: "mail"
     exclude group: "org.apache.commons", module: "commons-configuration2"
+    exclude group: "org.iq80.snappy", module: "snappy"
     resolutionStrategy {
       force "org.apache.commons:commons-compress:1.26.0"
       force "org.mozilla:rhino:1.7.15"
@@ -376,6 +377,7 @@ configure(subprojects.findAll {! it.name.startsWith('spark-lineage')}) {
       force "org.apache.kafka:kafka-clients:3.7.0"
       force "com.nimbusds:oauth2-oidc-sdk:8.36.2"
       force "net.minidev:json-smart:2.4.9"
+      force "com.typesafe.akka:akka-actor_2.12:2.8.5"
     }
   }
 }

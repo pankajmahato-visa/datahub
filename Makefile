@@ -62,16 +62,7 @@ build:
 	export LANGUAGE=en_US.UTF-8; \
 	export LC_ALL=en_US.UTF-8; \
 	echo "Running Build and Test for all modules"; \
-	./gradlew :metadata-service:war:build -x test --parallel; \
-	./gradlew :metadata-jobs:mae-consumer-job:build -x test  --parallel; \
-	./gradlew :metadata-jobs:mce-consumer-job:build -x test --parallel; \
-	./gradlew :datahub-upgrade:build -x test --parallel; \
-	export GRADLE_OPTS="-Dgradle.wrapperUser=$$PIPER_CUSTOM_USER -Dgradle.wrapperPassword=$$PIPER_CUSTOM_PASSWORD"; \
-	export LANG=en_US.UTF-8; \
-	export LANGUAGE=en_US.UTF-8; \
-	export LC_ALL=en_US.UTF-8; \
-	echo "Running Datahub Frontend build Task"; \
-	./gradlew :datahub-frontend:build -x test --parallel;
+	./gradlew :metadata-service:war:build :metadata-jobs:mae-consumer-job:build :metadata-jobs:mce-consumer-job:build :datahub-upgrade:build :datahub-frontend:build -x test --parallel;
 
 package:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
