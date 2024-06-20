@@ -49,11 +49,7 @@ test:
 	export LANGUAGE=en_US.UTF-8; \
 	export LC_ALL=en_US.UTF-8; \
 	echo "Running Test for all modules"; \
-# 	./gradlew :metadata-service:war:test; \
-# 	./gradlew :datahub-frontend:test; \
-# 	./gradlew :datahub-upgrade:test; \
-# 	./gradlew :metadata-jobs:mae-consumer-job:test; \
-# 	./gradlew :metadata-jobs:mce-consumer-job:test;
+	./gradlew :metadata-service:war:test :datahub-frontend:test :datahub-upgrade:test :metadata-jobs:mae-consumer-job:test :metadata-jobs:mce-consumer-job:test --parallel;
 
 build:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \
@@ -62,7 +58,7 @@ build:
 	export LANGUAGE=en_US.UTF-8; \
 	export LC_ALL=en_US.UTF-8; \
 	echo "Running Build and Test for all modules"; \
-	./gradlew :metadata-service:war:build :metadata-jobs:mae-consumer-job:build :metadata-jobs:mce-consumer-job:build :datahub-upgrade:build :datahub-frontend:build -x test --parallel;
+	./gradlew :metadata-service:war:build :metadata-jobs:mae-consumer-job:build :metadata-jobs:mce-consumer-job:build :datahub-upgrade:build :datahub-frontend:build --parallel;
 
 package:
 	echo "Setting Gradle Wrapper Credentials for gradle download"; \

@@ -31,6 +31,7 @@
         username: "{{ username }}"
         password: "{{ password }}"
         force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
       register: task_output
     - debug: msg="{{ task_output }}"
 
@@ -120,6 +121,18 @@
 
 
 
+    - name: Cleanup Jetty Temp Files
+      shell: |
+        echo "Deleting all Jetty temp files"
+        cd /tmp
+        echo "\nFolders deleted"
+        ls -dt */ | grep 'jetty-'
+        ls -dt */ | grep 'jetty-'| xargs -r rm -rf --
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
     - name: Pointing previous symlink to latest
       shell: |
         rm {{ datahub_root_folder }}/datahub-previous
@@ -147,6 +160,7 @@
         username: "{{ username }}"
         password: "{{ password }}"
         force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
       retries: 3
       delay: 10
       register: task_output
@@ -162,6 +176,7 @@
         username: "{{ username }}"
         password: "{{ password }}"
         force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
       retries: 3
       delay: 10
       register: task_output
@@ -177,6 +192,7 @@
         username: "{{ username }}"
         password: "{{ password }}"
         force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
       retries: 3
       delay: 10
       register: task_output
@@ -192,6 +208,7 @@
         username: "{{ username }}"
         password: "{{ password }}"
         force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
       retries: 3
       delay: 10
       register: task_output
@@ -207,6 +224,7 @@
         username: "{{ username }}"
         password: "{{ password }}"
         force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
       retries: 3
       delay: 10
       register: task_output
@@ -222,6 +240,7 @@
         username: "{{ username }}"
         password: "{{ password }}"
         force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
       retries: 3
       delay: 10
       register: task_output
