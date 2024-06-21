@@ -262,7 +262,6 @@
         echo "Starting MAE Consumer"
         cd {{ datahub_root_folder }}/datahub-latest/datahub-mae-consumer/
         nohup sh start.sh > /dev/null 2> datahub-mae-consumer.log < /dev/null & echo $! > datahub-mae-consumer.pid
-        disown
       register: task_output
     - debug: msg="{{ task_output }}"
 
@@ -274,7 +273,6 @@
         echo "Starting MCE Consumer"
         cd {{ datahub_root_folder }}/datahub-latest/datahub-mce-consumer/
         nohup sh start.sh > /dev/null 2> datahub-mce-consumer.log < /dev/null & echo $! > datahub-mce-consumer.pid
-        disown
       register: task_output
     - debug: msg="{{ task_output }}"
 
@@ -286,7 +284,6 @@
         echo "Starting Datahub GMS"
         cd {{ datahub_root_folder }}/datahub-latest/datahub-gms/
         nohup sh start.sh > /dev/null 2> datahub-gms.log < /dev/null & echo $! > datahub-gms.pid
-        disown
       register: task_output
     - debug: msg="{{ task_output }}"
 
@@ -298,7 +295,6 @@
         echo "Starting Datahub Frontend"
         cd {{ datahub_root_folder }}/datahub-latest/datahub-frontend/
         nohup sh start.sh > /dev/null 2> datahub-frontend.log < /dev/null & echo $! > datahub-frontend.pid
-        disown
       register: task_output
     - debug: msg="{{ task_output }}"
 
