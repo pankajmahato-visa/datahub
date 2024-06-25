@@ -50,8 +50,8 @@
         cd {{ datahub_root_folder }}/datahub-latest/datahub-mae-consumer/
         echo "Sending SIGTERM to Datahub MAE Consumer"
         [ -f datahub-mae-consumer.pid ] && cat datahub-mae-consumer.pid | xargs kill -15 || true
-        echo "Sleeping 60 seconds"
-        sleep 60
+        echo "Sleeping 20 seconds"
+        sleep 20
         echo "Sending SIGKILL"
         [ -f datahub-mae-consumer.pid ] && cat datahub-mae-consumer.pid | xargs kill -9 || true
         rm -f datahub-mae-consumer.pid
@@ -69,8 +69,8 @@
         cd {{ datahub_root_folder }}/datahub-latest/datahub-mce-consumer/
         echo "Sending SIGTERM to Datahub MCE Consumer"
         [ -f datahub-mce-consumer.pid ] && cat datahub-mce-consumer.pid | xargs kill -15 || true
-        echo "Sleeping 60 seconds"
-        sleep 60
+        echo "Sleeping 20 seconds"
+        sleep 20
         echo "Sending SIGKILL"
         [ -f datahub-mce-consumer.pid ] && cat datahub-mce-consumer.pid | xargs kill -9 || true
         rm -f datahub-mce-consumer.pid
@@ -88,8 +88,8 @@
         cd {{ datahub_root_folder }}/datahub-latest/datahub-frontend/
         echo "Sending SIGTERM to Datahub Frontend"
         [ -f datahub-frontend.pid ] && cat datahub-frontend.pid | xargs kill -15 || true
-        echo "Sleeping 60 seconds"
-        sleep 60
+        echo "Sleeping 20 seconds"
+        sleep 20
         echo "Sending SIGKILL"
         [ -f datahub-frontend.pid ] && cat datahub-frontend.pid | xargs kill -9 || true
         rm -f datahub-frontend.pid
@@ -107,8 +107,8 @@
         cd {{ datahub_root_folder }}/datahub-latest/datahub-gms/
         echo "Sending SIGTERM to Datahub Frontend"
         [ -f datahub-gms.pid ] && cat datahub-gms.pid | xargs kill -15 || true
-        echo "Sleeping 60 seconds"
-        sleep 60
+        echo "Sleeping 20 seconds"
+        sleep 20
         echo "Sending SIGKILL"
         [ -f datahub-gms.pid ] && cat datahub-gms.pid | xargs kill -9 || true
         rm -f datahub-frontend.pid
@@ -256,6 +256,17 @@
 
 
 
+    - name: Start Datahub GMS
+      shell: |
+        sleep 30
+        echo "Starting Datahub GMS"
+        cd {{ datahub_root_folder }}/datahub-latest/datahub-gms/
+        nohup sh start.sh > /dev/null 2> datahub-gms.log < /dev/null & echo $! > datahub-gms.pid
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
     - name: Start MAE Consumer
       shell: |
         sleep 30
@@ -278,20 +289,9 @@
 
 
 
-    - name: Start Datahub GMS
-      shell: |
-        sleep 30
-        echo "Starting Datahub GMS"
-        cd {{ datahub_root_folder }}/datahub-latest/datahub-gms/
-        nohup sh start.sh > /dev/null 2> datahub-gms.log < /dev/null & echo $! > datahub-gms.pid
-      register: task_output
-    - debug: msg="{{ task_output }}"
-
-
-
     - name: Start Datahub Frontend
       shell: |
-        sleep 60
+        sleep 20
         echo "Starting Datahub Frontend"
         cd {{ datahub_root_folder }}/datahub-latest/datahub-frontend/
         nohup sh start.sh > /dev/null 2> datahub-frontend.log < /dev/null & echo $! > datahub-frontend.pid
