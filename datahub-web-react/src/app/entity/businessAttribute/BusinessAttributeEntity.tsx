@@ -61,7 +61,7 @@ export class BusinessAttributeEntity implements Entity<BusinessAttribute> {
 
     getCustomCardUrlPath = () => PageRoutes.BUSINESS_ATTRIBUTE;
 
-    isBrowseEnabled = () => false;
+    isBrowseEnabled = () => true;
 
     isLineageEnabled = () => false;
 
