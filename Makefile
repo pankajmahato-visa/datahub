@@ -96,16 +96,18 @@ package:
 	echo "6. Copying Crawler Test JAR"; \
 	echo "7. Copying entity-registry.yml"; \
 	cp metadata-models/src/main/resources/entity-registry.yml datahub-artifact/resources; \
-	echo "8. Copying elasticsearch json files"; \
+	echo "8. Copying spark-lineage-retention.yaml"; \
+	cp deploy-scripts/spark-lineage-retention.yaml datahub-artifact/plugins/retention; \
+	echo "9. Copying elasticsearch json files"; \
 	cp metadata-service/restli-servlet-impl/src/main/resources/index/usage-event/{index_template.json,policy.json} datahub-artifact/setup/elasticsearch-setup; \
-	echo "9. Downloading jetty files"; \
+	echo "10. Downloading jetty files"; \
 	chmod u+x download.sh; \
 	./download.sh; \
-	echo "10. Downloading VISA Certificates"; \
-	echo "11. Copying Datahub GMS files"; \
+	echo "11. Downloading VISA Certificates"; \
+	echo "12. Copying Datahub GMS files"; \
 	cp docker/datahub-gms/jetty.xml datahub-artifact/datahub-gms; \
 	cp docker/datahub-gms/jetty-jmx.xml datahub-artifact/datahub-gms; \
-	echo "12. Copying Deploy Scripts"; \
+	echo "13. Copying Deploy Scripts"; \
 	cp -a deploy-scripts/. datahub-artifact/; \
 	echo "Final datahub-artifact folder tree"; \
 	find datahub-artifact | sort | sed -e "s/[^-][^\/]*\//  |/g" -e "s/|\([^ ]\)/|-\1/"; \
