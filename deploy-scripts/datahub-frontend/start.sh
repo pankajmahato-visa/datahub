@@ -48,7 +48,7 @@ export DATAHUB_FRONTEND_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED \
   ${DATAHUB_FRONTEND_HEAP_OPTS} \
   -Dhttp.port=$SERVER_PORT \
   -Dconfig.file=datahub-frontend/conf/application.conf \
-  -Djava.security.auth.login.config=datahub-frontend/conf/jaas.conf \
+  -Djava.security.auth.login.config=/datahub/env/datahub-frontend-jaas.conf \
   -Dlogback.configurationFile=datahub-frontend/conf/logback.xml \
   ${PROMETHEUS_AGENT:-} ${OTEL_AGENT:-} \
   ${TRUSTSTORE_FILE:-} ${TRUSTSTORE_TYPE:-} ${TRUSTSTORE_PASSWORD:-} \
