@@ -126,7 +126,7 @@
         echo "Deleting all Jetty temp files"
         cd /tmp
         echo "\nFolders deleted"
-        ls -dt */ | grep 'jetty-'
+        ls -ladt */ | grep 'jetty-'
         ls -dt */ | grep 'jetty-'| xargs -r rm -rf --
       register: task_output
     - debug: msg="{{ task_output }}"
@@ -267,6 +267,17 @@
 
 
 
+    - name: Start Datahub Frontend
+      shell: |
+        sleep 20
+        echo "Starting Datahub Frontend"
+        cd {{ datahub_root_folder }}/datahub-latest/datahub-frontend/
+        nohup sh start.sh > /dev/null 2> datahub-frontend.log < /dev/null & echo $! > datahub-frontend.pid
+      register: task_output
+    - debug: msg="{{ task_output }}"
+      
+
+
     - name: Start MAE Consumer
       shell: |
         sleep 30
@@ -284,17 +295,6 @@
         echo "Starting MCE Consumer"
         cd {{ datahub_root_folder }}/datahub-latest/datahub-mce-consumer/
         nohup sh start.sh > /dev/null 2> datahub-mce-consumer.log < /dev/null & echo $! > datahub-mce-consumer.pid
-      register: task_output
-    - debug: msg="{{ task_output }}"
-
-
-
-    - name: Start Datahub Frontend
-      shell: |
-        sleep 20
-        echo "Starting Datahub Frontend"
-        cd {{ datahub_root_folder }}/datahub-latest/datahub-frontend/
-        nohup sh start.sh > /dev/null 2> datahub-frontend.log < /dev/null & echo $! > datahub-frontend.pid
       register: task_output
     - debug: msg="{{ task_output }}"
 
