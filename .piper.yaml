@@ -8,12 +8,13 @@ jobs:
     image: reg.visa.com/usawant/rhel8-jdk17-node21:v8
     build:
       init: make init
-      build: make build test package
-    oss:
-      name: parsec/datahub
-      project: DPL_parsec-datahub-AskNowId_0078529
-      release: v0.13.3_REL_010062024
-      files: "datahub-artifact/*"
+      build: make build package
+      # build: make build test package
+    # oss:
+    #   name: parsec/datahub
+    #   project: DPL_parsec-datahub-AskNowId_0078529
+    #   release: v0.13.3_REL_010062024
+    #   files: "datahub-artifact/*"
 #    securityScan:
 #      projectName: DPDLC-datahub_0029651_REL_V013.3
 #      groupId: fb48f27c-987a-44a3-ba21-a9f843b45287
@@ -24,11 +25,11 @@ jobs:
 #      highThreshold: 10
 #      mediumThreshold: 100
 #      hideDebugLogs: true
-    sonatypeScan:
-      iqStage: 'build'
-      iqApplication: '0078529_DPDLC_Datahub'
-      iqScanPatterns: [ { scanPattern: '**/datahub-artifact/datahub-gms/*.war' }, { scanPattern: '**/datahub-artifact/datahub-frontend/*' }, { scanPattern: '**/datahub-artifact/datahub-mae-consumer/*.jar' }, { scanPattern: '**/datahub-artifact/datahub-mce-consumer/*.jar' } ]
-      iqModuleExcludes: [ moduleExclude: '**/datahub-upgrade/*' ]
+    # sonatypeScan:
+    #   iqStage: 'build'
+    #   iqApplication: '0078529_DPDLC_Datahub'
+    #   iqScanPatterns: [ { scanPattern: '**/datahub-artifact/datahub-gms/*.war' }, { scanPattern: '**/datahub-artifact/datahub-frontend/*' }, { scanPattern: '**/datahub-artifact/datahub-mae-consumer/*.jar' }, { scanPattern: '**/datahub-artifact/datahub-mce-consumer/*.jar' } ]
+    #   iqModuleExcludes: [ moduleExclude: '**/datahub-upgrade/*' ]
   publish:
     steps:
       artifactory:
