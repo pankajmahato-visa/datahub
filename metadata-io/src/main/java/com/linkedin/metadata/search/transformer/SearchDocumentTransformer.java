@@ -68,7 +68,6 @@ public class SearchDocumentTransformer {
 
   public Optional<String> transformSnapshot(
       final RecordTemplate snapshot, final EntitySpec entitySpec, final Boolean forDelete) {
-    log.info("Transform snapshot. Maximum array length: {}", maxArrayLength);
     final Map<SearchableFieldSpec, List<Object>> extractedSearchableFields =
         FieldExtractor.extractFieldsFromSnapshot(
                 snapshot, entitySpec, AspectSpec::getSearchableFieldSpecs, maxValueLength)
@@ -84,7 +83,6 @@ public class SearchDocumentTransformer {
         FieldExtractor.extractFieldsFromSnapshot(
             snapshot, entitySpec, AspectSpec::getSearchScoreFieldSpecs, maxValueLength);
     if (extractedSearchableFields.isEmpty() && extractedSearchScoreFields.isEmpty()) {
-      log.info("Transform snapshot - if block. Maximum array length: {}", maxArrayLength);
       return Optional.empty();
     }
     final ObjectNode searchDocument = JsonNodeFactory.instance.objectNode();
@@ -117,7 +115,6 @@ public class SearchDocumentTransformer {
       final @Nonnull AspectSpec aspectSpec,
       final Boolean forDelete)
       throws RemoteInvocationException, URISyntaxException {
-    log.info("Transform aspect. Maximum array length: {}", maxArrayLength);
     final Map<SearchableFieldSpec, List<Object>> extractedSearchableFields =
         FieldExtractor.extractFields(aspect, aspectSpec.getSearchableFieldSpecs(), maxValueLength);
     final Map<SearchableRefFieldSpec, List<Object>> extractedSearchRefFields =
@@ -131,7 +128,6 @@ public class SearchDocumentTransformer {
     if (!extractedSearchableFields.isEmpty()
         || !extractedSearchScoreFields.isEmpty()
         || !extractedSearchRefFields.isEmpty()) {
-      log.info("Transform aspect - if block. Maximum array length: {}", maxArrayLength);
       final ObjectNode searchDocument = JsonNodeFactory.instance.objectNode();
       searchDocument.put("urn", urn.toString());
 
@@ -144,7 +140,6 @@ public class SearchDocumentTransformer {
           (key, values) -> setSearchScoreValue(key, values, searchDocument, forDelete));
       result = Optional.of(searchDocument);
     } else if (STRUCTURED_PROPERTIES_ASPECT_NAME.equals(aspectSpec.getName())) {
-      log.info("Transform aspect - else if block. Maximum array length: {}", maxArrayLength);
       final ObjectNode searchDocument = JsonNodeFactory.instance.objectNode();
       searchDocument.put("urn", urn.toString());
       setStructuredPropertiesSearchValue(
@@ -160,7 +155,6 @@ public class SearchDocumentTransformer {
       final List<Object> fieldValues,
       final ObjectNode searchDocument,
       final Boolean forDelete) {
-    log.info("Setting searchable value. Maximum array length: {}", maxArrayLength);
     DataSchema.Type valueType = fieldSpec.getPegasusSchema().getType();
     Optional<Object> firstValue = fieldValues.stream().findFirst();
     boolean isArray = fieldSpec.isArray();
@@ -176,12 +170,10 @@ public class SearchDocumentTransformer {
                 return;
               }
               if (valueType == DataSchema.Type.BOOLEAN) {
-                log.info("Field value is a Boolean. Maximum array length: {}", maxArrayLength);
                 searchDocument.set(
                     fieldName,
                     JsonNodeFactory.instance.booleanNode((Boolean) firstValue.orElse(false)));
               } else {
-                log.info("Field value is not a Boolean. Maximum array length: {}", maxArrayLength);
                 searchDocument.set(
                     fieldName, JsonNodeFactory.instance.booleanNode(!fieldValues.isEmpty()));
               }
@@ -223,13 +215,10 @@ public class SearchDocumentTransformer {
     }
 
     if (isArray || (valueType == DataSchema.Type.MAP && !OBJECT_FIELD_TYPES.contains(fieldType))) {
-      log.info("Field value is an array. Maximum array length: {}", maxArrayLength);
       if (fieldType == FieldType.BROWSE_PATH_V2) {
-        log.info("Field type browse path v2. Maximum array length: {}", maxArrayLength);
         String browsePathV2Value = getBrowsePathV2Value(fieldValues);
         searchDocument.set(fieldName, JsonNodeFactory.instance.textNode(browsePathV2Value));
       } else {
-        log.info("Field type browse path v2 - else block. Maximum array length: {}", maxArrayLength);
         ArrayNode arrayNode = JsonNodeFactory.instance.arrayNode();
         fieldValues
             .subList(0, Math.min(fieldValues.size(), maxArrayLength))
@@ -238,7 +227,6 @@ public class SearchDocumentTransformer {
         searchDocument.set(fieldName, arrayNode);
       }
     } else if (valueType == DataSchema.Type.MAP && FieldType.MAP_ARRAY.equals(fieldType)) {
-      log.info("Field value is a map and type map_array. Maximum array length: {}", maxArrayLength);
       ObjectNode dictDoc = JsonNodeFactory.instance.objectNode();
       fieldValues
           .subList(0, Math.min(fieldValues.size(), maxObjectKeys))
@@ -258,7 +246,6 @@ public class SearchDocumentTransformer {
               });
       searchDocument.set(fieldName, dictDoc);
     } else if (valueType == DataSchema.Type.MAP) {
-      log.info("Field value is a map. Maximum array length: {}", maxArrayLength);
       ObjectNode dictDoc = JsonNodeFactory.instance.objectNode();
       fieldValues
           .subList(0, Math.min(fieldValues.size(), maxObjectKeys))
@@ -271,7 +258,6 @@ public class SearchDocumentTransformer {
               });
       searchDocument.set(fieldName, dictDoc);
     } else if (!fieldValues.isEmpty()) {
-      log.info("Field value is empty. Maximum array length: {}", maxArrayLength);
       getNodeForValue(valueType, fieldValues.get(0), fieldType)
           .ifPresent(node -> searchDocument.set(fieldName, node));
     }
