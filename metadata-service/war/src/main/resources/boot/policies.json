@@ -271,7 +271,7 @@
       "description":"Editors can manage ingestion and view analytics.",
       "state":"ACTIVE",
       "type":"PLATFORM",
-      "editable":false
+      "editable":true
     }
   },
   {
@@ -322,7 +322,7 @@
       "description":"Editors have all metadata privileges.",
       "state":"ACTIVE",
       "type":"METADATA",
-      "editable":false
+      "editable":true
     }
   },
   {
@@ -391,7 +391,7 @@
       "description":"Readers can view analytics.",
       "state":"ACTIVE",
       "type":"PLATFORM",
-      "editable":false
+      "editable":true
     }
   },
   {
@@ -422,7 +422,7 @@
       "description":"Readers can view all assets.",
       "state":"ACTIVE",
       "type":"METADATA",
-      "editable":false
+      "editable":true
     }
   },
   {
