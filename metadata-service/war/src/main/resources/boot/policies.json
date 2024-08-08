@@ -356,7 +356,8 @@
                 "glossaryTerm",
                 "glossaryNode",
                 "notebook",
-                "dataProduct"
+                "dataProduct",
+                "dataProcessInstance"
               ],
               "condition": "EQUALS"
             }
