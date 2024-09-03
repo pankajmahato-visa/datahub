@@ -18,9 +18,9 @@ dependencies {
     play(externalDependency.jacksonDataBind)
     play('com.nimbusds:oauth2-oidc-sdk:8.36.2')
 //    play('com.nimbusds:nimbus-jose-jwt:8.18')
-    play('com.typesafe.akka:akka-actor_2.12:2.8.5')
+    play('com.typesafe.akka:akka-actor_2.12:2.8.6')
     play(externalDependency.jsonSmart)
-    play('io.netty:netty-all:4.1.108.Final')
+    play('io.netty:netty-all:4.1.112.Final')
     implementation(externalDependency.commonsText) {
       because("previous versions are vulnerable to CVE-2022-42889")
     }
@@ -42,7 +42,9 @@ dependencies {
   implementation externalDependency.antlr4Runtime
   implementation externalDependency.antlr4
   implementation externalDependency.akkaHttp
-  implementation('org.slf4j:slf4j-simple:2.0.5')
+  implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+  implementation 'io.jsonwebtoken:jjwt-gson:0.11.2'
+  implementation 'org.slf4j:slf4j-simple:2.0.5'
 
   implementation externalDependency.jerseyCore
   implementation externalDependency.jerseyGuava
@@ -57,8 +59,8 @@ dependencies {
   implementation externalDependency.playPac4j
   implementation externalDependency.shiroCore
 
-  implementation (externalDependency.playCache)
-  implementation (externalDependency.playCaffeineCache)
+  implementation externalDependency.playCache
+  implementation externalDependency.playCaffeineCache
   implementation externalDependency.playWs
   implementation externalDependency.playServer
   implementation externalDependency.playAkkaHttpServer

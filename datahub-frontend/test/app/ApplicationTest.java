@@ -41,7 +41,7 @@ import play.test.TestBrowser;
 import play.test.WithBrowser;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SetEnvironmentVariable(key = "DATAHUB_SECRET", value = "test")
+@SetEnvironmentVariable(key = "DATAHUB_SECRET", value = "test1234test1234test1234test1234test1234test1234")
 @SetEnvironmentVariable(key = "KAFKA_BOOTSTRAP_SERVER", value = "")
 @SetEnvironmentVariable(key = "DATAHUB_ANALYTICS_ENABLED", value = "false")
 @SetEnvironmentVariable(key = "AUTH_OIDC_ENABLED", value = "true")

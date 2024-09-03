@@ -46,6 +46,7 @@ public class UsageClientFactory {
   public RestliUsageClient getUsageClient() {
     Map<String, String> params = new HashMap<>();
     params.put(HttpClientFactory.HTTP_REQUEST_TIMEOUT, String.valueOf(timeoutMs));
+    params.put(HttpClientFactory.HTTP_USE_RESPONSE_COMPRESSION, String.valueOf(false));
 
     Client restClient =
         DefaultRestliClientFactory.getRestLiClient(
