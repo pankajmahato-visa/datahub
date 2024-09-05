@@ -111,7 +111,7 @@
         sleep 20
         echo "Sending SIGKILL"
         [ -f datahub-gms.pid ] && cat datahub-gms.pid | xargs kill -9 || true
-        rm -f datahub-frontend.pid
+        rm -f datahub-gms.pid
       args:
         removes: "{{ datahub_root_folder }}/datahub-latest/datahub-gms/datahub-gms.pid"
       retries: 3
