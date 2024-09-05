@@ -232,7 +232,7 @@ project.ext.externalDependency = [
     'resilience4j': 'io.github.resilience4j:resilience4j-retry:1.7.1',
     'rythmEngine': 'org.rythmengine:rythm-engine:1.3.0',
     'servletApi': 'jakarta.servlet:jakarta.servlet-api:6.0.0',
-//    'shiroCore': 'org.apache.shiro:shiro-core:1.13.0',
+    'shiroCore': 'org.apache.shiro:shiro-core:1.13.0',
     'slf4jSimple': 'org.slf4j:slf4j-simple:1.7.35',
     'snakeYaml': 'org.yaml:snakeyaml:2.0',
     'sparkSql' : 'org.apache.spark:spark-sql_2.12:3.0.3',
@@ -370,6 +370,7 @@ configure(subprojects.findAll {! it.name.startsWith('spark-lineage')}) {
     exclude group: "javax.mail", module: "mail"
     exclude group: "org.apache.commons", module: "commons-configuration2"
     exclude group: "io.jsonwebtoken", module: "jjwt"
+    exclude group: "commons-collections", module: "commons-collections"
     resolutionStrategy {
       force "org.apache.commons:commons-compress:1.26.0"
       force "org.mozilla:rhino:1.7.15"
