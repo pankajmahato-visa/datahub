@@ -57,7 +57,7 @@ dependencies {
   implementation 'com.nimbusds:nimbus-jose-jwt:8.23'
   implementation externalDependency.jsonSmart
   implementation externalDependency.playPac4j
-  implementation externalDependency.shiroCore
+//  implementation externalDependency.shiroCore
 
   implementation externalDependency.playCache
   implementation externalDependency.playCaffeineCache
@@ -97,7 +97,7 @@ play {
   platform {
     playVersion = '2.8.21'
     scalaVersion = '2.12'
-    javaVersion = JavaVersion.VERSION_11
+    javaVersion = JavaVersion.VERSION_17
   }
 
   injectedRoutesGenerator = true

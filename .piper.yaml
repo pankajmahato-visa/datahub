@@ -14,16 +14,16 @@ jobs:
       project: DPL_parsec-datahub-AskNowId_0078529
       release: v0.13.3_REL_010062024
       files: "datahub-artifact" # To enable blackduck scan, replace this line with - files: "datahub-artifact/*"
-#    securityScan:
-#      projectName: DPDLC-datahub_0029651_REL_V013.3
-#      groupId: fb48f27c-987a-44a3-ba21-a9f843b45287
-#      filterPattern: '**/*.py,**/**/**.java'
-#      excludeFolders: 'build/**, datahub-web-react/node_modules/, tests/**, datahub-artifact/**, .git/**, .github/**, /test/**, *.tar, **/*.png, **/*.map, .gradle/**, ansible/**, **/*.txt, **/__tests__/**/*.*, docs/**, gradle/**, datahub-upgrade/**, metadata-ingestion/**, crawler-test/**, metadata-integration/**, buildSrc/**'
-#      credentialsId: dp_checkmarx
-#      vulnerabilityThresholdEnabled: true
-#      highThreshold: 10
-#      mediumThreshold: 100
-#      hideDebugLogs: true
+    securityScan:
+      projectName: DPDLC-datahub_0029651_REL_V013.3
+      groupId: fb48f27c-987a-44a3-ba21-a9f843b45287
+      filterPattern: '**/*.py,**/**/**.java'
+      excludeFolders: 'build/**, datahub-web-react/node_modules/, tests/**, datahub-artifact/**, .git/**, .github/**, /test/**, *.tar, **/*.png, **/*.map, .gradle/**, ansible/**, **/*.txt, **/__tests__/**/*.*, docs/**, gradle/**, datahub-upgrade/**, metadata-ingestion/**, crawler-test/**, metadata-integration/**, buildSrc/**'
+      credentialsId: dp_checkmarx
+      vulnerabilityThresholdEnabled: true
+      highThreshold: 10
+      mediumThreshold: 100
+      hideDebugLogs: true
     sonatypeScan:
       iqStage: 'build'
       iqApplication: '0078529_DPDLC_Datahub'
