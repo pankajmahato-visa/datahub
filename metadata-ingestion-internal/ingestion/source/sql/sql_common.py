@@ -39,11 +39,23 @@
                                 data_reader,
                             )
                         except Exception as e:
-                            self.warn(logger, f"{schema}.{table}", f"Ingestion error: {e}")
+                            self.report.warning(
+                                "Error processing table",
+                                context=f"{schema}.{table}",
+                                exc=e,
+                            )
                     except Exception as e:
-                        self.error(logger, f"{schema}", f"Tables error: {e}")
+                        self.report.failure(
+                            "Error processing tables",
+                            context=schema,
+                            exc=e,
+                        )
             except Exception as e:
-                self.error(logger, f"{schema}", f"Tables error: {e}")
+                self.report.failure(
+                    "Error processing tables",
+                    context=schema,
+                    exc=e,
+                )
 
 # Code change 2
 # Add exception log message
