@@ -130,4 +130,4 @@ datahub-artifact
 datahub-*.tar
 /.run/
 /env/
-!/metadata-ingestion-internal/bin/
+!/visa/metadata-ingestion-internal-code/bin/
