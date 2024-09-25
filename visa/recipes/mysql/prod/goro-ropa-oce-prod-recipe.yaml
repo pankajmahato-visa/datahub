@@ -1,0 +1,32 @@
+source:
+  type: mysql
+  config:
+    platform_instance: GORO-ROPA.OCE.PROD
+    env: PROD
+    host_port: SL73VTPSDBP001.visa.com:3306
+    #    database: dbname
+    username: ${VTRUST_USERNAME}
+    password: ${VTRUST_PASSWORD}
+    stateful_ingestion:
+      enabled: true
+      fail_safe_threshold: 100
+    schema_pattern:
+      allow:
+        - TRMMAPROD
+        - trmmaprod_repo
+#      deny:
+#        -
+#    table_pattern:
+#      deny:
+#        -
+#sink:
+#  type: file
+#  config:
+#    filename: goro-ropa-oce-prod-ingestion.json
+pipeline_name: "GORO ROPA OCE PROD"
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

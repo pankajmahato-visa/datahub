@@ -1,0 +1,31 @@
+source:
+  type: mysql
+  config:
+    platform_instance: VTRUST.OCE.DEV
+    env: DEV
+    host_port: sl73vtpsdbd001.visa.com:3306
+    #    database: dbname
+    username: ${VTRUST_USERNAME}
+    password: ${VTRUST_PASSWORD}
+    stateful_ingestion:
+      enabled: true
+      fail_safe_threshold: 100
+    schema_pattern:
+      allow:
+        - vtrust
+#      deny:
+#        - performance_schema
+#    table_pattern:
+#      deny:
+#        -
+#sink:
+#  type: file
+#  config:
+#    filename: vtrust-oce-dev-ingestion.json
+pipeline_name: "VTRUST DEV"
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

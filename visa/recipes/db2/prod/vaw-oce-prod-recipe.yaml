@@ -1,0 +1,29 @@
+source:
+  type: sqlalchemy
+  config:
+    platform_instance: VDW.OCE.PROD
+    env: PROD
+    connect_uri: "db2+ibm_db://${DB2_VAW_USERNAME}:${DB2_VAW_PASSWORD}@vawocesip1.visa.com:50000/DBEDWP1"
+    platform: "db2"
+    include_tables: true
+    include_views: false
+#    schema_pattern:
+#      allow:
+#        -
+#      deny:
+#        -
+#    table_pattern:
+#      deny:
+#        -
+#  extractor_config:
+#    unpack_mces_into_mcps: true       
+#sink:
+#  type: file
+#  config:
+#    filename: vaw-oce-prod-ingestion.json
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

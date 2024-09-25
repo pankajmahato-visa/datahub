@@ -1,10 +1,10 @@
 source:
   type: hive
   config:
-    platform_instance: ANA.OCE.DEV
-    env: DEV
-    host_port: 'sl73caehmnc601.visa.com:10000'
-    username: svchdlc1d
+    platform_instance: OPR.OCE.PROD
+    env: PROD
+    host_port: 'sl73caehmpc1417.visa.com:10000'
+    username: svc_am_opr_prod
     options:
       connect_args:
         auth: KERBEROS
@@ -16,7 +16,8 @@ source:
 #        -
 #    table_pattern:
 #      deny:
-# 
+#        -
+pipeline_name: "OPR OCE PROD"
 sink:
   type: datahub-rest
   config:

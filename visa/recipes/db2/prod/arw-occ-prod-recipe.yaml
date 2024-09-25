@@ -1,0 +1,29 @@
+source:
+  type: sqlalchemy
+  config:
+    platform_instance: ARW.OCC.PROD
+    env: PROD
+    connect_uri: "db2+ibm_db://${DB2_ARW_USERNAME}:${DB2_ARW_PASSWORD}@arwoccsip.visa.com:50000/DBARWP1"
+    platform: "db2"
+    include_tables: true
+    include_views: false
+#    schema_pattern:
+#      allow:
+#        -
+#      deny:
+#        -
+#    table_pattern:
+#      deny:
+#        -
+#  extractor_config:
+#    unpack_mces_into_mcps: true       
+#sink:
+#  type: file
+#  config:
+#    filename: arw-occ-prod-ingestion.json
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

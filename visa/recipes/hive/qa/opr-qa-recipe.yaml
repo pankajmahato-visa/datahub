@@ -1,10 +1,10 @@
 source:
   type: hive
   config:
-    platform_instance: ANA.OCE.DEV
+    platform_instance: OPR.OCE.QA
     env: DEV
-    host_port: 'sl73caehmnc601.visa.com:10000'
-    username: svchdlc1d
+    host_port: 'sl73caehmnc607.visa.com:10000'
+    username: svcdlcnifi
     options:
       connect_args:
         auth: KERBEROS
@@ -16,7 +16,7 @@ source:
 #        -
 #    table_pattern:
 #      deny:
-# 
+#        -
 sink:
   type: datahub-rest
   config:
