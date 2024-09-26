@@ -7,6 +7,8 @@ source:
     platform: "db2"
     include_tables: true
     include_views: false
+    stateful_ingestion:
+      enabled: false
 #    schema_pattern:
 #      allow:
 #        -

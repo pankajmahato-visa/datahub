@@ -9,6 +9,8 @@ source:
       connect_args:
         auth: KERBEROS
         kerberos_service_name: hive
+    stateful_ingestion:
+      enabled: false
 #    schema_pattern:
 #      allow:
 #        -
@@ -17,7 +19,6 @@ source:
 #    table_pattern:
 #      deny:
 #        -
-pipeline_name: "OPR OCE PROD"
 sink:
   type: datahub-rest
   config:
