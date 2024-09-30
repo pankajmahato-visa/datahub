@@ -13,10 +13,6 @@ fi
 [ -f ../../env/datahub-frontend-creds.env ] && source ../../env/datahub-frontend-creds.env
 set +o allexport
 
-if [[ ! -z ${DEFAULT_DATAHUB_CREDENTIALS:-} ]]; then
-  printf '%s' "${DEFAULT_DATAHUB_CREDENTIALS}" > datahub-frontend/conf/user.props
-fi
-
 PROMETHEUS_AGENT=""
 if [[ ${ENABLE_PROMETHEUS:-false} == true ]]; then
   PROMETHEUS_AGENT="-javaagent:/datahub/monitoring/jmx_prometheus_javaagent.jar=4319:/datahub/monitoring/conf/prometheus-config.yaml"
