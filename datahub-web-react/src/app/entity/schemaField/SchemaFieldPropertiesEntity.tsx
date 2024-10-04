@@ -4,6 +4,7 @@ import { EntityType, SchemaFieldEntity, SearchResult } from '../../../types.gene
 import { Entity, IconStyleType, PreviewType } from '../Entity';
 import { getDataForEntityType } from '../shared/containers/profile/utils';
 import { Preview } from './preview/Preview';
+import { capitalizeFirstLetterOnly } from '../../shared/textUtil';
 
 export class SchemaFieldPropertiesEntity implements Entity<SchemaFieldEntity> {
     type: EntityType = EntityType.SchemaField;
@@ -38,6 +39,11 @@ export class SchemaFieldPropertiesEntity implements Entity<SchemaFieldEntity> {
             previewType={previewType}
             datasetUrn={data.parent.urn}
             name={data.fieldPath}
+            parentContainers={data?.parent?.parentContainers}
+            platformName={data?.parent?.dataPlatformInstance?.platform?.properties?.displayName || capitalizeFirstLetterOnly(data?.dataPlatformInstance?.platform?.name)}
+            platformLogo={data?.parent?.dataPlatformInstance?.platform?.properties?.logoUrl || ''}
+            platformInstanceId={data?.parent?.dataPlatformInstance?.instanceId}
+            parentDataset={data?.parent?.properties}
         />
     );
 
