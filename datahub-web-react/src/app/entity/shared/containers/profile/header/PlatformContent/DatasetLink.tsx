@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Typography } from 'antd';
-import { FolderOpenOutlined } from '@ant-design/icons';
 import { EntityType, ParentDataset } from '../../../../../../../types.generated';
 import { ANTD_GRAY } from '../../../../constants';
 import { useEntityRegistry } from '../../../../../../useEntityRegistry';
@@ -38,7 +37,7 @@ function DatasetLink(props: Props) {
     const datasetName = entityRegistry.getDisplayName(EntityType.Dataset, parentDataset);
 
     return (
-        <StyledLink to={datasetUrl + "/"} data-testid="dataset">
+        <StyledLink to={datasetUrl} data-testid="dataset">
             <DatasetIcon>{parentDatasetIcon}</DatasetIcon>
             <DatasetText>{datasetName}</DatasetText>
         </StyledLink>
