@@ -40,8 +40,8 @@ export class SchemaFieldPropertiesEntity implements Entity<SchemaFieldEntity> {
             datasetUrn={data.parent.urn}
             name={data.fieldPath}
             parentContainers={data?.parent?.parentContainers}
-            platformName={data?.parent?.dataPlatformInstance?.platform?.properties?.displayName || capitalizeFirstLetterOnly(data?.dataPlatformInstance?.platform?.name)}
-            platformLogo={data?.parent?.dataPlatformInstance?.platform?.properties?.logoUrl || ''}
+            platformName={data?.parent?.platform?.properties?.displayName || capitalizeFirstLetterOnly(data?.parent?.platform?.name)}
+            platformLogo={data?.parent?.platform?.properties?.logoUrl || ''}
             platformInstanceId={data?.parent?.dataPlatformInstance?.instanceId}
             parentDataset={data?.parent?.properties}
         />

@@ -976,6 +976,9 @@ fragment entityField on SchemaFieldEntity {
     type
       ...entityDisplayNameFields
       ... on Dataset {
+          platform {
+                ...platformFields
+          }
           dataPlatformInstance {
               ... dataPlatformInstanceFields
           }
