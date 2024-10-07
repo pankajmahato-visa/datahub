@@ -4,7 +4,7 @@ import analyticsConfig from '../../../conf/analytics';
 
 const gaConfigs = analyticsConfig.googleAnalytics;
 const isEnabled: boolean = gaConfigs || false;
-const trackingId = isEnabled ? gaConfigs.trackingId : undefined;
+const measurementIds = isEnabled ? gaConfigs.measurementIds : undefined;
 
 const getLabelFromEvent = (event: Event) => {
     switch (event.type) {
@@ -24,7 +24,7 @@ if (isEnabled) {
     /**
      * Init default GA plugin
      */
-    const googleAnalyticsPlugin = googleAnalytics({ trackingId });
+    const googleAnalyticsPlugin = googleAnalytics({ measurementIds });
 
     /**
      * Lightweight wrapper on top of the default google analytics plugin

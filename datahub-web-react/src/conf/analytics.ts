@@ -1,7 +1,7 @@
 const config: any = {
     // Uncomment below to configure analytics.
     googleAnalytics: {
-       trackingId: 'G-WTXYLDM5B1',
+        measurementIds: ['G-WTXYLDM5B1'],
     },
     // mixpanel: {
     //    token: 'fad1285da4e618b618973cacf6565e61',
