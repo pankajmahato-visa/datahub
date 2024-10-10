@@ -106,7 +106,7 @@ searchService:
   cache:
     hazelcast:
       serviceName: ${SEARCH_SERVICE_HAZELCAST_SERVICE_NAME:hazelcast-service}
-      cacheName: ${SEARCH_SERVICE_HAZELCAST_CACHE_NAME:search-cache}
+      clusterName: ${SEARCH_SERVICE_HAZELCAST_CLUSTER_NAME:hazelcast-cluster}
       mapName: ${SEARCH_SERVICE_HAZELCAST_MAP_NAME:search-map}
 
 configEntityRegistry:
