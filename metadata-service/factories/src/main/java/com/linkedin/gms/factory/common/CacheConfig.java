@@ -29,6 +29,12 @@ public class CacheConfig {
   @Value("${searchService.cache.hazelcast.serviceName:hazelcast-service}")
   private String hazelcastServiceName;
 
+  @Value("${searchService.cache.hazelcast.mapName:hazelcast-map}")
+  private String hazelcastMapName;
+
+  @Value("${searchService.cache.hazelcast.clusterName:hazelcast-cluster}")
+  private String hazelcastClusterName;
+
   @Bean
   @ConditionalOnProperty(name = "searchService.cacheImplementation", havingValue = "caffeine")
   public CacheManager caffeineCacheManager() {
@@ -60,12 +66,12 @@ public class CacheConfig {
             .setSize(cacheMaxSize)
             .setEvictionPolicy(EvictionPolicy.LFU);
     mapConfig.setEvictionConfig(evictionConfig);
-    mapConfig.setName("default");
+    mapConfig.setName(hazelcastMapName);
     config.addMapConfig(mapConfig);
 
     // Force classloader to load from application code
     config.setClassLoader(this.getClass().getClassLoader());
-
+    config.setClusterName(hazelcastClusterName);
     config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
     config
         .getNetworkConfig()
