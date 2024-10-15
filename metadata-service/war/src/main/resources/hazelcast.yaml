@@ -1,0 +1,35 @@
+hazelcast:
+  cluster-name: dev
+  management-center:
+    scripting-enabled: false
+  network:
+    port:
+      auto-increment: false
+    outbound-ports:
+      # Allowed port range when connecting to other nodes.
+      # 0 or * means use system provided port.
+      - 0
+    join:
+      multicast:
+        enabled: false
+        multicast-group: 224.2.2.3
+        multicast-port: 54327
+      tcp-ip:
+        enabled: true
+        connection-timeout-seconds: 30
+        member-list:
+          - 127.0.0.1
+      kubernetes:
+        enabled: false
+        namespace: MY-KUBERNETES-NAMESPACE
+        service-name: MY-SERVICE-NAME
+        service-label-name: MY-SERVICE-LABEL-NAME
+        service-label-value: MY-SERVICE-LABEL-VALUE
+  map:
+    default:
+      time-to-live-seconds: 3600
+      max-idle-seconds: 3600
+      eviction:
+        eviction-policy: LFU
+        max-size-policy: PER_NODE
+        size: 10000
