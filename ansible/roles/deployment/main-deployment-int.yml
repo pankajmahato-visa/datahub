@@ -126,8 +126,10 @@
         echo "Deleting all Jetty temp files"
         cd /tmp
         echo "\nFolders deleted"
-        ls -ladt */ | grep 'jetty-'
-        ls -dt */ | grep 'jetty-'| xargs -r rm -rf --
+        ls -ladt */ | grep 'jetty-'; true
+        ls -dt */ | grep 'jetty-'| xargs -r rm -rf --; true
+        ls -ladt */ | grep 'mce-consumer-job-'; true
+        ls -dt */ | grep 'mce-consumer-job-'| xargs -r rm -rf --; true
       register: task_output
     - debug: msg="{{ task_output }}"
 
@@ -255,6 +257,7 @@
     - debug: msg="{{ task_output }}"
 
 
+
     - name: Start Datahub GMS
       shell: |
         sleep 30
@@ -304,10 +307,10 @@
         echo "Deleting all except last {{ files_to_retain }} TAR files"
         cd {{ datahub_root_folder }}/
         echo "\nFolders deleted"
-        ls -dt */ | grep -E 'datahub-v'| tail -n +{{files_to_retain + 1 }}
+        ls -dt */ | grep -E 'datahub-v'| tail -n +{{files_to_retain + 1 }}; true
         echo "\nFiles deleted"
-        ls -t datahub-v*.tar | tail -n +{{files_to_retain + 1 }}
-        ls -dt */ | grep -E 'datahub-v'| tail -n +{{files_to_retain + 1 }} | xargs -r rm -rf --
-        ls -t datahub-v*.tar | tail -n +{{files_to_retain + 1 }} | xargs -r rm -rf --
+        ls -t datahub-v*.tar | tail -n +{{files_to_retain + 1 }}; true
+        ls -dt */ | grep -E 'datahub-v'| tail -n +{{files_to_retain + 1 }} | xargs -r rm -rf --; true
+        ls -t datahub-v*.tar | tail -n +{{files_to_retain + 1 }} | xargs -r rm -rf --; true
       register: task_output
     - debug: msg="{{ task_output }}"
