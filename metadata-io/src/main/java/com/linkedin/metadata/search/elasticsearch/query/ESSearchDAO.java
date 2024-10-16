@@ -338,7 +338,7 @@ public class ESSearchDAO {
           AutocompleteRequestHandler.getBuilder(
               entitySpec,
               customSearchConfiguration,
-              opContext.getRetrieverContext().get().getAspectRetriever());
+              opContext.getRetrieverContext().get().getAspectRetriever(), searchConfiguration);
       SearchRequest req =
           builder.getSearchRequest(
               opContext,
