@@ -128,8 +128,8 @@
         echo "\nFolders deleted"
         ls -ladt */ | grep 'jetty-'; true
         ls -dt */ | grep 'jetty-'| xargs -r rm -rf --; true
-        ls -ladt */ | grep 'mce-consumer-job-'; true
-        ls -dt */ | grep 'mce-consumer-job-'| xargs -r rm -rf --; true
+        ls -ladt */ | grep 'mce-consumer-job'; true
+        ls -dt */ | grep 'mce-consumer-job'| xargs -r rm -rf --; true
       register: task_output
     - debug: msg="{{ task_output }}"
 
