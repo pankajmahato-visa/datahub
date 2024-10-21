@@ -172,7 +172,7 @@ export default function EditBusinessAttributeModal({
     const onSelectValue = (selectedUrn: string) => {
         const selectedSearchOption = attributeSearchOptions?.find((option) => option.props.value === selectedUrn);
         setUrn(selectedUrn);
-        if (!selectedAttribute) {
+        if (selectedAttribute?.selectedUrn !== selectedUrn) {
             setSelectedAttribute({
                 selectedUrn,
                 component: (
