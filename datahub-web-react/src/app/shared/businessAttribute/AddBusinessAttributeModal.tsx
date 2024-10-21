@@ -155,7 +155,7 @@ export default function EditBusinessAttributeModal({
             event.stopPropagation();
         };
         /* eslint-disable-next-line react/prop-types */
-        const selectedItem = displayedAttributes.find((attribute) => attribute.urn === value)?.component;
+        const selectedItem = selectedAttribute ? selectedAttribute?.component : displayedAttributes.find((attribute) => attribute.urn === value)?.component;
         return (
             <StyleTag onMouseDown={onPreventMouseDown} closable={closable} onClose={onClose}>
                 {selectedItem}
@@ -178,7 +178,7 @@ export default function EditBusinessAttributeModal({
                 component: (
                     <div>
                         <GlobalOutlined />
-                        <AttributeName>{selectedSearchOption?.props.name}</AttributeName>
+                        <AttributeName>{selectedSearchOption?.props?.name}</AttributeName>
                     </div>
                 ),
             });
