@@ -1856,16 +1856,16 @@ type ParentContainersResult {
 }
 
 """
-Provides Parent Dataset name for schema field, utilized for showing browse paths in Business Attribute related entities.
+Additional properties about EntityName
 """
-type ParentDataset {
+type EntityNameProperties {
     """
-    The parent dataset name to which the schema field belongs
+    The name of the entity used in display
     """
     name: String!
 
     """
-    Fully-qualified name of the Parent Dataset
+    Fully-qualified name of the Entity
     """
     qualifiedName: String
 }

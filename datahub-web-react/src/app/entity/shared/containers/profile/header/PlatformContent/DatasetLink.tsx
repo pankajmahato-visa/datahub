@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Typography } from 'antd';
-import { EntityType, ParentDataset } from '../../../../../../../types.generated';
+import { EntityNameProperties, EntityType } from '../../../../../../../types.generated';
 import { ANTD_GRAY } from '../../../../constants';
 import { useEntityRegistry } from '../../../../../../useEntityRegistry';
 
@@ -24,17 +24,17 @@ const StyledLink = styled(Link)`
 
 interface Props {
     parentDatasetUrn: string | '';
-    parentDataset: ParentDataset;
+    parentDatasetProperties: EntityNameProperties;
     parentDatasetIcon: JSX.Element;
 }
 
 function DatasetLink(props: Props) {
-    const { parentDatasetUrn, parentDataset, parentDatasetIcon } = props;
+    const { parentDatasetUrn, parentDatasetProperties, parentDatasetIcon } = props;
     const entityRegistry = useEntityRegistry();
-    if (!parentDatasetUrn && !parentDataset) return null;
+    if (!parentDatasetUrn && !parentDatasetProperties) return null;
 
     const datasetUrl = entityRegistry.getEntityUrl(EntityType.Dataset, parentDatasetUrn);
-    const datasetName = entityRegistry.getDisplayName(EntityType.Dataset, parentDataset);
+    const datasetName = entityRegistry.getDisplayName(EntityType.Dataset, parentDatasetProperties);
 
     return (
         <StyledLink to={datasetUrl} data-testid="dataset">

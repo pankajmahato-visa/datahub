@@ -1,6 +1,6 @@
 import React from 'react';
 import { PicCenterOutlined } from '@ant-design/icons';
-import { EntityType, Owner, ParentContainersResult, ParentDataset } from '../../../../types.generated';
+import { EntityNameProperties, EntityType, Owner, ParentContainersResult } from '../../../../types.generated';
 import DefaultPreviewCard from '../../../preview/DefaultPreviewCard';
 import { useEntityRegistry } from '../../../useEntityRegistry';
 import { IconStyleType, PreviewType } from '../../Entity';
@@ -15,7 +15,7 @@ export const Preview = ({
     platformName,
     platformLogo,
     platformInstanceId,
-    parentDataset
+    parentDatasetProperties,
 }: {
     datasetUrn: string;
     name: string;
@@ -26,7 +26,7 @@ export const Preview = ({
     platformName?: string;
     platformLogo?: string | null;
     platformInstanceId?: string;
-    parentDataset?: ParentDataset;
+    parentDatasetProperties?: EntityNameProperties;
 }): JSX.Element => {
     const entityRegistry = useEntityRegistry();
 
@@ -48,7 +48,7 @@ export const Preview = ({
             platformInstanceId={platformInstanceId}
             parentContainers={parentContainers}
             parentDatasetIcon={entityRegistry.getIcon(EntityType.Dataset, 14, IconStyleType.ACCENT)}
-            parentDataset={parentDataset}
+            parentDatasetProperties={parentDatasetProperties}
         />
     );
 };

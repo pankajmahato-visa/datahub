@@ -9,8 +9,8 @@ import {
     GlossaryTerms,
     SearchInsight,
     Container,
+    EntityNameProperties,
     ParentContainersResult,
-    ParentDataset,
     Maybe,
     CorpUser,
     Deprecation,
@@ -198,7 +198,7 @@ interface Props {
     paths?: EntityPath[];
     health?: Health[];
     parentDatasetIcon?: JSX.Element;
-    parentDataset?: ParentDataset;
+    parentDatasetProperties?: EntityNameProperties;
 }
 
 export default function DefaultPreviewCard({
@@ -242,7 +242,7 @@ export default function DefaultPreviewCard({
     paths,
     health,
     parentDatasetIcon,
-    parentDataset
+    parentDatasetProperties,
 }: Props) {
     // sometimes these lists will be rendered inside an entity container (for example, in the case of impact analysis)
     // in those cases, we may want to enrich the preview w/ context about the container entity
@@ -291,7 +291,7 @@ export default function DefaultPreviewCard({
                         areContainersTruncated={isContentTruncated}
                         parentDatasetUrn={urn}
                         parentDatasetIcon={parentDatasetIcon}
-                        parentDataset={parentDataset}
+                        parentDatasetProperties={parentDatasetProperties}
                     />
                     <EntityTitleContainer>
                         <Link to={url}>

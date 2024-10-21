@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Typography, Image } from 'antd';
 import { Maybe } from 'graphql/jsutils/Maybe';
-import { Container, Entity, ParentDataset } from '../../../../../../../types.generated';
+import { Container, Entity, EntityNameProperties } from '../../../../../../../types.generated';
 import { ANTD_GRAY } from '../../../../constants';
 import ContainerLink from './ContainerLink';
 import DatasetLink from './DatasetLink';
@@ -82,7 +82,7 @@ interface Props {
     areContainersTruncated: boolean;
     parentDatasetUrn?: string;
     parentDatasetIcon?: JSX.Element;
-    parentDataset?: ParentDataset;
+    parentDatasetProperties?: EntityNameProperties;
 }
 
 function PlatformContentView(props: Props) {
@@ -101,7 +101,7 @@ function PlatformContentView(props: Props) {
         areContainersTruncated,
         parentDatasetUrn,
         parentDatasetIcon,
-        parentDataset
+        parentDatasetProperties,
     } = props;
 
     const directParentContainer = parentContainers && parentContainers[0];
@@ -154,10 +154,14 @@ function PlatformContentView(props: Props) {
                 </ParentContainersWrapper>
                 {directParentContainer && <ContainerLink container={directParentContainer} />}
             </StyledTooltip>
-            {parentDatasetUrn && parentDataset && parentDatasetIcon && (
+            {parentDatasetUrn && parentDatasetProperties && parentDatasetIcon && (
                     <span>
                         <StyledRightOutlined data-testid="right-arrow" />       
-                        <DatasetLink parentDatasetUrn={parentDatasetUrn} parentDataset={parentDataset} parentDatasetIcon={parentDatasetIcon}/>
+                        <DatasetLink
+                            parentDatasetUrn={parentDatasetUrn}
+                            parentDatasetProperties={parentDatasetProperties}
+                            parentDatasetIcon={parentDatasetIcon}
+                        />                    
                     </span>
                 )}
             <ParentEntities parentEntities={parentEntities || []} numVisible={3} />
