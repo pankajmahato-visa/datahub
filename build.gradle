@@ -34,8 +34,8 @@ buildscript {
   // Releases: https://github.com/linkedin/rest.li/blob/master/CHANGELOG.md
   ext.pegasusVersion = '29.58.0'
   ext.mavenVersion = '3.6.3'
-  ext.springVersion = '6.1.12'
-  ext.springBootVersion = '3.2.3'
+  ext.springVersion = '6.1.14'
+  ext.springBootVersion = '3.2.7'
   ext.springKafkaVersion = '3.2.0'
   ext.openTelemetryVersion = '1.18.0'
   ext.neo4jVersion = '5.14.0'
@@ -44,7 +44,7 @@ buildscript {
   ext.testContainersVersion = '1.17.4'
   ext.elasticsearchVersion = '2.11.1' // ES 7.10, Opensearch 1.x, 2.x
   ext.jacksonVersion = '2.15.3'
-  ext.jettyVersion = '11.0.21'
+  ext.jettyVersion = '11.0.24'
   ext.playVersion = '2.8.22'
   ext.log4jVersion = '2.19.0'
   ext.slf4jVersion = '1.7.36'
@@ -108,8 +108,8 @@ project.ext.externalDependency = [
     'antlr4Runtime': 'org.antlr:antlr4-runtime:4.9.3',
     'antlr4': 'org.antlr:antlr4:4.9.3',
     'assertJ': 'org.assertj:assertj-core:3.11.1',
-    'avro': 'org.apache.avro:avro:1.11.3',
-    'avroCompiler': 'org.apache.avro:avro-compiler:1.11.3',
+    'avro': 'org.apache.avro:avro:1.12.0',
+    'avroCompiler': 'org.apache.avro:avro-compiler:1.12.0',
     'awsGlueSchemaRegistrySerde': 'software.amazon.glue:schema-registry-serde:1.1.20',
     'awsMskIamAuth': 'software.amazon.msk:aws-msk-iam-auth:2.0.3',
     'awsSecretsManagerJdbc': 'com.amazonaws.secretsmanager:aws-secretsmanager-jdbc:1.0.13',
@@ -225,7 +225,7 @@ project.ext.externalDependency = [
     'pac4j': 'org.pac4j:pac4j-oidc:4.5.8',
     'playPac4j': 'org.pac4j:play-pac4j_2.12:9.0.2',
 //    'postgresql': 'org.postgresql:postgresql:42.7.2',
-    'protobuf': 'com.google.protobuf:protobuf-java:3.19.6',
+    'protobuf': 'com.google.protobuf:protobuf-java:3.25.5',
     'grpcProtobuf': 'io.grpc:grpc-protobuf:1.53.0',
     'rangerCommons': 'org.apache.ranger:ranger-plugins-common:2.3.0',
     'reflections': 'org.reflections:reflections:0.9.12',
@@ -375,7 +375,7 @@ configure(subprojects.findAll {! it.name.startsWith('spark-lineage')}) {
       force "org.apache.commons:commons-compress:1.26.0"
       force "org.mozilla:rhino:1.7.15"
       force "com.nimbusds:nimbus-jose-jwt:8.23"
-      force "org.apache.kafka:kafka-clients:3.7.0"
+      force "org.apache.kafka:kafka-clients:3.6.2"
       force "com.nimbusds:oauth2-oidc-sdk:8.36.2"
       force "net.minidev:json-smart:2.4.9"
       force "org.iq80.snappy:snappy:0.4"
@@ -385,6 +385,7 @@ configure(subprojects.findAll {! it.name.startsWith('spark-lineage')}) {
       force "com.typesafe.akka:akka-protobuf-v3_2.12:2.8.6"
       force "com.typesafe.akka:akka-stream_2.12:2.8.6"
       force "com.typesafe.akka:akka-serialization-jackson_2.12:2.8.6"
+      force "com.mysql:mysql-connector-j:8.2.0"
     }
   }
 }
