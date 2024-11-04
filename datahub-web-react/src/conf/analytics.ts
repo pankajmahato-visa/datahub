@@ -1,7 +1,7 @@
 const config: any = {
     // Uncomment below to configure analytics.
     googleAnalytics: {
-        measurementIds: ['G-WTXYLDM5B1'],
+        measurementIds: ['G-DG463921XL'],
     },
     // mixpanel: {
     //    token: 'fad1285da4e618b618973cacf6565e61',
