@@ -1,11 +1,11 @@
-<configuration>
+<configuration scan="true" scanPeriod="120 seconds">
   <property name="LOG_DIR" value="${LOG_DIR:- /tmp/datahub/logs/datahub-frontend}"/>
   <timestamp key="bySecond" datePattern="yyyy-MM-dd'_'HH-mm-ss"/>
   <timestamp key="byDate" datePattern="yyyy-MM-dd"/>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <layout class="ch.qos.logback.classic.PatternLayout">
-      <pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <pattern>%date{ISO8601} [%thread] %-5level %logger{36}:%L - %msg%n</pattern>
     </layout>
     <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
       <level>INFO</level>
@@ -32,7 +32,7 @@
       <level>INFO</level>
     </filter>
     <encoder>
-      <pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <pattern>%date{ISO8601} [%thread] %-5level %logger{36}:%L - %msg%n</pattern>
     </encoder>
   </appender>
 
@@ -42,10 +42,10 @@
       <FileNamePattern>${LOG_DIR}/datahub-frontend.debug.%d{yyyy-dd-MM}-%i.log</FileNamePattern>
       <!-- each archived file, size max 100MB -->
       <maxFileSize>100MB</maxFileSize>
-      <!-- total size of all archive files, if total size > 2GB, it will delete old archived file -->
-      <totalSizeCap>2GB</totalSizeCap>
-      <!-- 1 days to keep -->
-      <maxHistory>1</maxHistory>
+      <!-- total size of all archive files, if total size > 10GB, it will delete old archived file -->
+      <totalSizeCap>10GB</totalSizeCap>
+      <!-- 15 days to keep -->
+      <maxHistory>15</maxHistory>
     </rollingPolicy>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>DEBUG</level>
@@ -53,7 +53,7 @@
       <onMismatch>DENY</onMismatch>
     </filter>
     <encoder>
-      <pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <pattern>%date{ISO8601} [%thread] %-5level %logger{36}:%L - %msg%n</pattern>
     </encoder>
   </appender>
 

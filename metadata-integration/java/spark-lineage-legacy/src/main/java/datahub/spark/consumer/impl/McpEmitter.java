@@ -70,6 +70,7 @@ public class McpEmitter implements LineageConsumer {
               mcpw -> {
                 try {
                   log.debug("emitting mcpw: " + mcpw);
+                  System.out.println("emitting mcpw: " + mcpw);
                   return emitter.get().emit(mcpw);
                 } catch (IOException ioException) {
                   log.error("Failed to emit metadata to DataHub", ioException);

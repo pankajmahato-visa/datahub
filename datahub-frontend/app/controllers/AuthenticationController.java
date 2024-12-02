@@ -19,11 +19,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.InvalidPathException;
 import java.util.Base64;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import org.apache.commons.httpclient.InvalidRedirectLocationException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.context.Cookie;
@@ -92,10 +93,10 @@ public class AuthenticationController extends Controller {
     try {
       URI redirectUri = new URI(redirectPath);
       if (redirectUri.getScheme() != null || redirectUri.getAuthority() != null) {
-        throw new InvalidRedirectLocationException("Redirect location must be relative to the base url, cannot "
+        throw new InvalidPathException("Redirect location must be relative to the base url, cannot "
             + "redirect to other domains: " + redirectPath, redirectPath);
       }
-    } catch (URISyntaxException | InvalidRedirectLocationException e) {
+    } catch (URISyntaxException | InvalidPathException e) {
       _logger.warn(e.getMessage());
       redirectPath = "/";
     }

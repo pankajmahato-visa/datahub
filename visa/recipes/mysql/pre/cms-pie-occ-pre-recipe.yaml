@@ -1,0 +1,31 @@
+source:
+  type: mysql
+  config:
+    platform_instance: CMS.OCC.PRE
+    env: PROD
+    host_port:  sl55piedbc001.visa.com:3306
+    #    database: dbname
+    username: ${CMS_PIE_OCC_PRE_USERNAME}
+    password: ${CMS_PIE_OCC_PRE_PASSWORD}
+    stateful_ingestion:
+      enabled: true
+      fail_safe_threshold: 100
+    schema_pattern:
+      allow:
+        - "^piedb$"
+#      deny:
+#        -
+#    table_pattern:
+#      deny:
+#        -
+#sink:
+#  type: file
+#  config:
+#    filename: cms-occ-pre-ingestion.json
+pipeline_name: "CMS OCC PRE"
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

@@ -93,20 +93,26 @@ public class DatahubSparkListener extends SparkListener {
 
   public void onApplicationStart(SparkListenerApplicationStart applicationStart) {
     long startTime = System.currentTimeMillis();
+    try {
+      initializeContextFactoryIfNotInitialized();
 
-    log.info("Application start called");
-    this.appContext = getSparkAppContext(applicationStart);
+      log.info("Application start called");
+      this.appContext = getSparkAppContext(applicationStart);
     initializeContextFactoryIfNotInitialized();
-    listener.onApplicationStart(applicationStart);
-    long elapsedTime = System.currentTimeMillis() - startTime;
-    log.info("onApplicationStart completed successfully in {} ms", elapsedTime);
+      listener.onApplicationStart(applicationStart);
+      long elapsedTime = System.currentTimeMillis() - startTime;
+      log.info("onApplicationStart completed successfully in {} ms", elapsedTime);
+    } catch (Throwable e) {
+      log.error("Exception in method:onApplicationStart", e);
+    }
   }
 
   public Optional<DatahubEmitterConfig> initializeEmitter(Config sparkConf) {
-    String emitterType =
+    try {
+      String emitterType =
         sparkConf.hasPath(SparkConfigParser.EMITTER_TYPE)
             ? sparkConf.getString(SparkConfigParser.EMITTER_TYPE)
-            : "rest";
+                      : "rest";
     switch (emitterType) {
       case "rest":
         String gmsUrl =
@@ -236,8 +242,10 @@ public class DatahubSparkListener extends SparkListener {
             "DataHub Transport {} not recognized. DataHub Lineage emission will not work",
             emitterType);
         break;
+      }
+    } catch (Throwable e) {
+      log.error("Exception in method:initializeEmitter", e);
     }
-
     return Optional.empty();
   }
 
@@ -268,49 +276,63 @@ public class DatahubSparkListener extends SparkListener {
 
   public void onApplicationEnd(SparkListenerApplicationEnd applicationEnd) {
     long startTime = System.currentTimeMillis();
+    try {
     initializeContextFactoryIfNotInitialized();
 
-    log.debug("Application end called");
-    listener.onApplicationEnd(applicationEnd);
-    if (datahubConf.hasPath(STREAMING_JOB) && (datahubConf.getBoolean(STREAMING_JOB))) {
-      return;
-    }
-    if (emitter != null) {
-      emitter.emitCoalesced();
-    } else {
-      log.warn("Emitter is not initialized, unable to emit coalesced events");
-    }
+      log.debug("Application end called");
+      listener.onApplicationEnd(applicationEnd);
+      if (datahubConf.hasPath(STREAMING_JOB) && (datahubConf.getBoolean(STREAMING_JOB))) {
+        return;
+      }
+      if (emitter != null) {
+        emitter.emitCoalesced();
+      } else {
+        log.warn("Emitter is not initialized, unable to emit coalesced events");
+      }
 
-    long elapsedTime = System.currentTimeMillis() - startTime;
-    log.debug("onApplicationEnd completed successfully in {} ms", elapsedTime);
+      long elapsedTime = System.currentTimeMillis() - startTime;
+      log.debug("onApplicationEnd completed successfully in {} ms", elapsedTime);
+    } catch (Throwable e) {
+      log.error("Exception in method:onApplicationEnd", e);
+    }
   }
 
   public void onTaskEnd(SparkListenerTaskEnd taskEnd) {
     long startTime = System.currentTimeMillis();
-
-    log.debug("Task end called");
-    listener.onTaskEnd(taskEnd);
-    long elapsedTime = System.currentTimeMillis() - startTime;
-    log.debug("onTaskEnd completed successfully in {} ms", elapsedTime);
+    try {
+      log.debug("Task end called");
+      listener.onTaskEnd(taskEnd);
+      long elapsedTime = System.currentTimeMillis() - startTime;
+      log.debug("onTaskEnd completed successfully in {} ms", elapsedTime);
+    } catch (Throwable e) {
+      log.error("Exception in method:onTaskEnd", e);
+    }
   }
 
   public void onJobEnd(SparkListenerJobEnd jobEnd) {
     long startTime = System.currentTimeMillis();
-
-    log.debug("Job end called");
-    listener.onJobEnd(jobEnd);
-    long elapsedTime = System.currentTimeMillis() - startTime;
-    log.debug("onJobEnd completed successfully in {} ms", elapsedTime);
+    try {
+      log.debug("Job end called");
+      listener.onJobEnd(jobEnd);
+      long elapsedTime = System.currentTimeMillis() - startTime;
+      log.debug("onJobEnd completed successfully in {} ms", elapsedTime);
+    } catch (Throwable e) {
+      log.error("Exception in method:onJobEnd", e);
+    }
   }
 
   public void onJobStart(SparkListenerJobStart jobStart) {
     long startTime = System.currentTimeMillis();
-    initializeContextFactoryIfNotInitialized();
+    try {
+      initializeContextFactoryIfNotInitialized();
 
     log.debug("Job start called");
-    listener.onJobStart(jobStart);
-    long elapsedTime = System.currentTimeMillis() - startTime;
-    log.debug("onJobStart completed successfully in {} ms", elapsedTime);
+      listener.onJobStart(jobStart);
+      long elapsedTime = System.currentTimeMillis() - startTime;
+      log.debug("onJobStart completed successfully in {} ms", elapsedTime);
+    } catch (Throwable e) {
+      log.error("Exception in method:onJobStart", e);
+    }
   }
 
   public void onOtherEvent(SparkListenerEvent event) {
@@ -318,49 +340,53 @@ public class DatahubSparkListener extends SparkListener {
 
     log.debug("Other event called {}", event.getClass().getName());
     // Switch to streaming mode if streaming mode is not set, but we get a progress event
-    if ((event instanceof StreamingQueryListener.QueryProgressEvent)
-        || (event instanceof StreamingQueryListener.QueryStartedEvent)) {
-      if (!emitter.isStreaming()) {
-        if (!datahubConf.hasPath(STREAMING_JOB)) {
-          log.info("Streaming mode not set explicitly, switching to streaming mode");
-          emitter.setStreaming(true);
-        } else {
-          emitter.setStreaming(datahubConf.getBoolean(STREAMING_JOB));
-          log.info("Streaming mode set to {}", datahubConf.getBoolean(STREAMING_JOB));
+    try {
+      if ((event instanceof StreamingQueryListener.QueryProgressEvent)
+              || (event instanceof StreamingQueryListener.QueryStartedEvent)) {
+        if (!emitter.isStreaming()) {
+          if (!datahubConf.hasPath(STREAMING_JOB)) {
+            log.info("Streaming mode not set explicitly, switching to streaming mode");
+            emitter.setStreaming(true);
+          } else {
+            emitter.setStreaming(datahubConf.getBoolean(STREAMING_JOB));
+            log.info("Streaming mode set to {}", datahubConf.getBoolean(STREAMING_JOB));
+          }
         }
       }
-    }
 
-    if (datahubConf.hasPath(STREAMING_JOB) && !datahubConf.getBoolean(STREAMING_JOB)) {
-      log.info("Not in streaming mode");
-      return;
-    }
-
-    listener.onOtherEvent(event);
-
-    if (event instanceof StreamingQueryListener.QueryProgressEvent) {
-      int streamingHeartbeatIntervalSec = SparkConfigParser.getStreamingHeartbeatSec(datahubConf);
-      StreamingQueryListener.QueryProgressEvent queryProgressEvent =
-          (StreamingQueryListener.QueryProgressEvent) event;
-      ((StreamingQueryListener.QueryProgressEvent) event).progress().id();
-      if ((batchLastUpdated.containsKey(queryProgressEvent.progress().id().toString()))
-          && (batchLastUpdated
-              .get(queryProgressEvent.progress().id().toString())
-              .isAfter(Instant.now().minusSeconds(streamingHeartbeatIntervalSec)))) {
-        log.debug(
-            "Skipping lineage emit as it was emitted in the last {} seconds",
-            streamingHeartbeatIntervalSec);
+      if (datahubConf.hasPath(STREAMING_JOB) && !datahubConf.getBoolean(STREAMING_JOB)) {
+        log.info("Not in streaming mode");
         return;
       }
-      try {
-        batchLastUpdated.put(queryProgressEvent.progress().id().toString(), Instant.now());
-        emitter.emit(queryProgressEvent.progress());
-      } catch (URISyntaxException e) {
-        throw new RuntimeException(e);
+
+      listener.onOtherEvent(event);
+
+      if (event instanceof StreamingQueryListener.QueryProgressEvent) {
+        int streamingHeartbeatIntervalSec = SparkConfigParser.getStreamingHeartbeatSec(datahubConf);
+        StreamingQueryListener.QueryProgressEvent queryProgressEvent =
+                (StreamingQueryListener.QueryProgressEvent) event;
+        ((StreamingQueryListener.QueryProgressEvent) event).progress().id();
+        if ((batchLastUpdated.containsKey(queryProgressEvent.progress().id().toString()))
+                && (batchLastUpdated
+                .get(queryProgressEvent.progress().id().toString())
+                .isAfter(Instant.now().minusSeconds(streamingHeartbeatIntervalSec)))) {
+          log.debug(
+                  "Skipping lineage emit as it was emitted in the last {} seconds",
+                  streamingHeartbeatIntervalSec);
+          return;
+        }
+        try {
+          batchLastUpdated.put(queryProgressEvent.progress().id().toString(), Instant.now());
+          emitter.emit(queryProgressEvent.progress());
+        } catch (URISyntaxException e) {
+          log.error("URISyntaxException in method:onOtherEvent", e);
+        }
+        log.debug("Query progress event: {}", queryProgressEvent.progress());
+        long elapsedTime = System.currentTimeMillis() - startTime;
+        log.debug("onOtherEvent completed successfully in {} ms", elapsedTime);
       }
-      log.debug("Query progress event: {}", queryProgressEvent.progress());
-      long elapsedTime = System.currentTimeMillis() - startTime;
-      log.debug("onOtherEvent completed successfully in {} ms", elapsedTime);
+    } catch (Throwable e) {
+      log.error("Exception in method:onOtherEvent", e);
     }
   }
 

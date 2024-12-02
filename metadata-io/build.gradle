@@ -44,8 +44,13 @@ dependencies {
     exclude group: 'com.fasterxml.jackson.core'
   }
   api externalDependency.datastaxOssQueryBuilder
-  api externalDependency.elasticSearchRest
-  api externalDependency.elasticSearchJava
+  api (externalDependency.elasticSearchRest){
+    //exclude group: 'org.apache.lucene', module: 'lucene-core'
+  }
+  api (externalDependency.elasticSearchJava){
+    //exclude group: 'org.apache.lucene', module: 'lucene-core'
+  }
+  //implementation externalDependency.luceneCore
   implementation externalDependency.javatuples
   api externalDependency.javaxValidation
   runtimeOnly externalDependency.jna
@@ -70,7 +75,7 @@ dependencies {
   testImplementation project(path: ':metadata-integration:java:datahub-client', configuration: 'shadow')
   testImplementation project(':metadata-service:auth-impl')
   testImplementation externalDependency.testng
-  testImplementation externalDependency.h2
+//  testImplementation externalDependency.h2
   testImplementation externalDependency.mysqlConnector
   testImplementation externalDependency.neo4jHarness
   testImplementation (externalDependency.neo4jApocCore) {

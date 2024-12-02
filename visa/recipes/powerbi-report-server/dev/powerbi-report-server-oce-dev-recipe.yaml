@@ -1,0 +1,35 @@
+source:
+  type: powerbi-report-server
+  config:
+    #    platform_instance: POWERBI.OCE.DEV
+    username: '${POWERBI_USERNAME}'
+    password: '${POWERBI_PASSWORD}'
+    workstation_name: corpdev
+    host_port: 'powerbirsdev.trusted.visa.com:443'
+    server_alias: server_alias
+    env: DEV
+    report_virtual_directory_name: Reports
+    report_server_virtual_directory_name: ReportServer
+    extract_ownership: true
+    ownership_type: TECHNICAL_OWNER
+#    stateful_ingestion:
+#      enabled: true
+#    schema_pattern:
+#      allow:
+#        -
+#      deny:
+#        -
+#    table_pattern:
+#      deny:
+#        -
+#sink:
+#  type: file
+#  config:
+#    filename: powerbi-oce-dev-ingestion.json
+pipeline_name: "POWERBI DEV"
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

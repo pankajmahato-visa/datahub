@@ -1,0 +1,36 @@
+source:
+  type: mysql
+  config:
+    platform_instance: CMS.OCE.QA
+    env: QA
+    host_port: sl73piedbq001.visa.com:3306
+    database: pie
+    username: ${CMS_PIE_QA_USERNAME}
+    password: ${CMS_PIE_QA_PASSWORD}
+    options:
+      connect_args:
+        ssl_ca: "/data/vdc/datahub/ingestion-certs/cms/pie/dev/rootCA.pem"
+        ssl_cert: "/data/vdc/datahub/ingestion-certs/cms/pie/dev/pie.dev.visa.com.pem"
+        ssl_key: "/data/vdc/datahub/ingestion-certs/cms/pie/dev/pie.dev.visa.com-key.pem"
+    stateful_ingestion:
+      enabled: true
+      fail_safe_threshold: 100
+    schema_pattern:
+      allow:
+        - pie
+#      deny:
+#        - performance_schema
+#    table_pattern:
+#      deny:
+#        -
+#sink:
+#  type: file
+#  config:
+#    filename: cms-pie-oce-qa-ingestion.json
+pipeline_name: "CMS QA"
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

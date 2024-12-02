@@ -1,0 +1,63 @@
+jobs:
+  name: datahub
+  type: generic
+  alert: 837a4955.visainc.onmicrosoft.com@amer.teams.ms
+  askNowId: 0078529
+  buildUrl: https://jenkins.trusted.visa.com/dp/job/dpdlc/job/dpdlc_dev/job/dlc/job/datahub/
+  steps:
+    image: reg.visa.com/usawant/rhel8-jdk17-node21:v8
+    build:
+      init: make init
+      build: make build package
+    oss:
+      name: parsec/datahub
+      project: DPL_parsec-datahub-AskNowId_0078529
+      release: v0.14.1_REL_028112024
+      files: "datahub-artifact" # To enable blackduck scan, replace this line with - files: "datahub-artifact/*"
+#    securityScan:
+#      projectName: DPDLC-datahub_0029651_REL_V014.1
+#      groupId: fb48f27c-987a-44a3-ba21-a9f843b45287
+#      filterPattern: '**/*.py,**/**/**.java'
+#      excludeFolders: 'build/**, datahub-web-react/node_modules/, tests/**, datahub-artifact/**, .git/**, .github/**, /test/**, *.tar, **/*.png, **/*.map, .gradle/**, ansible/**, **/*.txt, **/__tests__/**/*.*, docs/**, gradle/**, datahub-upgrade/**, metadata-ingestion/**, crawler-test/**, metadata-integration/**, buildSrc/**'
+#      credentialsId: dp_checkmarx
+#      vulnerabilityThresholdEnabled: true
+#      highThreshold: 10
+#      mediumThreshold: 100
+#      hideDebugLogs: true
+#    sonatypeScan:
+#      iqStage: 'build'
+#      iqApplication: '0078529_DPDLC_Datahub'
+#      iqScanPatterns: [ { scanPattern: '**/datahub-artifact/datahub-gms/*.war' }, { scanPattern: '**/datahub-artifact/datahub-frontend/*' }, { scanPattern: '**/datahub-artifact/datahub-mae-consumer/*.jar' }, { scanPattern: '**/datahub-artifact/datahub-mce-consumer/*.jar' } ]
+#      iqModuleExcludes: [ moduleExclude: '**/datahub-upgrade/*' ]
+  publish:
+    steps:
+      artifactory:
+        uploadHost: 'https://artifactory.trusted.visa.com'
+        uploadFiles: '[{"pattern":"datahub-v*.tar","target":"vdc/datahub/"}]'
+        credentialsId: vdc-upload
+  deployment:
+    tool: ansible-rpm
+    environment: dev
+    stack:
+      engine: host
+      credentialsId: datahub-deployment
+    dev:
+      host: datahub
+      playbook: ansible/roles/deployment/main.yml
+      inventory: ansible/inventories/dev/hosts
+      credentialsId: datahub-deployment
+    integration:
+      host: datahub
+      playbook: ansible/roles/deployment/main-deployment-int.yml
+      inventory: ansible/inventories/int/hosts
+      credentialsId: datahub-deployment
+    oce:
+      host: datahub
+      playbook: ansible/roles/deployment/main-deployment-prod-oce.yml
+      inventory: ansible/inventories/oce/hosts
+      credentialsId: datahub-deployment
+    occ:
+      host: datahub
+      playbook: ansible/roles/deployment/main-deployment-prod-occ.yml
+      inventory: ansible/inventories/occ/hosts
+      credentialsId: datahub-deployment

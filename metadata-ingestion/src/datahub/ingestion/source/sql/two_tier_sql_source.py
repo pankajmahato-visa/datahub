@@ -1,3 +1,4 @@
+import traceback
 import typing
 import urllib.parse
 from typing import Any, Dict, Iterable, Optional, Tuple
@@ -118,16 +119,23 @@ class TwoTierSQLAlchemySource(SQLAlchemySource):
         engine = create_engine(url, **self.config.options)
         with engine.connect() as conn:
             inspector = inspect(conn)
+            if inspector is None:
+                return None
             if self.config.database and self.config.database != "":
                 databases = [self.config.database]
             else:
                 databases = inspector.get_schema_names()
             for db in databases:
-                if self.config.database_pattern.allowed(db):
-                    url = self.config.get_sql_alchemy_url(current_db=db)
-                    with create_engine(url, **self.config.options).connect() as conn:
-                        inspector = inspect(conn)
-                        yield inspector
+                try:
+                    if self.config.database_pattern.allowed(db):
+                        url = self.config.get_sql_alchemy_url(current_db=db)
+                        with create_engine(
+                            url, **self.config.options
+                        ).connect() as conn:
+                            if inspector is not None:
+                                yield inspector
+                except Exception as e:
+                    logger.exception(f"Failed to create connection with Database {db} -> {e}")
 
     def gen_schema_containers(
         self,

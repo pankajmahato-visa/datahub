@@ -1,0 +1,31 @@
+source:
+  type: mysql
+  config:
+    platform_instance: CMS.OCE.PRE
+    env: PROD
+    host_port: sl73piedbc001.visa.com:3306
+    #    database: dbname
+    username: ${CMS_PIE_OCE_PRE_USERNAME}
+    password: ${CMS_PIE_OCE_PRE_PASSWORD}
+    stateful_ingestion:
+      enabled: true
+      fail_safe_threshold: 100
+    schema_pattern:
+      allow:
+        - "^piedb$"
+#      deny:
+#        -
+#    table_pattern:
+#      deny:
+#        -
+#sink:
+#  type: file
+#  config:
+#    filename: cms-oce-pre-ingestion.json
+pipeline_name: "CMS OCE PRE"
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

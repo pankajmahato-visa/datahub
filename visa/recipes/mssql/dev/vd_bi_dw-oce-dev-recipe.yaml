@@ -1,0 +1,33 @@
+source:
+  type: sqlalchemy
+  config:
+    platform_instance: vd_bi_dw.oce.dev
+    env: DEV
+    connect_uri: "mssql+pymssql://${VD_BI_DW_DEV_USERNAME}:${VD_BI_DW_DEV_PASSWORD}@CW730VPBIDS1N1.LABWEBAPP.COM:50000"
+    platform: "mssql"
+#    host_port: CW730VPBIDS1N1.LABWEBAPP.COM:50000
+##    database: dbname
+#    username: ${VD_BI_DW_DEV_USERNAME}
+#    password: ${VD_BI_DW_DEV_PASSWORD}
+    stateful_ingestion:
+      enabled: true
+      fail_safe_threshold: 100
+#    schema_pattern:
+#      allow:
+#        - 
+#      deny:
+#        -
+#    table_pattern:
+#      deny:
+#        -
+#sink:
+#  type: file
+#  config:
+#    filename: vd_bi_dw-oce-dev-ingestion.json
+pipeline_name: "VD_BI_DW OCE DEV"
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

@@ -1,0 +1,31 @@
+source:
+  type: sqlalchemy
+  config:
+    platform_instance: IRW_EDW.OCIB.PROD
+    env: PROD
+    connect_uri: "db2+ibm_db://${DB2_IRW_EDW_USERNAME}:${DB2_IRW_EDW_PASSWORD}@edwocibsip.visa.com:50000/DBEDWP1"
+    platform: "db2"
+    include_tables: true
+    include_views: false
+    stateful_ingestion:
+      enabled: false
+#    schema_pattern:
+#      allow:
+#        -
+#      deny:
+#        -
+#    table_pattern:
+#      deny:
+#        -
+#  extractor_config:
+#    unpack_mces_into_mcps: true       
+#sink:
+#  type: file
+#  config:
+#    filename: irw-edw-ocib-prod-ingestion.json
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

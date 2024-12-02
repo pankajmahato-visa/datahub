@@ -29,7 +29,7 @@
             <level>INFO</level>
         </filter>
         <encoder>
-            <pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%date{ISO8601} [%thread] %-5level %logger{36}:%L - %msg%n</pattern>
         </encoder>
         <filter class="com.linkedin.metadata.utils.log.LogMessageFilter">
             <excluded>scanned from multiple locations</excluded>
@@ -41,12 +41,12 @@
         <file>${LOG_DIR}/upgrade.debug.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <FileNamePattern>${LOG_DIR}/upgrade.debug.%d{yyyy-dd-MM}-%i.log</FileNamePattern>
-            <!-- each archived file, size max 10MB -->
+            <!-- each archived file, size max 100MB -->
             <maxFileSize>100MB</maxFileSize>
-            <!-- total size of all archive files, if total size > 2GB, it will delete old archived file -->
-            <totalSizeCap>2GB</totalSizeCap>
-            <!-- 1 days to keep -->
-            <maxHistory>1</maxHistory>
+            <!-- total size of all archive files, if total size > 10GB, it will delete old archived file -->
+            <totalSizeCap>10GB</totalSizeCap>
+            <!-- 10 days to keep -->
+            <maxHistory>15</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
@@ -54,7 +54,7 @@
             <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
-            <pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%date{ISO8601} [%thread] %-5level %logger{36}:%L - %msg%n</pattern>
         </encoder>
     </appender>
 

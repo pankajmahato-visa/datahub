@@ -1,0 +1,27 @@
+source:
+  type: hive
+  config:
+    platform_instance: ANA-OPR.OCIM.PROD
+    env: PROD
+    host_port: 'sl974iaehmp0501.visa.com:10000'
+    username: svc_vdc_ana_opr_prod
+    options:
+      connect_args:
+        auth: KERBEROS
+        kerberos_service_name: hive
+    stateful_ingestion:
+      enabled: false
+#    schema_pattern:
+#      allow:
+#        -
+#      deny:
+#        -
+#    table_pattern:
+#      deny:
+#        -
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

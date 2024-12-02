@@ -1,0 +1,74 @@
+source:
+  type: "mongodb"
+  config:
+    platform_instance: "IPCSR.OCE.QA"
+    env: QA
+    connect_uri: "mongodb://sl73ipcsrdbq039.visa.com:27017,sl73ipcsrdbq040.visa.com:27017,sl73ipcsrdbq041.visa.com:27017"
+    # Credentials
+    username: ${IPCSR_QA_USERNAME}
+    password: ${IPCSR_QA_PASSWORD}
+    authMechanism: "SCRAM-SHA-1"
+    options:
+      tls: True
+      tlsCAFile: /data/vdc/datahub/ingestion-certs/ipcsr/ipcsr-root-ca.pem
+      tlsCertificateKeyFile: /data/vdc/datahub/ingestion-certs/ipcsr/ipcsr-mongodb.pem
+      authSource: dbipdpq1
+    
+    # Options
+    enableSchemaInference: True
+    useRandomSampling: True
+    maxSchemaSize: 4000
+    collection_pattern:
+      allow:
+        - dbipdpq1.BaseIIEODResults
+        - dbipdpq1.baseiiEodTotalsPrd2Eu
+        - dbipdpq1.baseiiEodTotalsPrd2Intl
+        - dbipdpq1.baseiiPrd2EuBii
+        - dbipdpq1.baseiiPrd2IntlBii
+        - dbipdpq1.BatchFileSelectionIds
+        - dbipdpq1.BusinessDates
+        - dbipdpq1.cardholderactivity_ds
+        - dbipdpq1.cardholderactivity_eu
+        - dbipdpq1.cardholderactivity_intl
+        - dbipdpq1.cardholderactivity_sps
+        - dbipdpq1.ContextDocument
+        - dbipdpq1.EodDefinition
+        - dbipdpq1.EodTracking
+        - dbipdpq1.exceptionFeeDataMvs
+        - dbipdpq1.exceptionItemDataMvs
+        - dbipdpq1.ExecutionContext
+        - dbipdpq1.FileCreationIdentifiers
+        - dbipdpq1.FileSelectionIdentifiers
+        - dbipdpq1.fintranbilling
+        - dbipdpq1.fintranbillingdaily
+        - dbipdpq1.fwdRecon
+        - dbipdpq1.ISO20022Trace
+        - dbipdpq1.JobExecution
+        - dbipdpq1.JobInstance
+        - dbipdpq1.MagicMessageContext
+        - dbipdpq1.OpenSearchReconInfo
+        - dbipdpq1.PeriodicReconDetail
+        - dbipdpq1.PeriodicReconTracking
+        - dbipdpq1.PeriodicReconWindow
+        - dbipdpq1.sccSct
+        - dbipdpq1.sccsct_logfile_tracker
+        - dbipdpq1.Sequences
+        - dbipdpq1.settle_properties
+        - dbipdpq1.spsSettlementInterchangeData
+        - dbipdpq1.spsSettlementInterchangeDataMvs
+        - dbipdpq1.StepExecution
+        - dbipdpq1.TTLCollection
+        - dbipdpq1.VeesKeys
+#      deny:
+#        - 
+
+#sink:
+#  type: file
+#  config:
+#    filename: ipcsr-oce-qa-ingestion.json
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

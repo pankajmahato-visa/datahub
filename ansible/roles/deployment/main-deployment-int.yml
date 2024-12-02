@@ -1,0 +1,316 @@
+# Piper provided environment variables are mentioned here for reference
+#   deploy_host
+#   deploy_environment
+#   deploy_version
+#   username
+#   password
+- hosts:
+    - "{{ deploy_host }}"
+  vars:
+    artifactory_path: https://artifactory.trusted.visa.com/vdc
+    repo_name: datahub
+    package_name: datahub
+    download_url: "{{ artifactory_path }}/{{ repo_name }}/{{ package_name }}-{{ deploy_version}}.tar"
+    visa_certificates_download_url: "{{ artifactory_path }}/{{ repo_name }}/certificates/int/cacerts"
+    frontend_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/int/datahub-frontend.env"
+    gms_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/int/datahub-gms.env"
+    upgrade_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/int/datahub-upgrade.env"
+    mae_consumer_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/int/datahub-mae-consumer.env"
+    mce_consumer_env_download_url: "{{ artifactory_path }}/{{ repo_name }}/env/int/datahub-mce-consumer.env"
+    folder: "/datahub/{{ package_name }}-{{ deploy_version}}"
+    datahub_root_folder: "/datahub"
+    date: "{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
+    files_to_retain: 5
+  gather_facts: no
+  tasks:
+    - name: Download TAR Ball  "{{ download_url }}"
+      get_url:
+        url: "{{ download_url }}"
+        dest: "{{ folder }}.tar"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+        force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Extract TAR Ball
+      shell: |
+        mkdir -p {{ folder }} && tar -xvf {{ folder }}.tar -C {{ folder }} --strip-components 1
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Stop MAE Consumer
+      shell: |
+        cd {{ datahub_root_folder }}/datahub-latest/datahub-mae-consumer/
+        echo "Sending SIGTERM to Datahub MAE Consumer"
+        [ -f datahub-mae-consumer.pid ] && cat datahub-mae-consumer.pid | xargs kill -15 || true
+        echo "Sleeping 20 seconds"
+        sleep 20
+        echo "Sending SIGKILL"
+        [ -f datahub-mae-consumer.pid ] && cat datahub-mae-consumer.pid | xargs kill -9 || true
+        rm -f datahub-mae-consumer.pid
+      args:
+        removes: "{{ datahub_root_folder }}/datahub-latest/datahub-mae-consumer/datahub-mae-consumer.pid"
+      retries: 3
+      delay: 10
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Stop MCE Consumer
+      shell: |
+        cd {{ datahub_root_folder }}/datahub-latest/datahub-mce-consumer/
+        echo "Sending SIGTERM to Datahub MCE Consumer"
+        [ -f datahub-mce-consumer.pid ] && cat datahub-mce-consumer.pid | xargs kill -15 || true
+        echo "Sleeping 20 seconds"
+        sleep 20
+        echo "Sending SIGKILL"
+        [ -f datahub-mce-consumer.pid ] && cat datahub-mce-consumer.pid | xargs kill -9 || true
+        rm -f datahub-mce-consumer.pid
+      args:
+        removes: "{{ datahub_root_folder }}/datahub-latest/datahub-mce-consumer/datahub-mce-consumer.pid"
+      retries: 3
+      delay: 10
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Stop Datahub Frontend
+      shell: |
+        cd {{ datahub_root_folder }}/datahub-latest/datahub-frontend/
+        echo "Sending SIGTERM to Datahub Frontend"
+        [ -f datahub-frontend.pid ] && cat datahub-frontend.pid | xargs kill -15 || true
+        echo "Sleeping 20 seconds"
+        sleep 20
+        echo "Sending SIGKILL"
+        [ -f datahub-frontend.pid ] && cat datahub-frontend.pid | xargs kill -9 || true
+        rm -f datahub-frontend.pid
+      args:
+        removes: "{{ datahub_root_folder }}/datahub-latest/datahub-frontend/datahub-frontend.pid"
+      retries: 3
+      delay: 10
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Stop Datahub GMS
+      shell: |
+        cd {{ datahub_root_folder }}/datahub-latest/datahub-gms/
+        echo "Sending SIGTERM to Datahub Frontend"
+        [ -f datahub-gms.pid ] && cat datahub-gms.pid | xargs kill -15 || true
+        echo "Sleeping 20 seconds"
+        sleep 20
+        echo "Sending SIGKILL"
+        [ -f datahub-gms.pid ] && cat datahub-gms.pid | xargs kill -9 || true
+        rm -f datahub-gms.pid
+      args:
+        removes: "{{ datahub_root_folder }}/datahub-latest/datahub-gms/datahub-gms.pid"
+      retries: 3
+      delay: 10
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Cleanup Jetty Temp Files
+      shell: |
+        echo "Deleting all Jetty temp files"
+        cd /tmp
+        echo "\nFolders deleted"
+        ls -ladt */ | grep 'jetty-'; true
+        ls -dt */ | grep 'jetty-'| xargs -r rm -rf --; true
+        ls -ladt */ | grep 'mce-consumer-job'; true
+        ls -dt */ | grep 'mce-consumer-job'| xargs -r rm -rf --; true
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Pointing previous symlink to latest
+      shell: |
+        rm {{ datahub_root_folder }}/datahub-previous
+        mv {{ datahub_root_folder }}/datahub-latest {{ datahub_root_folder }}/datahub-previous
+      args:
+        removes: "{{ datahub_root_folder }}/datahub-latest"
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Pointing latest symlink to latest Downloaded TAR Ball
+      shell: |
+        ln -snvf {{ folder}} {{ datahub_root_folder }}/datahub-latest
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Download VISA Certificates  "{{ visa_certificates_download_url }}"
+      get_url:
+        url: "{{ visa_certificates_download_url }}"
+        dest: "{{ folder }}/certs"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+        force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
+      retries: 3
+      delay: 10
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Download MAE Consumer ENV "{{ mae_consumer_env_download_url }}"
+      get_url:
+        url: "{{ mae_consumer_env_download_url }}"
+        dest: "{{ folder }}/datahub-mae-consumer/env"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+        force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
+      retries: 3
+      delay: 10
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Download MCE Consumer ENV "{{ mce_consumer_env_download_url }}"
+      get_url:
+        url: "{{ mce_consumer_env_download_url }}"
+        dest: "{{ folder }}/datahub-mce-consumer/env"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+        force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
+      retries: 3
+      delay: 10
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Download Frontend ENV "{{ frontend_env_download_url }}"
+      get_url:
+        url: "{{ frontend_env_download_url }}"
+        dest: "{{ folder }}/datahub-frontend/env"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+        force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
+      retries: 3
+      delay: 10
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Download GMS ENV "{{ gms_env_download_url }}"
+      get_url:
+        url: "{{ gms_env_download_url }}"
+        dest: "{{ folder }}/datahub-gms/env"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+        force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
+      retries: 3
+      delay: 10
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Download Upgrade ENV "{{ upgrade_env_download_url }}"
+      get_url:
+        url: "{{ upgrade_env_download_url }}"
+        dest: "{{ folder }}/datahub-upgrade/env"
+        validate_certs: no
+        username: "{{ username }}"
+        password: "{{ password }}"
+        force: true
+        tmp_dest: "{{datahub_root_folder}}/temp"
+      retries: 3
+      delay: 10
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: check download
+      shell: |
+        ls -lah {{ datahub_root_folder }}/datahub-latest/
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Start Datahub GMS
+      shell: |
+        sleep 30
+        echo "Starting Datahub GMS"
+        cd {{ datahub_root_folder }}/datahub-latest/datahub-gms/
+        nohup sh start.sh > /dev/null 2> datahub-gms.log < /dev/null & echo $! > datahub-gms.pid
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Start Datahub Frontend
+      shell: |
+        sleep 20
+        echo "Starting Datahub Frontend"
+        cd {{ datahub_root_folder }}/datahub-latest/datahub-frontend/
+        nohup sh start.sh > /dev/null 2> datahub-frontend.log < /dev/null & echo $! > datahub-frontend.pid
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Start MAE Consumer
+      shell: |
+        sleep 30
+        echo "Starting MAE Consumer"
+        cd {{ datahub_root_folder }}/datahub-latest/datahub-mae-consumer/
+        nohup sh start.sh > /dev/null 2> datahub-mae-consumer.log < /dev/null & echo $! > datahub-mae-consumer.pid
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Start MCE Consumer
+      shell: |
+        sleep 30
+        echo "Starting MCE Consumer"
+        cd {{ datahub_root_folder }}/datahub-latest/datahub-mce-consumer/
+        nohup sh start.sh > /dev/null 2> datahub-mce-consumer.log < /dev/null & echo $! > datahub-mce-consumer.pid
+      register: task_output
+    - debug: msg="{{ task_output }}"
+
+
+
+    - name: Cleanup old TAR files and Folders
+      shell: |
+        echo "Deleting all except last {{ files_to_retain }} TAR files"
+        cd {{ datahub_root_folder }}/
+        echo "\nFolders deleted"
+        ls -dt */ | grep -E 'datahub-v'| tail -n +{{files_to_retain + 1 }}; true
+        echo "\nFiles deleted"
+        ls -t datahub-v*.tar | tail -n +{{files_to_retain + 1 }}; true
+        ls -dt */ | grep -E 'datahub-v'| tail -n +{{files_to_retain + 1 }} | xargs -r rm -rf --; true
+        ls -t datahub-v*.tar | tail -n +{{files_to_retain + 1 }} | xargs -r rm -rf --; true
+      register: task_output
+    - debug: msg="{{ task_output }}"

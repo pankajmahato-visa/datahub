@@ -33,7 +33,7 @@ dependencies {
 
     runtimeOnly externalDependency.mariadbConnector
     runtimeOnly externalDependency.mysqlConnector
-    runtimeOnly externalDependency.postgresql
+//    runtimeOnly externalDependency.postgresql
 
     annotationProcessor externalDependency.lombok
 

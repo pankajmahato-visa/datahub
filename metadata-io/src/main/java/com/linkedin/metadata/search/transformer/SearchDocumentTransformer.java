@@ -104,7 +104,6 @@ public class SearchDocumentTransformer {
       @Nonnull EntitySpec entitySpec,
       @Nonnull AspectSpec aspectSpec,
       @Nonnull final AuditStamp auditStamp) {
-
     // relies on the MCP processor preventing unneeded key aspects
     if (Set.of(ChangeType.CREATE, ChangeType.CREATE_ENTITY, ChangeType.UPSERT).contains(changeType)
         && entitySpec.getKeyAspectName().equals(aspectSpec.getName())) {

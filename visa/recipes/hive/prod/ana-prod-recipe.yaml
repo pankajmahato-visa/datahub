@@ -1,0 +1,27 @@
+source:
+  type: hive
+  config:
+    platform_instance: ANA.OCE.PROD
+    env: PROD
+    host_port: 'sl73caehmpc1601.visa.com:10000'
+    username: svchdlc1p
+    options:
+      connect_args:
+        auth: KERBEROS
+        kerberos_service_name: hive
+    stateful_ingestion:
+      enabled: false
+#    schema_pattern:
+#      allow:
+#        -
+#      deny:
+#        -
+#    table_pattern:
+#      deny:
+#        -
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

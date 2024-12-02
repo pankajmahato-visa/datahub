@@ -23,9 +23,9 @@ export const HomePageOnboardingConfig: OnboardingStep[] = [
                     style={{ marginLeft: '50px' }}
                     src={dataHubFlowDiagram}
                 />
-                <Typography.Title level={3}>Welcome to DataHub! 👋</Typography.Title>
+                <Typography.Title level={3}>Welcome to Visa Data Catalog!</Typography.Title>
                 <Typography.Paragraph style={{ lineHeight: '22px' }}>
-                    <strong>DataHub</strong> helps you discover and organize the important data within your
+                    <strong>Visa Data Catalog</strong> helps you discover and organize the important data within your
                     organization. You can:
                 </Typography.Paragraph>
                 <Typography.Paragraph style={{ lineHeight: '24px' }}>

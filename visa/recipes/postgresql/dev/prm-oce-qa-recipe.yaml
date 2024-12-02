@@ -1,0 +1,70 @@
+source:
+  type: postgres
+  config:
+    platform_instance: PRM.OCE.QA
+    env: QA
+    host_port: sl73cwgdbq006.visa.com:5432
+    database: cwg_app
+    username: ${PRM_USERNAME}
+    password: ${PRM_PASSWORD}
+    stateful_ingestion:
+      enabled: true
+      fail_safe_threshold: 100
+    #    schema_pattern:
+    #      allow:
+    #        -
+    #      deny:
+    #        -
+    table_pattern:
+      allow:
+        - cwg_app.*.tcwg_hbr_case
+        - cwg_app.*.tcwg_hbr_case_ackmt_dtls
+        - cwg_app.*.tcwg_hbr_case_bid_x_tier
+        - cwg_app.*.tcwg_hbr_case_tier_x_mcc
+        - cwg_app.*.tcwg_hbr_sor_ackmt_dtls
+        - cwg_app.*.tcwg_hbr_sor_acqr
+        - cwg_app.*.tcwg_hrm_attstn_lck
+        - cwg_app.*.TCWG_HRM_BID_X_TIER
+        - cwg_app.*.TCWG_HRM_CASE
+        - cwg_app.*.TCWG_HRM_CASE_ACQR_BIN
+        - cwg_app.*.TCWG_HRM_CASE_MRCH
+        - cwg_app.*.TCWG_HRM_CASE_MRCH_CAID
+        - cwg_app.*.TCWG_HRM_CASE_MRCH_DBA
+        - cwg_app.*.TCWG_HRM_CASE_MRCH_RVW_INFO
+        - cwg_app.*.TCWG_HRM_CASE_MRCH_SOC_MEDIA_PG_URL
+        - cwg_app.*.TCWG_HRM_CASE_MRCH_WEB_URL
+        - cwg_app.*.TCWG_HRM_CASE_RGSTRN
+        - cwg_app.*.TCWG_HRM_CASE_TPA_BUR_INFO
+        - cwg_app.*.tcwg_hrm_mrch_attstn
+        - cwg_app.*.tcwg_hrm_mrch_attstn_grp
+        - cwg_app.*.tcwg_hrm_mrch_attstn_ln_itm
+        - cwg_app.*.tcwg_hrm_mrch_attstn_ops
+        - cwg_app.*.TCWG_HRM_SOR_ACQR_BIN
+        - cwg_app.*.TCWG_HRM_SOR_MRCH
+        - cwg_app.*.TCWG_HRM_SOR_MRCH_CAID
+        - cwg_app.*.TCWG_HRM_SOR_MRCH_DBA
+        - cwg_app.*.TCWG_HRM_SOR_MRCH_RVW_INFO
+        - cwg_app.*.TCWG_HRM_SOR_MRCH_SOC_MEDIA_PG_URL
+        - cwg_app.*.TCWG_HRM_SOR_MRCH_WEB_URL
+        - cwg_app.*.TCWG_HRM_SOR_RGSTRN
+        - cwg_app.*.TCWG_HRM_SOR_TPA_BUR_INFO
+        - cwg_app.*.TCWG_HRM_TIER_X_MCC
+        - cwg_app.*.tcwg_usr
+        - cwg_app.*.tcwg_usr_bid_regn_role
+        - cwg_app.*.tedc_ctry
+        - cwg_app.*.tedc_regn
+        - cwg_app.*.tedc_state
+        - cwg_app.*.tedc_sub_regn
+#      deny:
+#        -
+#sink:
+#  type: file
+#  config:
+#    filename: prm-oce-qa-ingestion.json
+pipeline_name: "PRM QA"
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

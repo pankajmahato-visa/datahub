@@ -1,0 +1,18 @@
+- entity: "dataFlow"
+  aspect: "dataFlowInfo"
+  config:
+    retention:
+      version:
+        maxVersions: 3
+- entity: "dataJob"
+  aspect: "dataJobInfo"
+  config:
+    retention:
+      version:
+        maxVersions: 3
+- entity: "dataJob"
+  aspect: "dataJobInputOutput"
+  config:
+    retention:
+      version:
+        maxVersions: 3

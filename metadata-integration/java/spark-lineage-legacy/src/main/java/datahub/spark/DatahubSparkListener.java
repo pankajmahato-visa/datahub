@@ -12,7 +12,6 @@ import datahub.spark.model.LineageUtils;
 import datahub.spark.model.SQLQueryExecEndEvent;
 import datahub.spark.model.SQLQueryExecStartEvent;
 import datahub.spark.model.dataset.SparkDataset;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -229,7 +228,7 @@ public class DatahubSparkListener extends SparkListener {
                 }
               });
       super.onApplicationStart(applicationStart);
-    } catch (Exception e) {
+    } catch (Throwable e) {
       // log error, but don't impact thread
       StringWriter s = new StringWriter();
       PrintWriter p = new PrintWriter(s);
@@ -270,7 +269,7 @@ public class DatahubSparkListener extends SparkListener {
                       try {
                         emitter.close();
                         appEmitters.remove(sc.applicationId());
-                      } catch (Exception e) {
+                      } catch (Throwable e) {
                         log.warn("Failed to close underlying emitter due to {}", e.getMessage());
                       }
                     }
@@ -280,7 +279,7 @@ public class DatahubSparkListener extends SparkListener {
                               x.accept(evt);
                               try {
                                 x.close();
-                              } catch (IOException e) {
+                              } catch (Throwable e) {
                                 log.warn("Failed to close lineage consumer", e);
                               }
                             });
@@ -289,7 +288,7 @@ public class DatahubSparkListener extends SparkListener {
                 }
               });
       super.onApplicationEnd(applicationEnd);
-    } catch (Exception e) {
+    } catch (Throwable e) {
       // log error, but don't impact thread
       StringWriter s = new StringWriter();
       PrintWriter p = new PrintWriter(s);
@@ -311,7 +310,7 @@ public class DatahubSparkListener extends SparkListener {
         log.debug("SQL Exec end event with id " + sqlEvt.executionId());
         processExecutionEnd(sqlEvt);
       }
-    } catch (Exception e) {
+    } catch (Throwable e) {
       // log error, but don't impact thread
       StringWriter s = new StringWriter();
       PrintWriter p = new PrintWriter(s);
@@ -346,6 +345,7 @@ public class DatahubSparkListener extends SparkListener {
                           sqlEnd.executionId(),
                           start);
                   McpEmitter emitter = appEmitters.get(sc.applicationId());
+                  System.out.println("DatahubSparkListener applicationId=" + sc.applicationId());
                   if (emitter != null) {
                     emitter.accept(evt);
                   }

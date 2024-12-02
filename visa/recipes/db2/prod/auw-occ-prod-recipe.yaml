@@ -1,0 +1,26 @@
+source:
+  type: sqlalchemy
+  config:
+    platform_instance: AUW.OCC.PROD
+    env: PROD
+    connect_uri: "db2+ibm_db://${DB2_AUW_USERNAME}:${DB2_AUW_PASSWORD}@auwoccsip1.visa.com:50300/DBAUWP1"
+    platform: "db2"
+    include_tables: true
+    include_views: false
+    stateful_ingestion:
+      enabled: false
+#    schema_pattern:
+#      allow:
+#        -
+#      deny:
+#        -
+#    table_pattern:
+#      deny:
+#        -
+#  extractor_config:
+#    unpack_mces_into_mcps: true
+sink:
+  type: file
+  config:
+    filename: auw-ingestion.json
+    max_threads: 1

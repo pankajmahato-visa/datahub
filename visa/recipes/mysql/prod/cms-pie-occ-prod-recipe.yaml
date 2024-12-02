@@ -1,0 +1,31 @@
+source:
+  type: mysql
+  config:
+    platform_instance: CMS.OCC.PROD
+    env: PROD
+    host_port: sl55piedbp001.visa.com:3306
+    #    database: dbname
+    username: ${CMS_PIE_OCC_PROD_USERNAME}
+    password: ${CMS_PIE_OCC_PROD_PASSWORD}
+    stateful_ingestion:
+      enabled: true
+      fail_safe_threshold: 100
+    schema_pattern:
+      allow:
+        - "^pie$"
+#      deny:
+#        -
+#    table_pattern:
+#      deny:
+#        -
+#sink:
+#  type: file
+#  config:
+#    filename: cms-occ-prod-ingestion.json
+pipeline_name: "CMS OCC PROD"
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

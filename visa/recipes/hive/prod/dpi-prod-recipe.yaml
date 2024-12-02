@@ -1,0 +1,27 @@
+source:
+  type: hive
+  config:
+    platform_instance: DPI.OCE.PROD
+    env: PROD
+    host_port: 'hs2-oce-prod-dpi.visa.com:10000'
+    username: svcdpidlcp
+    options:
+      connect_args:
+        auth: KERBEROS
+        kerberos_service_name: hive
+    stateful_ingestion:
+      enabled: false
+#    schema_pattern:
+#      allow:
+#        -
+#      deny:
+#        -
+#    table_pattern:
+#      deny:
+#        -
+sink:
+  type: datahub-rest
+  config:
+    server: '${DATAHUB_GMS_HOST}'
+    token: '${DATAHUB_GMS_TOKEN}'
+    max_threads: 1

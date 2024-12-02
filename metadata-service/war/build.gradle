@@ -26,10 +26,10 @@ dependencies {
   runtimeOnly project(':metadata-jobs:pe-consumer')
 
   runtimeOnly externalDependency.awsSecretsManagerJdbc
-  runtimeOnly externalDependency.h2
+//  runtimeOnly externalDependency.h2
   runtimeOnly externalDependency.mariadbConnector
   runtimeOnly externalDependency.mysqlConnector
-  runtimeOnly externalDependency.postgresql
+//  runtimeOnly externalDependency.postgresql
   implementation externalDependency.springWebMVC
   implementation externalDependency.springBootAutoconfigure
   implementation externalDependency.servletApi
@@ -53,7 +53,7 @@ configurations {
 }
 
 dependencies {
-  jetty11 "org.eclipse.jetty:jetty-runner:11.0.19"
+  jetty11 "org.eclipse.jetty:jetty-runner:11.0.24"
 }
 
 task run(type: JavaExec, dependsOn: build) {
