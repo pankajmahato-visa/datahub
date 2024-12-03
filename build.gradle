@@ -103,7 +103,7 @@ project.ext.spec = [
 ]
 
 project.ext.externalDependency = [
-    'akkaHttp': 'com.typesafe.akka:akka-http-core_2.12:10.5.3',
+    'akkaHttp': 'com.typesafe.akka:akka-http-core_2.12:10.2.10',
     'antlr4Runtime': 'org.antlr:antlr4-runtime:4.9.3',
     'antlr4': 'org.antlr:antlr4:4.9.3',
     'assertJ': 'org.assertj:assertj-core:3.11.1',
