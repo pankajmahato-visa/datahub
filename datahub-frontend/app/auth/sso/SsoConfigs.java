@@ -1,10 +1,9 @@
 package auth.sso;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import static auth.AuthUtils.*;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Class responsible for extracting and validating top-level SSO related configurations. TODO:

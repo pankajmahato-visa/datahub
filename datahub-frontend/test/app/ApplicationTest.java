@@ -41,7 +41,9 @@ import play.test.TestBrowser;
 import play.test.WithBrowser;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SetEnvironmentVariable(key = "DATAHUB_SECRET", value = "test1234test1234test1234test1234test1234test1234")
+@SetEnvironmentVariable(
+    key = "DATAHUB_SECRET",
+    value = "test1234test1234test1234test1234test1234test1234")
 @SetEnvironmentVariable(key = "KAFKA_BOOTSTRAP_SERVER", value = "")
 @SetEnvironmentVariable(key = "DATAHUB_ANALYTICS_ENABLED", value = "false")
 @SetEnvironmentVariable(key = "AUTH_OIDC_ENABLED", value = "true")
@@ -201,8 +203,9 @@ public class ApplicationTest extends WithBrowser {
   }
 
   /**
-   * The Redirect Uri parameter is used to store a previous relative location within the app to be able to
-   * take a user back to their expected page. Redirecting to other domains should be blocked.
+   * The Redirect Uri parameter is used to store a previous relative location within the app to be
+   * able to take a user back to their expected page. Redirecting to other domains should be
+   * blocked.
    */
   @Test
   public void testInvalidRedirectUrl() {

@@ -18,7 +18,7 @@ dependencies {
     play(externalDependency.jacksonDataBind)
     play('com.nimbusds:oauth2-oidc-sdk:8.36.2')
     play('com.nimbusds:nimbus-jose-jwt:8.18')
-    play('com.typesafe.akka:akka-actor_2.12:2.6.20')
+    play('com.typesafe.akka:akka-actor_2.13:2.6.20')
     play(externalDependency.jsonSmart)
     play('io.netty:netty-all:4.1.86.Final')
     implementation(externalDependency.commonsText) {
@@ -79,6 +79,7 @@ dependencies {
   runtimeOnly externalDependency.guicePlay
   runtimeOnly (externalDependency.playDocs) {
     exclude group: 'com.typesafe.akka', module: 'akka-http-core_2.12'
+    exclude group: 'com.typesafe.akka', module: 'akka-http-core_2.13'
   }
   runtimeOnly externalDependency.playGuice
   implementation externalDependency.log4j2Api
@@ -91,7 +92,7 @@ dependencies {
 play {
   platform {
     playVersion = '2.8.21'
-    scalaVersion = '2.12'
+    scalaVersion = '2.13'
     javaVersion = JavaVersion.VERSION_11
   }
 

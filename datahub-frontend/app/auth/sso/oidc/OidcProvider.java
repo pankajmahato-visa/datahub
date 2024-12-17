@@ -2,14 +2,13 @@ package auth.sso.oidc;
 
 import auth.sso.SsoProvider;
 import auth.sso.oidc.custom.CustomOidcClient;
-import com.google.common.collect.ImmutableMap;
+import com.nimbusds.jose.JWSAlgorithm;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.http.callback.PathParameterCallbackUrlResolver;
 import org.pac4j.oidc.config.OidcConfiguration;
-import org.pac4j.oidc.credentials.OidcCredentials;
 import org.pac4j.oidc.profile.OidcProfileDefinition;
 
 /**
@@ -28,7 +27,7 @@ public class OidcProvider implements SsoProvider<OidcConfigs> {
   private static final String OIDC_CLIENT_NAME = "oidc";
 
   private final OidcConfigs _oidcConfigs;
-  private final Client<OidcCredentials> _oidcClient; // Used primarily for redirecting to IdP.
+  private final Client _oidcClient; // Used primarily for redirecting to IdP.
 
   public OidcProvider(final OidcConfigs configs) {
     _oidcConfigs = configs;
@@ -36,7 +35,7 @@ public class OidcProvider implements SsoProvider<OidcConfigs> {
   }
 
   @Override
-  public Client<OidcCredentials> client() {
+  public Client client() {
     return _oidcClient;
   }
 
@@ -50,7 +49,7 @@ public class OidcProvider implements SsoProvider<OidcConfigs> {
     return SsoProtocol.OIDC;
   }
 
-  private Client<OidcCredentials> createPac4jClient() {
+  private Client createPac4jClient() {
     final OidcConfiguration oidcConfiguration = new OidcConfiguration();
     oidcConfiguration.setClientId(_oidcConfigs.getClientId());
     oidcConfiguration.setSecret(_oidcConfigs.getClientSecret());
@@ -70,12 +69,8 @@ public class OidcProvider implements SsoProvider<OidcConfigs> {
     _oidcConfigs
         .getCustomParamResource()
         .ifPresent(value -> customParamsMap.put("resource", value));
-    _oidcConfigs
-        .getGrantType()
-        .ifPresent(value -> customParamsMap.put("grant_type", value));
-    _oidcConfigs
-        .getAcrValues()
-        .ifPresent(value -> customParamsMap.put("acr_values", value));
+    _oidcConfigs.getGrantType().ifPresent(value -> customParamsMap.put("grant_type", value));
+    _oidcConfigs.getAcrValues().ifPresent(value -> customParamsMap.put("acr_values", value));
     if (!customParamsMap.isEmpty()) {
       oidcConfiguration.setCustomParams(customParamsMap);
     }
@@ -84,7 +79,7 @@ public class OidcProvider implements SsoProvider<OidcConfigs> {
         .ifPresent(
             preferred -> {
               log.info("Setting preferredJwsAlgorithm: " + preferred);
-              oidcConfiguration.setPreferredJwsAlgorithm(preferred);
+              oidcConfiguration.setPreferredJwsAlgorithm(JWSAlgorithm.parse(preferred));
             });
 
     final CustomOidcClient oidcClient = new CustomOidcClient(oidcConfiguration);

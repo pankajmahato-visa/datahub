@@ -36,8 +36,8 @@ import play.libs.ws.InMemoryBodyWritable;
 import play.libs.ws.StandaloneWSClient;
 import play.libs.ws.ahc.StandaloneAhcWSClient;
 import play.mvc.Controller;
-import play.mvc.Http.Cookie;
 import play.mvc.Http;
+import play.mvc.Http.Cookie;
 import play.mvc.ResponseHeader;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -167,7 +167,8 @@ public class Application extends Controller {
         .execute()
         .thenApply(
             apiResponse -> {
-              // Log the query if it takes longer than the configured threshold and verbose logging is enabled
+              // Log the query if it takes longer than the configured threshold and verbose logging
+              // is enabled
               boolean verboseGraphQLLogging = _config.getBoolean("graphql.verbose.logging");
               int verboseGraphQLLongQueryMillis = _config.getInt("graphql.verbose.slowQueryMillis");
               Instant finish = Instant.now();
@@ -376,9 +377,10 @@ public class Application extends Controller {
     return path;
   }
 
-
   /**
-   * Called if verbose logging is enabled and request takes longer that the slow query milliseconds defined in the config
+   * Called if verbose logging is enabled and request takes longer that the slow query milliseconds
+   * defined in the config
+   *
    * @param request GraphQL request that was made
    * @param resolvedUri URI that was requested
    * @param duration How long the query took to complete
@@ -393,16 +395,16 @@ public class Application extends Controller {
       JsonNode jsonNode = request.body().asJson();
       ((ObjectNode) jsonNode).remove("query");
       jsonBody.append(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode));
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       _logger.info("GraphQL Request Received: {}, Unable to parse JSON body", resolvedUri);
     }
     String jsonBodyStr = jsonBody.toString();
-    _logger.info("Slow GraphQL Request Received: {}, Request query string: {}, Request actor: {}, Request JSON: {}, Request completed in {} ms",
-            resolvedUri,
-            request.queryString(),
-            actorValue,
-            jsonBodyStr,
-            duration);
+    _logger.info(
+        "Slow GraphQL Request Received: {}, Request query string: {}, Request actor: {}, Request JSON: {}, Request completed in {} ms",
+        resolvedUri,
+        request.queryString(),
+        actorValue,
+        jsonBodyStr,
+        duration);
   }
 }

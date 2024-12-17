@@ -24,11 +24,11 @@ jobs:
 #      highThreshold: 10
 #      mediumThreshold: 100
 #      hideDebugLogs: true
-#    sonatypeScan:
-#      iqStage: 'build'
-#      iqApplication: '0078529_DPDLC_Datahub'
-#      iqScanPatterns: [ { scanPattern: '**/datahub-artifact/datahub-gms/*.war' }, { scanPattern: '**/datahub-artifact/datahub-frontend/*' }, { scanPattern: '**/datahub-artifact/datahub-mae-consumer/*.jar' }, { scanPattern: '**/datahub-artifact/datahub-mce-consumer/*.jar' } ]
-#      iqModuleExcludes: [ moduleExclude: '**/datahub-upgrade/*' ]
+    sonatypeScan:
+      iqStage: 'build'
+      iqApplication: '0078529_DPDLC_Datahub'
+      iqScanPatterns: [ { scanPattern: '**/datahub-artifact/datahub-gms/*.war' }, { scanPattern: '**/datahub-artifact/datahub-frontend/*' }, { scanPattern: '**/datahub-artifact/datahub-mae-consumer/*.jar' }, { scanPattern: '**/datahub-artifact/datahub-mce-consumer/*.jar' } ]
+      iqModuleExcludes: [ moduleExclude: '**/datahub-upgrade/*' ]
   publish:
     steps:
       artifactory:
